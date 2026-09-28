@@ -1,0 +1,90 @@
+TAP version 13
+# Subtest: allowed request reaches the test body exactly once
+ok 1 - allowed request reaches the test body exactly once
+  ---
+  duration_ms: 131.6221
+  ...
+# Subtest: unknown tools and path escapes never reach the body
+ok 2 - unknown tools and path escapes never reach the body
+  ---
+  duration_ms: 121.4159
+  ...
+# Subtest: guard denies when an earlier listener bypasses our pre-execute handler
+ok 3 - guard denies when an earlier listener bypasses our pre-execute handler
+  ---
+  duration_ms: 19.6334
+  ...
+# Subtest: argument mutation after the gate fails the final guard
+ok 4 - argument mutation after the gate fails the final guard
+  ---
+  duration_ms: 119.5985
+  ...
+# Subtest: agent supplied actor/task fields cannot enroll a session
+ok 5 - agent supplied actor/task fields cannot enroll a session
+  ---
+  duration_ms: 16.9989
+  ...
+# Subtest: parallel requests share a single persistent rate counter
+ok 6 - parallel requests share a single persistent rate counter
+  ---
+  duration_ms: 122.5282
+  ...
+# Subtest: critical write uses allowed-once and a one-use policy token
+ok 7 - critical write uses allowed-once and a one-use policy token
+  ---
+  duration_ms: 121.3855
+  ...
+# Subtest: rejected, unavailable and unexpected approvals do not execute
+ok 8 - rejected, unavailable and unexpected approvals do not execute
+  ---
+  duration_ms: 489.3264
+  ...
+# Subtest: approval with changed content is rejected before grant
+ok 9 - approval with changed content is rejected before grant
+  ---
+  duration_ms: 127.5101
+  ...
+# Subtest: absence and timeout of approval channel fail closed
+ok 10 - absence and timeout of approval channel fail closed
+  ---
+  duration_ms: 276.168
+  ...
+# Subtest: stopped worker denies instead of resetting policy state
+ok 11 - stopped worker denies instead of resetting policy state
+  ---
+  duration_ms: 15.9624
+  ...
+# Subtest: invalid configuration never permits a call
+ok 12 - invalid configuration never permits a call
+  ---
+  duration_ms: 131.6285
+  ...
+# Subtest: abort after gate cannot reach the body
+ok 13 - abort after gate cannot reach the body
+  ---
+  duration_ms: 125.1288
+  ...
+# Subtest: closing adapter leaves a denial guard until runtime shutdown
+ok 14 - closing adapter leaves a denial guard until runtime shutdown
+  ---
+  duration_ms: 15.7169
+  ...
+# Subtest: another policy denial is preserved
+ok 15 - another policy denial is preserved
+  ---
+  duration_ms: 14.5621
+  ...
+# Subtest: session context cannot be re-enrolled or changed silently
+ok 16 - session context cannot be re-enrolled or changed silently
+  ---
+  duration_ms: 14.2236
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2049.0954

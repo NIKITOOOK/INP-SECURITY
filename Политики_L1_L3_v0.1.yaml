@@ -1,0 +1,146 @@
+# Профиль исследовательского симулятора; не конфигурация плагина DSH.
+schema_version: '0.4'
+profile: research-l1-l3
+policy_version: '0.4'
+layers:
+  input: enabled
+  model: disabled
+  system: enabled
+controls:
+  tool_allowlist: enabled
+  workspace_boundary: enabled
+  rate_limit: enabled
+  budget_guard: enabled
+  data_flow: enabled
+  egress_allowlist: enabled
+  human_approval: enabled
+  memory_boundary: enabled
+  session_stop: enabled
+  sandbox_mode: workspace-write
+defaults:
+  tool_decision: deny
+  on_policy_error: deny
+  on_approval_unavailable: deny
+  source_trust: untrusted
+input_limits:
+  max_chars: 20000
+tool_permissions:
+  - task: read_workspace
+    tool: file.read
+    operations: [read]
+  - task: edit_workspace
+    tool: file.read
+    operations: [read]
+  - task: edit_workspace
+    tool: file.write
+    operations: [write]
+  - task: edit_workspace
+    tool: file.delete
+    operations: [delete]
+  - task: read_memory
+    tool: memory.read
+    operations: [memory.read]
+  - task: update_memory
+    tool: memory.write
+    operations: [memory.write]
+  - task: query_status
+    tool: network.http
+    operations: [network.send]
+workspace:
+  root: D:/AI-Agent-Security-Lab/workspaces/demo
+  resolve_symlinks: true
+memory:
+  operations: [memory.read, memory.write]
+  permissions:
+    - task: read_memory
+      tool: memory.read
+      operation: memory.read
+      key_prefixes: [project/demo/]
+    - task: update_memory
+      tool: memory.write
+      operation: memory.write
+      key_prefixes: [project/demo/]
+rate_limits:
+  - tool: file.read
+    scope: [actor_id, task_id]
+    window_seconds: 60
+    max_calls: 5
+budgets:
+  scope: [actor_id, session_id]
+  tool_call_count: 100
+  elapsed_seconds: 3600
+approval:
+  timeout_seconds: 60
+  max_outstanding_per_session: 10
+  approvers: [administrator]
+data_flow:
+  default_source_label: protected
+  lattice:
+    public: [public]
+    protected: [public, protected]
+  sink_clearance:
+    file.read: protected
+    file.write: protected
+    file.delete: protected
+    memory.read: protected
+    memory.write: protected
+    network.http: public
+egress:
+  operations: [network.send]
+  tool_allowlists:
+    - tool: network.http
+      destinations: [api.example.test, '*.trusted.example.test']
+critical_operations: [delete, network.send, policy.modify]
+rules:
+  - id: P01_INPUT_PROVENANCE
+    layer: input
+    event: input.received
+    when:
+      origin_any: [web, file, tool, memory]
+    effect:
+      add_labels: [untrusted]
+      detect_prompt_injection: true
+  - id: P02_TOOL_ALLOWLIST
+    layer: system
+    event: tool.requested
+    when:
+      permission_match: false
+    decision: deny
+  - id: P03_WORKSPACE_BOUNDARY
+    layer: system
+    event: tool.requested
+    when:
+      operation_any: [read, write, delete]
+      canonical_target_inside_workspace: false
+    decision: deny
+  - id: P04_RATE_LIMIT
+    layer: system
+    event: tool.requested
+    when:
+      rate_limit_exceeded: true
+    decision: deny
+  - id: P05_CRITICAL_APPROVAL
+    layer: system
+    event: tool.requested
+    when:
+      operation_in_critical_operations: true
+    decision: require_review
+  - id: N03_DATA_FLOW
+    layer: system
+    event: tool.requested
+    when:
+      sink_clearance_dominates_source: false
+      destination_in_allowlist: false
+    decision: deny
+  - id: N05_POLICY_INTEGRITY
+    layer: system
+    event: tool.requested
+    when:
+      operation_is_policy_modify: true
+    decision: deny
+  - id: N04_STOP
+    layer: system
+    event: tool.requested
+    when:
+      session_is_stopped: true
+    decision: deny

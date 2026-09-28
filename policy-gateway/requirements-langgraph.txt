@@ -1,0 +1,2 @@
+# Isolated compatibility spike; install into a dedicated virtual environment.
+langgraph==1.2.12

@@ -1,0 +1,176 @@
+{
+  "generated_at_utc": "2026-09-25T07:12:53.662037+00:00",
+  "python": "3.13.2",
+  "pyyaml": "6.0.3",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "tests_run": 84,
+  "failures": 0,
+  "errors": 0,
+  "skipped": [],
+  "passed": true,
+  "l1_pipeline": {
+    "tests_run": 9,
+    "scope": "NeMo-compatible detector contract, RU/EN input labels and trusted provenance binding from L1 to L3"
+  },
+  "l3_controls": {
+    "tests_run": 6,
+    "scope": "MIT AGT-derived approval/budget semantics, data-flow lattice, egress destination allowlist and fail-closed parsing"
+  },
+  "langgraph_adapter": {
+    "tests_run": 8,
+    "scope": "LangGraph-shaped tool-call contract"
+  },
+  "langgraph_runtime": {
+    "available": true,
+    "version": "1.2.12",
+    "tests_run": 6,
+    "scope": "Real StateGraph, ToolNode, interrupt/resume and InMemorySaver; laboratory tools have no file or network side effects"
+  },
+  "langgraph_end_to_end": {
+    "tests_run": 19,
+    "scope": "Real StateGraph path L1 -> deterministic planner -> L3 -> ToolNode, including trusted provenance and HITL resume"
+  },
+  "adapter": {
+    "tests_run": 16,
+    "exit_code": 0,
+    "scope": "Real Python worker, DSH runtime contract double; not a running DSH instance"
+  },
+  "scope": "Synthetic policy decisions, NeMo-compatible detector adapter, DSH adapter contract and real LangGraph L1/L3 control-flow tests; deterministic planner only, no detector model, LLM, real DSH runtime or OS sandbox test",
+  "demo": {
+    "simulation": true,
+    "tools_executed": 0,
+    "results": [
+      {
+        "scenario": "L1 suspicious web input",
+        "decision": "annotate",
+        "rule_id": "P01_INPUT_PROVENANCE",
+        "policy_version": "0.4",
+        "policy_digest": "f1f9049f66137941e0ce0d424e4c35414478dc4ac421798f819e9bafcdc4dc97",
+        "labels": [
+          "untrusted",
+          "prompt_injection_suspected"
+        ]
+      },
+      {
+        "scenario": "Allowed workspace read",
+        "call_id": "read-1",
+        "session_id": "demo-session",
+        "task_id": "edit_workspace",
+        "decision": "allow",
+        "rule_id": "EXPLICIT_PERMISSION",
+        "policy_version": "0.4",
+        "policy_digest": "f1f9049f66137941e0ce0d424e4c35414478dc4ac421798f819e9bafcdc4dc97"
+      },
+      {
+        "scenario": "Unknown tool",
+        "call_id": "unknown",
+        "session_id": "demo-session",
+        "task_id": "edit_workspace",
+        "decision": "deny",
+        "rule_id": "P02_TOOL_ALLOWLIST",
+        "policy_version": "0.4",
+        "policy_digest": "f1f9049f66137941e0ce0d424e4c35414478dc4ac421798f819e9bafcdc4dc97"
+      },
+      {
+        "scenario": "Write outside workspace",
+        "call_id": "outside",
+        "session_id": "demo-session",
+        "task_id": "edit_workspace",
+        "decision": "deny",
+        "rule_id": "P03_WORKSPACE_BOUNDARY",
+        "policy_version": "0.4",
+        "policy_digest": "f1f9049f66137941e0ce0d424e4c35414478dc4ac421798f819e9bafcdc4dc97"
+      },
+      {
+        "scenario": "Read number 2",
+        "call_id": "read-2",
+        "session_id": "demo-session",
+        "task_id": "edit_workspace",
+        "decision": "allow",
+        "rule_id": "EXPLICIT_PERMISSION",
+        "policy_version": "0.4",
+        "policy_digest": "f1f9049f66137941e0ce0d424e4c35414478dc4ac421798f819e9bafcdc4dc97"
+      },
+      {
+        "scenario": "Read number 3",
+        "call_id": "read-3",
+        "session_id": "demo-session",
+        "task_id": "edit_workspace",
+        "decision": "allow",
+        "rule_id": "EXPLICIT_PERMISSION",
+        "policy_version": "0.4",
+        "policy_digest": "f1f9049f66137941e0ce0d424e4c35414478dc4ac421798f819e9bafcdc4dc97"
+      },
+      {
+        "scenario": "Read number 4",
+        "call_id": "read-4",
+        "session_id": "demo-session",
+        "task_id": "edit_workspace",
+        "decision": "allow",
+        "rule_id": "EXPLICIT_PERMISSION",
+        "policy_version": "0.4",
+        "policy_digest": "f1f9049f66137941e0ce0d424e4c35414478dc4ac421798f819e9bafcdc4dc97"
+      },
+      {
+        "scenario": "Read number 5",
+        "call_id": "read-5",
+        "session_id": "demo-session",
+        "task_id": "edit_workspace",
+        "decision": "allow",
+        "rule_id": "EXPLICIT_PERMISSION",
+        "policy_version": "0.4",
+        "policy_digest": "f1f9049f66137941e0ce0d424e4c35414478dc4ac421798f819e9bafcdc4dc97"
+      },
+      {
+        "scenario": "Read number 6",
+        "call_id": "read-6",
+        "session_id": "demo-session",
+        "task_id": "edit_workspace",
+        "decision": "deny",
+        "rule_id": "P04_RATE_LIMIT",
+        "policy_version": "0.4",
+        "policy_digest": "f1f9049f66137941e0ce0d424e4c35414478dc4ac421798f819e9bafcdc4dc97"
+      },
+      {
+        "scenario": "Delete awaits review",
+        "call_id": "delete-1",
+        "session_id": "demo-session",
+        "task_id": "edit_workspace",
+        "decision": "require_review",
+        "rule_id": "P05_CRITICAL_APPROVAL",
+        "policy_version": "0.4",
+        "policy_digest": "f1f9049f66137941e0ce0d424e4c35414478dc4ac421798f819e9bafcdc4dc97"
+      },
+      {
+        "scenario": "Operator approves exact delete request",
+        "call_id": "delete-1",
+        "session_id": "demo-session",
+        "task_id": "edit_workspace",
+        "decision": "allow",
+        "rule_id": "EXPLICIT_PERMISSION",
+        "policy_version": "0.4",
+        "policy_digest": "f1f9049f66137941e0ce0d424e4c35414478dc4ac421798f819e9bafcdc4dc97"
+      },
+      {
+        "scenario": "Replay of approved request",
+        "call_id": "delete-1",
+        "session_id": "demo-session",
+        "task_id": "edit_workspace",
+        "decision": "deny",
+        "rule_id": "CALL_REPLAY",
+        "policy_version": "0.4",
+        "policy_digest": "f1f9049f66137941e0ce0d424e4c35414478dc4ac421798f819e9bafcdc4dc97"
+      },
+      {
+        "scenario": "No approval channel",
+        "call_id": "delete-2",
+        "session_id": "demo-session",
+        "task_id": "edit_workspace",
+        "decision": "deny",
+        "rule_id": "APPROVAL_UNAVAILABLE",
+        "policy_version": "0.4",
+        "policy_digest": "f1f9049f66137941e0ce0d424e4c35414478dc4ac421798f819e9bafcdc4dc97"
+      }
+    ]
+  }
+}

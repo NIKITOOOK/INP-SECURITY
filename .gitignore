@@ -1,0 +1,69 @@
+# VM media, archives and downloaded runtimes
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.tgz
+*.iso
+*.viso
+*.vdi
+*.vmdk
+*.vhd
+*.vhdx
+*.ova
+*.ovf
+*.sav
+*.exe
+*.dll
+runtime/
+source-archives/
+**/node_modules/
+**/.venv/
+**/__pycache__/
+*.pyc
+# External upstream bulk; provenance README remains tracked
+originals/**/upstream/
+# Secrets and machine-specific credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+id_rsa*
+id_ed25519*
+credentials.json
+secrets/
+# Generated host caches and editor state
+.codex/
+.agents/
+.vscode/
+.idea/
+**/.DS_Store
+**/Thumbs.db
+# Review contains project work; keep private context only on disk
+/AGENTS.md
+/ПЕРЕДАЧА.md
+/logs/
+/Архив_плана_безопасности_v0.1.md
+/references/
+/originals/
+/research/archive-inventory.json
+/README_корень_D.md
+*ЧТЗ*
+*чтз*
+*Техническое_задание*
+*техническое_задание*
+*.pdf
+*.doc
+*.docx
+/policy-gateway/third_party/agt/
+/labs/00-environment/VirtualBox_A3_host_evidence.txt
+# Rendered assignment pages and carrier staging copies
+**/tmp/
+**/chtz*/
+**/*chtz*
+**/upstream/
+/labs/00-environment/transfer/

@@ -1,0 +1,8 @@
+{
+  "thresholds": {
+    "tool_call_count": 5,
+    "token_count": 1000,
+    "elapsed_seconds": 60,
+    "cost_usd": 1
+  }
+}

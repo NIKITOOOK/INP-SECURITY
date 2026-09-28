@@ -1,0 +1,266 @@
+registry_version: 0.6
+updated: 2026-09-25
+entries:
+  - id: deepseek-harness
+    role: integration-runtime-reference
+    upstream:
+      repository: https://github.com/deepseek-ai/deepseek-harness
+      ref: master
+      acquisition: "ZIP предоставлен пользователем; заявлен как скачанный напрямую из репозитория"
+      commit: null # Подтвердить до запуска или внедрения кода.
+      license: MIT # package.json в распакованном корне.
+    artifact:
+      filename: deepseek-harness-master.zip
+      sha256: 7DDDFDB7A5E25001394B895A9EEA743C89DF9238BB0093EFF34CB5ABD1C4417E
+      archive_entries: 15181
+      source_files: 13302
+      uncompressed_bytes: 110694002
+      structural_check: passed_no_absolute_or_parent_paths
+      antivirus_check: "Kaspersky: Downloads scan completed with no threats, user-provided result"
+    intended_use:
+      - "Изучение точек подключения к событиям, настройкам, approvals и sandbox."
+      - "Будущая интеграция policy gateway без копирования неучтённых фрагментов."
+    restrictions:
+      - "Не устанавливать зависимости автоматически."
+      - "Не запускать скрипты, тесты или сервер до отдельного решения."
+      - "Любое заимствование кода добавить в этот реестр с путём, лицензией, изменением и тестом."
+    adaptations:
+      - artifact: policy-gateway/dsh-adapter/adapter.mjs
+        kind: original_code_based_on_api_contract
+        sources:
+          - packages/core/tools/src/index.ts
+          - packages/fs/tool-fs/src/read.ts
+          - packages/fs/tool-fs/src/write.ts
+          - packages/fs/tool-fs/src/edit.ts
+          - packages/fs/tool-fs/src/session-cwd.ts
+          - docs/subsystems/approval.md
+        changes: "Сопоставление read/write/edit с политиками проекта; постоянный Python worker; доверенный контекст, HITL, финальный guard. Код DSH не копировался."
+        tests: policy-gateway/dsh-adapter/adapter.test.mjs
+        limitation: "Только контрактная имитация DSH; реальный runtime ещё не запускался."
+      - artifact: "План_проекта_безопасности_агента.md: этап 6"
+        kind: architecture_reference
+        sources:
+          - docs/cookbook/adding-a-settings-card.md
+          - packages/settings/settings/README.md
+        changes: "Config/volatile, ConfigEditor, сохранение Cordis profile patch; отдельная страница политик."
+      - artifact: policy-gateway/engine.py
+        kind: original_control_plane_code_based_on_dsh_cancellation_contract
+        sources:
+          - packages/core/agent/src/runtime-types.ts
+          - packages/core/agent-loop/src/agent.ts
+          - packages/core/session/src/types.ts
+          - .agents/notes/implemented/architecture/2026-07-16-explicit-turn-cancellation.md
+          - .agents/notes/implemented/architecture/2026-07-19-cooperative-tool-cancellation.md
+        changes: "Добавлен независимый stop_session(): новые разрешения для session_id запрещаются, pending/grants аннулируются. Исходный код DSH не копировался; Agent.cancel/whenIdle/AbortSignal оставлены для этапа интеграции выбранного ядра."
+        tests: policy-gateway/test_engine.py
+        limitation: "Не отменяет уже запущенное действие; активная отмена и достижение quiescence требуют реального DSH Agent или другого выбранного ядра."
+
+  - id: langgraph
+    role: candidate-agent-runtime-and-orchestration-reference
+    upstream:
+      repository: https://github.com/langchain-ai/langgraph
+      ref: main
+      acquisition: "ZIP предоставлен пользователем"
+      commit: null # Подтвердить до переноса кода.
+      license: MIT # Проверено по langgraph-main/LICENSE внутри ZIP.
+    artifact:
+      filename: langgraph-main.zip
+      sha256: 35CD89F1F5FDEB49B7233A7870C147DAA02376805DCA34FA5838ABE8B2050636
+      archive_entries: 835
+      structural_check: directory_read_only
+    intended_use:
+      - "Исследование ToolNode, interrupt, checkpoint/state и Human-in-the-Loop."
+      - "Минимальный адаптер к общему PolicyGateway после выбора Python или JavaScript/TypeScript."
+    restrictions:
+      - "Не считать LangGraph песочницей или движком политик безопасности."
+      - "Перед копированием фрагмента зафиксировать точный commit, исходный путь, изменения и тест."
+      - "ZIP содержит Python core и JS CLI-примеры, но не полное дерево LangGraph.js; для JS/TS нужен отдельный upstream artifact."
+    inspected_paths:
+      - LICENSE
+      - libs/prebuilt/langgraph/prebuilt/tool_node.py
+      - libs/langgraph/langgraph/types.py
+    adaptations:
+      - artifact: policy-gateway/langgraph_adapter/adapter.py
+        kind: original_code_based_on_tool_call_contract
+        sources:
+          - libs/prebuilt/langgraph/prebuilt/tool_node.py
+          - https://docs.langchain.com/oss/python/langgraph/interrupts
+          - https://docs.langchain.com/oss/python/langgraph/persistence
+        changes: "Преобразование id/name/args в общий tool.requested; доверенное enrollment; fail-closed guarded_execute; approval binding и replay prevention. Код LangGraph не копировался."
+        tests: policy-gateway/test_langgraph_adapter.py
+        limitation: "Восемь тестов проверяют собственный контракт отдельно от runtime."
+      - artifact: policy-gateway/langgraph_adapter/runtime.py
+        kind: original_integration_code_using_public_api
+        sources:
+          - https://pypi.org/project/langgraph/1.2.12/
+          - https://docs.langchain.com/oss/python/langgraph/interrupts
+          - https://docs.langchain.com/oss/python/langgraph/persistence
+          - https://reference.langchain.com/python/langgraph/prebuilt/tool_node/ToolNode
+        dependency: "langgraph==1.2.12, установлен с PyPI в отдельное runtime/langgraph-py"
+        changes: "Собственный граф policy -> ToolNode/END и policy -> interrupt -> ToolNode/END; доверенный thread enrollment; строгий формат ответа человека. Исходный код LangGraph не копировался."
+        tests: policy-gateway/test_langgraph_runtime.py
+        limitation: "Шесть runtime-тестов используют InMemorySaver и безвредные функции без файловых/сетевых эффектов; LLM, долговечное состояние и изоляция ОС не проверены. Хеш wheel пока не зафиксирован."
+
+  - id: nemo-guardrails
+    role: l1-guardrails-reference
+    upstream:
+      repository: https://github.com/NVIDIA/NeMo-Guardrails
+      ref: develop
+      acquisition: "ZIP предоставлен пользователем"
+      commit: null # Подтвердить до переноса кода.
+      license: Apache-2.0 # Проверено наличие LICENSE-Apache-2.0.txt; конкретные файлы проверять отдельно.
+    artifact:
+      filename: Guardrails-develop.zip
+      sha256: B739A7970A4E4FE187BAA7A152CED3D2A7109EFE8A02C3D54AD5B27FFA1B718D
+      archive_entries: 2665
+      structural_check: directory_read_only
+    intended_use:
+      - "Исследование input/output rails и примеров injection/jailbreak detection."
+      - "Кандидат для отдельного L1-эксперимента, а не обязательная зависимость ядра агента."
+    restrictions:
+      - "Не переносить конфигурацию без проверки используемой модели, сетевых вызовов и лицензии конкретного файла."
+    inspected_paths:
+      - LICENSE-Apache-2.0.txt
+      - LICENSE.md
+      - examples/configs/injection_detection/config/config.yml
+      - nemoguardrails/library/jailbreak_detection/rail.py
+      - nemoguardrails/library/jailbreak_detection/actions.py
+      - nemoguardrails/library/jailbreak_detection/request.py
+      - nemoguardrails/library/jailbreak_detection/heuristics/checks.py
+      - tests/test_jailbreak_request.py
+    adaptations:
+      - artifact: policy-gateway/l1/nemo_jailbreak.py
+        sha256: 1D0B9C6749649D7D0A8F8C824D6982237A8C3B8336C063D7900365CB5D9798F9
+        kind: adapted_http_contract_client
+        sources:
+          - nemoguardrails/library/jailbreak_detection/request.py
+          - tests/test_jailbreak_request.py
+        changes: "Сохранён POST-контракт prompt -> jailbreak; HTTP-слой заменён стандартной библиотекой, разрешён только loopback, добавлен инъецируемый transport. При недостоверном ответе клиент бросает DetectorUnavailable; L1Pipeline перехватывает его и добавляет detector_unavailable/untrusted, а не блокирует вход автоматически."
+        tests: policy-gateway/test_l1_pipeline.py
+        license_notice: policy-gateway/third_party/NEMO_GUARDRAILS_NOTICE.md
+        license_notice_sha256: 4ABDB35A10D2A9F73FD048C4FC24899DFD9A0A8062095C91CBE7D7CCB08BB118
+        limitation: "Сам NeMo detector/model не установлен и не запущен; GPT-2 Large, Torch и Transformers не переносились."
+
+  - id: openai-agents-python-tool-guardrails
+    role: l3-tool-guardrail-reference
+    upstream:
+      repository: https://github.com/openai/openai-agents-python
+      ref: main
+      acquisition: "ZIP предоставлен пользователем"
+      commit: null # Точный commit из предоставленного архива не установлен.
+      license: MIT
+    artifact:
+      filename: openai-agents-python-main.zip
+      sha256: 0AFB8D6B6A1275613248A5508A18CC8A7082310900D596F9024DA4A3BD0655FE
+      structural_check: "просмотр исходников и тестов без установки/запуска SDK"
+    inspected_paths:
+      - LICENSE
+      - src/agents/tool_guardrails.py
+      - src/agents/run_internal/tool_execution.py
+      - tests/test_tool_guardrails.py
+    decision:
+      kind: reference_only_no_code_copy
+      reason: "ToolInputGuardrail/ToolOutputGuardrail привязаны к Agent, ToolContext, Runner и FunctionTool этого SDK. Input guardrail подтверждает точку до function tool; output guardrail выполняется после тела и не отменяет внешний эффект. reject_content/raise_exception полезны для сопоставления, но не заменяют общий allow/deny/require_review шлюз."
+      future_adapter: "Если команда выберет OpenAI Agents SDK, сопоставить input allow/reject/raise с PolicyGateway перед FunctionTool. Shell/computer/custom tools требуют отдельных точек, потому что просмотренный путь guardrails относится к function tools."
+    restrictions:
+      - "SDK не установлен и тесты upstream не запускались."
+      - "Output guardrail нельзя считать предотвращением уже совершённого эффекта."
+      - "Код не переносился, поэтому MIT-файл не добавлялся в third_party."
+
+  - id: agent-control-standard-agt-policies
+    role: l3-policy-reference-and-adapted-code
+    upstream:
+      repository: https://github.com/GenAI-Security-Project/agent-control-standard
+      ref: null
+      acquisition: "ZIP предоставлен пользователем"
+      commit: null # В предоставленном архиве точный commit не установлен.
+      license: "MIT для reference-implementations/agt/policy/lib/**; Copyright (c) Microsoft Corporation"
+    artifact:
+      filename: agent-control-standard-integration.zip
+      sha256: BF87CB8EA31C7AB5CD2AF673C1AA41589E556BC715385C843FC0CE6AC35B6EAA
+      structural_check: "ранее проверен без запуска; OPA/Rego не установлен"
+    inspected_paths:
+      - LICENSING.md
+      - reference-implementations/agt/policy/LICENSE-AGT
+      - reference-implementations/agt/policy/lib/approval.rego
+      - reference-implementations/agt/policy/lib/approval_test.rego
+      - reference-implementations/agt/policy/lib/budgets.rego
+      - reference-implementations/agt/policy/lib/budgets_test.rego
+      - reference-implementations/agt/policy/lib/egress.rego
+      - reference-implementations/agt/policy/lib/egress_test.rego
+      - reference-implementations/agt/policy/lib/ifc.rego
+      - reference-implementations/agt/policy/lib/ifc_test.rego
+      - reference-implementations/agt/policy/lib/agt_default.rego
+    adaptations:
+      - artifact: policy-gateway/third_party/agt/approval.rego
+        kind: reduced_rego_adaptation
+        source: reference-implementations/agt/policy/lib/approval.rego
+        changes: "Сохранены три helper-решения escalate; сокращены комментарии и форматирование. Файл не считается активным без OPA."
+        license_notice: policy-gateway/third_party/AGT_POLICY_NOTICE.md
+      - artifact: policy-gateway/third_party/agt/budgets.rego
+        kind: reduced_rego_adaptation
+        source: reference-implementations/agt/policy/lib/budgets.rego
+        changes: "Сохранены счётчики и приоритетные deny при достижении лимита; сокращены комментарии и форматирование. Файл не считается активным без OPA."
+        license_notice: policy-gateway/third_party/AGT_POLICY_NOTICE.md
+      - artifact: policy-gateway/l3/agt_controls.py
+        sha256: 3CC270D83762F4FD589B614C232DA0B1A993A0F8F1726A8C0D4322B9A628F288
+        kind: limited_python_semantics_adapter
+        sources:
+          - reference-implementations/agt/policy/lib/approval.rego
+          - reference-implementations/agt/policy/lib/budgets.rego
+          - reference-implementations/agt/policy/lib/egress.rego
+          - reference-implementations/agt/policy/lib/ifc.rego
+        changes: "AGT escalate отображается в require_review; реализованы доступные шлюзу бюджеты вызовов/времени, no-write-down для class:public/protected и allowlist адресатов. Отсутствующий адресат network.send закрывается, хотя общий upstream helper без адресата не выдаёт verdict."
+        tests: policy-gateway/test_l3_controls.py; policy-gateway/test_engine.py
+    restrictions:
+      - "Это ограниченная адаптация семантики, а не совместимый OPA/Rego runtime и не заявление ACS-conformance."
+      - "Токены и стоимость не контролируются без доверенных счётчиков выбранного ядра."
+      - "Категории public/protected и домены являются лабораторными, не утверждённой корпоративной политикой."
+
+  - id: archive-catalog-tool
+    role: local-research-tool
+    upstream:
+      repository: null
+      ref: null
+      acquisition: "Написан в рамках проекта"
+      commit: null
+      license: project-internal
+    artifact:
+      filename: research/archive_catalog.py
+      sha256: null # Рассчитывать при выпуске версии документации.
+    intended_use:
+      - "Без распаковки находить лицензии и пути-кандидаты в известных ZIP."
+      - "Создавать воспроизводимый research/archive-inventory.json."
+    restrictions:
+      - "Не является антивирусом, проверкой зависимостей, CRC или анализатором вредоносного кода."
+      - "Не импортирует и не запускает код из архивов; чтение одного текста ограничено 256 КиБ."
+
+  - id: stage-1-threat-policy-design
+    role: original-security-analysis
+    upstream:
+      repository: null
+      ref: null
+      acquisition: "Составлено для этапа 1 плана из ЧТЗ, схемы и локальных материалов"
+      commit: null
+      license: project-internal
+    artifact:
+      filename: Этап_1_Модель_угроз_и_каталог_политик.md
+      sha256: null # Рассчитать при утверждении редакции документа.
+    sources:
+      - "А_02а_ЧТЗ_Никитин К.В.pdf: страницы 2, 5-6 — обязательные свойства безопасности"
+      - "deepseek_html_20260924_ad46b9.html: схема шины и уровней L1-L3"
+      - "Политики_L1_L3_v0.1.yaml и Контракт_шины_и_политики_v0.1.md: P01-P05"
+      - "Вставленный текст.txt: перечень 50 идей-кандидатов, не нормативный источник"
+      - "AI-SAFE v1.0, OWASP Agentic AI v1.1, исследование об отравлении памяти: справочная проверка полноты угроз"
+      - "Guardrails-develop.zip: nemoguardrails/library/jailbreak_detection/rail.py и actions.py, кандидат L1, Apache-2.0"
+      - "Guardrails-develop.zip: nemoguardrails/library/injection_detection/rail.py, в просмотренной версии output/tool_output, не прямой L1-ввод"
+      - "agent-control-standard-integration.zip: reference-implementations/agt/policy/lib/approval.rego и budgets.rego, кандидаты L3, LICENSE-AGT MIT"
+      - "openai-agents-python-main.zip: src/agents/tool_guardrails.py, кандидат L3, корневая MIT"
+      - "deepseek-harness-master.zip: packages/core/tools/src/index.ts и docs/subsystems/approval.md, точки интеграции, корневая MIT"
+    adaptations:
+      - kind: original_analysis_no_third_party_code
+        changes: "Выделены угрозы U01-U08, правила P01-P05/N01-N05 и сценарии T01-T11; статусы прототипа и кандидата разделены. Добавлена предварительная карта конкретных исходников для L1/L3 без их переноса."
+        tests: "Документарная сверка ID, ссылок на ЧТЗ и ограничений; код и конфигурация движка не менялись."
+    restrictions:
+      - "Новые N01-N05 не являются реализацией и не включены в исполняемый YAML."
+      - "L2, реальная изоляция ОС и сквозная защита агента не доказаны."
