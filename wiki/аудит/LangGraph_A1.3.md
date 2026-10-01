@@ -1,6 +1,6 @@
 # A1.3/4 — LangGraph: ToolNode, interrupt и состояние
 
-Дата: 27.09.2026. Источник: `C:\Users\abUser\Downloads\langgraph-main.zip`, SHA-256 `35CD89F1F5FDEB49B7233A7870C147DAA02376805DCA34FA5838ABE8B2050636` (совпадает с реестром). Исходники и относящиеся тесты прочитаны непосредственно из ZIP, без распаковки и исполнения. В архиве `libs/langgraph/pyproject.toml` указывает `langgraph` 1.2.12, а `libs/prebuilt/pyproject.toml` — `langgraph-prebuilt` 1.1.0; точный commit архива не установлен. Корневая лицензия — MIT © 2024 LangChain, Inc. (`LICENSE`, SHA-256 ниже). Совпадение версии `langgraph==1.2.12` локального установленного пакета с метаданными ZIP **не доказывает побайтовую идентичность wheel и архива**; wheel здесь не проверялся.
+Дата: 27.09.2026. Источник: `langgraph-main.zip`, SHA-256 `35CD89F1F5FDEB49B7233A7870C147DAA02376805DCA34FA5838ABE8B2050636` (совпадает с реестром). Исходники и относящиеся тесты прочитаны непосредственно из ZIP, без распаковки и исполнения. В архиве `libs/langgraph/pyproject.toml` указывает `langgraph` 1.2.12, а `libs/prebuilt/pyproject.toml` — `langgraph-prebuilt` 1.1.0; точный commit архива не установлен. Корневая лицензия — MIT © 2024 LangChain, Inc. (`LICENSE`, SHA-256 ниже). Совпадение версии `langgraph==1.2.12` локального установленного пакета с метаданными ZIP **не доказывает побайтовую идентичность wheel и архива**; wheel здесь не проверялся.
 
 ## Исходные механизмы и границы
 

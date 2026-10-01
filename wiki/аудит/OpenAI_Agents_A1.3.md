@@ -1,6 +1,6 @@
 # A1.3/3 — OpenAI Agents SDK: guardrails, approvals и граница sandbox
 
-Дата: 26.09.2026. Источник: `C:\Users\abUser\Downloads\openai-agents-python-main.zip`, SHA-256 `0AFB8D6B6A1275613248A5508A18CC8A7082310900D596F9024DA4A3BD0655FE`. Исходники и тесты прочитаны из ZIP в памяти; SDK, тесты, Docker и VM не запускались. `LICENSE` в ZIP — MIT © 2025 OpenAI, SHA-256 `13DF7812CA53ECAAE1CB4A868844BB598373047AE1D580E4DEBFBEF1DD5B6915`. Точный commit архива не установлен; имя `main` не фиксирует версию. Локальных копий кода SDK в проекте нет — ранее он был занесён в реестр как reference-only.
+Дата: 26.09.2026. Источник: `openai-agents-python-main.zip`, SHA-256 `0AFB8D6B6A1275613248A5508A18CC8A7082310900D596F9024DA4A3BD0655FE`. Исходники и тесты прочитаны из ZIP в памяти; SDK, тесты, Docker и VM не запускались. `LICENSE` в ZIP — MIT © 2025 OpenAI, SHA-256 `13DF7812CA53ECAAE1CB4A868844BB598373047AE1D580E4DEBFBEF1DD5B6915`. Точный commit архива не установлен; имя `main` не фиксирует версию. Локальных копий кода SDK в проекте нет — ранее он был занесён в реестр как reference-only.
 
 ## Что можно взять как принцип, а не готовую универсальную защиту
 

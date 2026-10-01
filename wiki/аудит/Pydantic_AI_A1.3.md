@@ -1,6 +1,6 @@
 # A1.3/6 — Pydantic AI: toolsets, approval и лимиты
 
-Дата: 27.09.2026. Источник: `C:\Users\abUser\Downloads\pydantic-ai-main.zip`, SHA-256 `1F0C12B6648482485A1E359083D0FF7489207EBBFE6AD8BB11ED33CA6CBCB49E`. ZIP содержит 3 098 элементов. Исходники, документация и относящиеся тесты прочитаны из ZIP без распаковки и исполнения. `LICENSE` — MIT © Pydantic Services Inc. 2024–present. В `pydantic_ai_slim/pyproject.toml` версия вычисляется из Git (`uv-dynamic-versioning`); точный commit предоставленного архива и итоговая версия пакета не установлены.
+Дата: 27.09.2026. Источник: `pydantic-ai-main.zip`, SHA-256 `1F0C12B6648482485A1E359083D0FF7489207EBBFE6AD8BB11ED33CA6CBCB49E`. ZIP содержит 3 098 элементов. Исходники, документация и относящиеся тесты прочитаны из ZIP без распаковки и исполнения. `LICENSE` — MIT © Pydantic Services Inc. 2024–present. В `pydantic_ai_slim/pyproject.toml` версия вычисляется из Git (`uv-dynamic-versioning`); точный commit предоставленного архива и итоговая версия пакета не установлены.
 
 ## Методы, полезные для нашей схемы
 
