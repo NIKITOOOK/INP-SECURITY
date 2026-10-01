@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ИМП 2026 — база ссылок · дополнено 01.10.2026</title>
+<style>
+:root {
+  --bg:#0b1020; --panel:#121a2d; --panel2:#17223a; --text:#e9eef9;
+  --muted:#9fb0c8; --line:#273653; --accent:#7fb3ff; --chip:#21304d;
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{position:sticky;top:0;z-index:10;background:rgba(11,16,32,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:18px 22px 14px}
+h1{font-size:24px;margin:0 0 6px} .sub{color:var(--muted)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+input{flex:1;min-width:260px;background:var(--panel);border:1px solid var(--line);color:var(--text);padding:11px 13px;border-radius:10px;outline:none}
+input:focus{border-color:var(--accent)}
+.layout{display:grid;grid-template-columns:310px 1fr;min-height:calc(100vh - 120px)}
+aside{border-right:1px solid var(--line);padding:18px;position:sticky;top:119px;height:calc(100vh - 119px);overflow:auto}
+.filters{display:flex;flex-direction:column;gap:7px}
+.filter{text-align:left;background:transparent;color:var(--muted);border:1px solid transparent;padding:9px 10px;border-radius:9px;cursor:pointer}
+.filter:hover,.filter.active{background:var(--panel2);border-color:var(--line);color:var(--text)}
+.filter span{float:right;color:var(--accent)}
+main{padding:20px;max-width:1450px;width:100%}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.stat{background:var(--panel);border:1px solid var(--line);padding:8px 11px;border-radius:9px;color:var(--muted)}
+.stat b{color:var(--text)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}
+.card:hover{border-color:#3c5378}
+.topline{display:flex;gap:7px;margin-bottom:8px}
+.badge{background:var(--chip);color:#b9c9df;font-size:12px;padding:2px 7px;border-radius:999px}
+.dup{color:#ffd38a}
+.title{display:block;color:var(--text);font-weight:650;font-size:16px;text-decoration:none;margin-bottom:7px}
+.title:hover{color:var(--accent)}
+.url{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11.5px;color:#7f95b6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta{font-size:12px;color:var(--muted);margin-top:8px}
+.actions{display:flex;gap:8px;margin-top:11px}
+.actions button,.actions a{font:inherit;font-size:12px;background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:6px 9px;border-radius:7px;text-decoration:none;cursor:pointer}
+.empty{display:none;color:var(--muted);padding:30px 0}
+@media(max-width:850px){.layout{display:block} aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)} .filters{flex-direction:row;overflow:auto} .filter{min-width:max-content}}
+.update-note{margin-bottom:24px}.update-note a{color:var(--accent)}.update-note details{margin:12px 0;border-top:1px solid var(--line);padding-top:10px}.update-note summary{cursor:pointer;font-weight:650}.update-note pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.6 system-ui;max-height:65vh;overflow:auto;padding:12px}details[id]{scroll-margin-top:150px}a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}</style>
+</head>
+<body>
+<header>
+  <h1>ИМП 2026 — база полезных ссылок</h1>
+  <div class="sub">Безопасность ИИ-агентов · поиск, категории, повторы и быстрый переход</div>
+  <div class="toolbar">
+    <input id="q" type="search" placeholder="Поиск по названию, домену, URL или категории…">
+  </div>
+</header>
+<div class="layout">
+  <aside><div class="filters"><button class="filter active" data-cat="__all__">Все <span>439</span></button><button class="filter" data-cat="Вендоры, продукты и практические кейсы">Вендоры, продукты и практические кейсы <span>25</span></button><button class="filter" data-cat="Обучение, руководства и разборы">Обучение, руководства и разборы <span>14</span></button><button class="filter" data-cat="GitHub: прочие репозитории">GitHub: прочие репозитории <span>41</span></button><button class="filter" data-cat="Прочее">Прочее <span>53</span></button><button class="filter" data-cat="Prompt injection, jailbreak и защитные фильтры">Prompt injection, jailbreak и защитные фильтры <span>39</span></button><button class="filter" data-cat="Архитектура и системный анализ">Архитектура и системный анализ <span>6</span></button><button class="filter" data-cat="Песочницы, контейнеры и изоляция выполнения">Песочницы, контейнеры и изоляция выполнения <span>36</span></button><button class="filter" data-cat="Стандарты, модели угроз и методологии">Стандарты, модели угроз и методологии <span>49</span></button><button class="filter" data-cat="Инструменты, MCP, API и контроль действий">Инструменты, MCP, API и контроль действий <span>4</span></button><button class="filter" data-cat="Агентные платформы, harness и оркестрация">Агентные платформы, harness и оркестрация <span>30</span></button><button class="filter" data-cat="Безопасность ОС: Windows / Linux / ядро">Безопасность ОС: Windows / Linux / ядро <span>27</span></button><button class="filter" data-cat="Идентификация, минимальные права и секреты">Идентификация, минимальные права и секреты <span>2</span></button><button class="filter" data-cat="Научные статьи, отчёты и PDF">Научные статьи, отчёты и PDF <span>15</span></button><button class="filter" data-cat="Red Team, тестирование, датасеты и уязвимости">Red Team, тестирование, датасеты и уязвимости <span>5</span></button><button class="filter" data-cat="Политики как код и контроль разрешений">Политики как код и контроль разрешений <span>15</span></button><button class="filter" data-cat="Дополнение из Wiki">Дополнение из Wiki <span>78</span></button></div></aside>
+  <main>
+    <div class="stats"><div class="stat">Источников проекта: <b>439</b></div><div class="stat">Категорий: <b>16</b></div><div class="stat">Показано: <b id="shown">439</b></div></div>
+    <div id="grid" class="grid">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+    <div id="empty" class="empty">Ничего не найдено.</div>
+  </main>
+</div>
+<script>
+let activeCat="__all__";
+const q=document.getElementById("q");
+const cards=[...document.querySelectorAll(".card")];
+const shown=document.getElementById("shown");
+const empty=document.getElementById("empty");
+
+function apply(){
+  const term=q.value.trim().toLowerCase();
+  let n=0;
+  for(const card of cards){
+    const catOK=activeCat==="__all__" || card.dataset.cat===activeCat;
+    const textOK=!term || card.dataset.search.includes(term);
+    const show=catOK && textOK;
+    card.style.display=show?"":"none";
+    if(show)n++;
+  }
+  shown.textContent=n;
+  empty.style.display=n?"none":"block";
+}
+document.querySelectorAll(".filter").forEach(btn=>btn.addEventListener("click",()=>{
+  document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));
+  btn.classList.add("active");
+  activeCat=btn.dataset.cat;
+  apply();
+}));
+q.addEventListener("input",apply);
+async function copyLink(s){
+  try{await navigator.clipboard.writeText(s);}catch(e){prompt("Скопируйте ссылку:",s);}
+}
+</script>
+</body>
+</html>

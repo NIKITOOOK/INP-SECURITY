@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'">
+<title>A1.3/6 — Pydantic AI: toolsets, approval и лимиты — Security Lab Wiki</title><style>:root{color-scheme:light;--ink:#233247;--muted:#5d6a7c;--line:#dce3eb;--accent:#175d9c}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+a{color:var(--accent);text-underline-offset:3px}a:focus-visible{outline:3px solid #ecae44;outline-offset:3px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:320px;top:8px;background:white;z-index:9}
+aside{position:fixed;inset:0 auto 0 0;width:290px;overflow-y:auto;background:#f5f7fa;border-right:1px solid var(--line);padding:25px 18px}
+.brand{font-size:19px;font-weight:750;display:block;text-decoration:none}.caption{color:var(--muted);font-size:12px;margin:6px 0 22px}
+details{margin:12px 0}summary{font-size:13px;font-weight:750;cursor:pointer;padding:5px}
+nav a{display:block;padding:7px 10px;font-size:13px;line-height:1.45;text-decoration:none;border-radius:5px;margin:2px 0}
+nav a:hover{background:#e5edf6}nav a[aria-current=page]{background:#dceafa;color:#124d81;font-weight:650}
+main{margin-left:290px;padding:38px clamp(22px,5vw,85px);max-width:1350px}
+.meta{font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:24px;overflow-wrap:anywhere}
+h1{font-size:30px;line-height:1.25;margin-top:0}h2{font-size:22px;margin-top:32px}h3{font-size:18px}
+pre{background:#f3f6fa;border:1px solid var(--line);padding:16px;overflow:auto;border-radius:7px}
+code{font-size:.87em;background:#f3f6fa;overflow-wrap:anywhere}pre code{background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;margin:20px 0;max-width:100%}
+th,td{border:1px solid var(--line);padding:10px 12px;min-width:130px;vertical-align:top}th{background:#edf2f8;text-align:left}
+blockquote{border-left:3px solid #aac5df;margin-left:0;padding-left:18px;color:var(--muted)}
+.unavailable{color:#7c5261;text-decoration:underline dotted;cursor:help}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:15px;font-size:12px;color:var(--muted)}
+@media(max-width:780px){aside{position:static;width:auto;max-height:42vh;border-bottom:1px solid var(--line)}main{margin:0;padding:24px 18px}h1{font-size:25px}.skip:focus{left:10px}}
+@media print{aside,.skip,.meta{display:none}main{margin:0;padding:0}table{display:table}pre{white-space:pre-wrap}}</style></head>
+<body><a class="skip" href="#content">К содержимому</a><aside><a class="brand" href="index.html">Security Lab · Wiki</a>
+<p class="caption">Многоуровневая защита агента<br>Документация ≠ доказательство испытания</p><nav aria-label="Разделы Wiki"><details open><summary>Обзор</summary><a href="index.html">Вики проекта</a><a href="p060.html">Карта методов защиты</a><a href="p064.html">Реализованные политики: код, проверки и ограничения</a><a href="p004.html">Карта реализации многоуровневой защиты</a></details><details open><summary>L1 &#183; Вход и результаты</summary><a href="p051.html">L1: проверка входа</a><a href="p052.html">L1: происхождение данных</a><a href="p053.html">L1: повторная проверка результата инструмента</a></details><details open><summary>L3 &#183; Ограничения</summary><a href="p050.html">Оригинальный AGT: ограничение бюджета</a><a href="p054.html">L3: лимиты прототипа</a><a href="p055.html">L3: остановка сессии</a><a href="p056.html">L3: отказ при ошибке и запрет изменения политики</a><a href="p057.html">L3: подтверждение критического действия</a><a href="p058.html">L3: метки данных и сетевые адресаты</a><a href="p059.html">L3: инструменты и границы доступа</a></details><details open><summary>Источники</summary><a href="p063.html">Полезные ссылки и ресурсы</a><a href="p049.html">Источники и честные статусы проверки</a><a href="p061.html">Неудавшиеся проверки и открытые вопросы</a><a href="p062.html">Поиск источников при отладке</a><a href="p026.html">A1.3 — индекс последовательного аудита 14 ZIP</a></details><details open><summary>Аудит и покрытие L2</summary><a href="p027.html">Контрольная точка A1.3: 14 ZIP рассмотрены, A1 ещё не закрыт</a><a href="p028.html">Контрольная QA-сверка A1 после 14 отчётов</a><a href="p029.html">A1.4 — покрытие многоуровневой модели безопасности</a><a href="p030.html">Как пользователь будет проверять методы в VM</a><a href="p031.html">A1.2 — статическая сверка заявленных заимствований</a><a href="p032.html">Единый формат методички и отчёта</a><a href="p033.html">A1.3/1 — Agent Governance Toolkit в архиве ACS</a><a href="p034.html">M-AGT-APPROVAL — оригинальные правила согласования AGT</a><a href="p035.html">A1.3/11 — Dify: модерация, лимиты, sandbox и сетевой прокси</a><a href="p036.html">A1.3/5 — DeepSeek Harness: политика инструментов, настройки и изоляция</a><a href="p037.html">A1.3/13 — GenAI Data Security Initiative: статический сканер и проверка трасс</a><a href="p038.html">A1.3/12 — GenAI Red Team Lab: испытательный корпус, не защитный middleware</a><a href="p039.html">A1.3/9 — Goose: инспекторы инструментов, разрешения и граница shell</a><a href="p040.html">A1.3/8 — Hermes Agent: approval, защищённые файлы и терминальная среда</a><a href="p041.html">A1.3/4 — LangGraph: ToolNode, interrupt и состояние</a><a href="p042.html">A1.3/7 — Microsoft Agent Framework: метки, политика инструментов и контейнерный shell</a><a href="p043.html">A1.3/2 — NeMo Guardrails: что действительно защищает L1</a><a href="p044.html">A1.3/3 — OpenAI Agents SDK: guardrails, approvals и граница sandbox</a><a href="p045.html">A1.3/10 — OpenHands: Agent Canvas и граница внешнего agent-server</a><a href="p046.html">A1.3/14 — OWASP CheatSheetSeries: рекомендации и иллюстративные примеры</a><a href="p047.html" aria-current="page">A1.3/6 — Pydantic AI: toolsets, approval и лимиты</a><a href="p048.html">Wiki оригинальных методов защиты</a></details><details><summary>Лабораторные</summary><a href="p016.html">A3 — подготовка ЛР №0: среда для пилота AGT budgets</a><a href="p017.html">labs/00-environment/Протокол_локальной_A3_20260929.md</a><a href="p018.html">A3 — фактический протокол Azure-стенда для ЛР №0</a><a href="p019.html">Лабораторная работа №1 — пороги AGT budgets без LLM</a><a href="p020.html">AGT budgets — отчёт пилотного сеанса 29.09.2026</a></details><details><summary>Проект и код</summary><a href="p001.html">Материалы проекта для проверки</a><a href="p002.html">Firecracker — заметка для этапа 5</a><a href="p003.html">Перенос политик безопасности между DeepSeek Harness и LangGraph</a><a href="p005.html">Контракт событий и политик L1/L3 — черновик 0.4</a><a href="p006.html">Матрица настроек L3 и границ автономности</a><a href="p007.html">Аудит оригинальных механизмов и ручная лаборатория</a><a href="p008.html">План работ по политикам безопасности агента</a><a href="p009.html">Программа проверки политик в Azure VM — A3–A4</a><a href="p010.html">Ревью этапов 1–3</a><a href="p011.html">Этап 1. Модель угроз и каталог политик многоуровневой защиты</a><a href="p012.html">Этап 2. Реализация L1 и передача меток в L3</a><a href="p013.html">Этап 3 — декларативные политики L3 и контрольная плоскость</a><a href="p014.html">Этап 4 — критерии интеграции L1/L3 с ядром</a><a href="p015.html">Этап 5.2 — подготовка изолированной среды</a><a href="p021.html">Этап 5.1: адаптер контракта DSH</a><a href="p022.html">Симулятор политик L1/L3</a><a href="p023.html">Agent Governance Toolkit policy notice</a><a href="p024.html">NeMo Guardrails code provenance</a><a href="p025.html">AI Agent Security Lab</a></details></nav></aside>
+<main id="content"><div class="meta">wiki/аудит/Pydantic_AI_A1.3.md · <a href="../../wiki/%D0%B0%D1%83%D0%B4%D0%B8%D1%82/Pydantic_AI_A1.3.md">Markdown-исходник</a></div>
+<span id="a136--pydantic-ai-toolsets-approval-и-лимиты"></span><h1 id="a1.36-pydantic-ai-toolsets-approval">A1.3/6 — Pydantic AI: toolsets, approval и лимиты</h1>
+<p>Дата: 27.09.2026. Источник: <code>C:\Users\abUser\Downloads\pydantic-ai-main.zip</code>, SHA-256 <code>1F0C12B6648482485A1E359083D0FF7489207EBBFE6AD8BB11ED33CA6CBCB49E</code>. ZIP содержит 3 098 элементов. Исходники, документация и относящиеся тесты прочитаны из ZIP без распаковки и исполнения. <code>LICENSE</code> — MIT © Pydantic Services Inc. 2024–present. В <code>pydantic_ai_slim/pyproject.toml</code> версия вычисляется из Git (<code>uv-dynamic-versioning</code>); точный commit предоставленного архива и итоговая версия пакета не установлены.</p>
+<span id="методы-полезные-для-нашей-схемы"></span><h2 id="section">Методы, полезные для нашей схемы</h2>
+<table>
+<thead>
+<tr>
+<th>Блок</th>
+<th>Найденный механизм</th>
+<th>Граница применения</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L3 / разрешённые инструменты</td>
+<td><code>FilteredToolset.get_tools()</code> отбирает определения по функции <code>(RunContext, ToolDefinition)</code>. <code>ToolManager.for_run_step()</code> формирует набор на шаг, а <code>_resolve_tool()</code> отклоняет неизвестное/недоступное имя до вызова тела. Тест <code>test_filtered_toolset_async_filter</code> проверяет, что скрытый инструмент не объявляется модели.</td>
+<td>Это конфигурация и проверка <strong>внутри маршрута Pydantic AI</strong>, не права ОС. Динамический набор надо испытывать при смене состояния и при прямом/вложенном вызове; фильтр одного toolset не покрывает автоматически другие toolsets или provider-native tools.</td>
+</tr>
+<tr>
+<td>L3 / валидация до исполнения</td>
+<td><code>ToolManager.validate_tool_call()</code> разрешает имя, валидирует аргументы и запускает validate hooks; <code>execute_tool_call()</code> отделён от валидации. <code>after_tool_validate</code> может действовать как политика на уже валидированных аргументах.</td>
+<td>Точка для детерминированного правила. Но хуки — расширения приложения, а не встроенная allow/block-политика; <code>SkipToolValidation</code> и пользовательские хуки меняют обычный маршрут. Для безопасности нужно отдельно проверить покрытие и запрещённые случаи.</td>
+</tr>
+<tr>
+<td>L3 / HITL</td>
+<td><code>requires_approval=True</code> и <code>ApprovalRequiredToolset</code> откладывают выбранный вызов до <code>DeferredToolResults</code>. Последний может содержать одобрение, отказ либо изменённые аргументы; при <code>override_args</code> код повторно валидирует вызов. Если handler не вернул результат, deferred-вызов не исполняется на этом пути.</td>
+<td>По умолчанию у function tool <code>requires_approval=False</code>; условие задаёт приложение. <strong>Approval не равен авторизации клиента</strong>: документация прямо предупреждает, что клиент, отправляющий историю и решение, может сфабриковать одобрение без серверного учёта. Нужна авторизация в самой чувствительной функции/сервисе.</td>
+</tr>
+<tr>
+<td>L3 / частичное продолжение</td>
+<td>В upstream <code>test_hitl_tool_approval</code> <code>delete_file</code> откладывается, но <code>create_file</code> из той же модельной пачки выполняется до человеческого ответа (<code>tests/test_agent.py:10907–11012</code>).</td>
+<td>HITL защищает отмеченный вызов, а не останавливает весь шаг и все возможные побочные эффекты. Если нужен барьер «сначала решение человека, потом любые эффекты», это отдельное требование к оркестрации.</td>
+</tr>
+<tr>
+<td>L3 / лимиты</td>
+<td><code>UsageLimits</code> по умолчанию задаёт <code>request_limit=50</code>, но <code>tool_calls_limit=None</code>. При заданном <code>tool_calls_limit</code> <code>_ToolCallProcessor.run()</code> проецирует <strong>всю пачку function-вызовов до их запуска</strong>; тест <code>test_parallel_tool_calls_limit_enforced</code> проверяет, что пачка сверх лимита не исполняется.</td>
+<td>Это лимит на run, не общая квота пользователя/организации и не сетевой rate limiting. Token/cost часто проверяются после ответа; <code>count_tokens_before_request=False</code> по умолчанию. При неизвестной стоимости <code>cost_limit</code> лишь предупреждает, что его нельзя обеспечить.</td>
+</tr>
+<tr>
+<td>L3 / таймаут</td>
+<td><code>FunctionToolset.call_tool()</code> применяет per-tool/toolset timeout (<code>anyio.fail_after</code>), переводит истечение в <code>ModelRetry</code>; <code>Agent.tool_timeout</code> задаёт default для своих function tools.</td>
+<td>Документация ограничивает действие <code>FunctionToolset</code>: внешние/MCP/custom toolsets обязаны реализовать свои дедлайны. Отмена ожидания и retry не доказывают откат уже совершённого действия.</td>
+</tr>
+<tr>
+<td>Коннекторы / native tools</td>
+<td><code>docs/native-tools.md</code> говорит, что native tools исполняются инфраструктурой провайдера, в отличие от function tools в Pydantic AI. <code>ToolManager</code> специально не применяет пользовательские tool hooks к internal output tools.</td>
+<td>Наш локальный Python hook или фильтр function tools нельзя объявлять контролем provider-native code execution, web search или remote MCP. Для них нужно отдельное соглашение о полномочиях и проверка у провайдера/коннектора.</td>
+</tr>
+<tr>
+<td>L1</td>
+<td><code>RaiseContentFilterError</code> реагирует на <code>finish_reason='content_filter'</code> <strong>после ответа модели</strong>.</td>
+<td>Это не детектор prompt injection на пользовательском входе, не Spotlighting и не prompt sandwiching. В просмотренных файлах эквивалентная L1-реализация не установлена; отсутствие в проекте в целом не утверждается.</td>
+</tr>
+<tr>
+<td>Изоляция ОС</td>
+<td>В просмотренном пакете нет собственного backend, сопоставимого с DSH <code>sandbox-windows-acl</code>; <code>docs/toolsets.md</code> перечисляет sandbox/toolsets как внешние проекты.</td>
+<td>Одни схемы Pydantic и toolset wrappers не создают VM, контейнер, AppLocker/AppArmor или ограничение прав процесса. Такое исполнение требуется проектировать и проверять отдельно.</td>
+</tr>
+</tbody>
+</table>
+<p>Особенно полезное разграничение для будущих лабораторных: у нас должны быть <strong>три наблюдения</strong> — инструмент был показан модели, policy разрешила/запретила конкретный вызов, и произошло/не произошло внешнее действие. Одна проверка фильтра моделей или текст <code>ToolDenied</code> не заменяют третье наблюдение. Перенос исходников в наш проект и выбор Python-ядра этим исследованием не санкционируются.</p>
+<span id="опорные-места-исходников-и-тестов"></span><h2 id="section-1">Опорные места исходников и тестов</h2>
+<p>Пути относительно <code>pydantic-ai-main/</code> внутри ZIP, строки — позиции в этих элементах:</p>
+<ul>
+<li><code>pydantic_ai_slim/pydantic_ai/toolsets/{filtered,approval_required}.py</code>: фильтрация и условное <code>ApprovalRequired</code>.</li>
+<li><code>pydantic_ai_slim/pydantic_ai/tool_manager.py:207–263, 398–476, 478–565, 657–780, 986–1040, 1128–1280</code>: снапшот инструментов, validate/execute hooks, отказ неизвестным, deferral и повторная валидация <code>override_args</code>.</li>
+<li><code>pydantic_ai_slim/pydantic_ai/_tool_execution.py:485–509</code>; <code>usage.py:446–589</code>: предисполнительная проверка пачки tool calls и границы лимитов.</li>
+<li><code>pydantic_ai_slim/pydantic_ai/toolsets/function.py:626–710</code>: подготовка определений и timeout function tools.</li>
+<li><code>pydantic_ai_slim/pydantic_ai/capabilities/content_filter.py:16–58</code>: обработка finish reason после модели.</li>
+<li><code>tests/test_agent.py:10907–11012, 12159–12182</code>; <code>tests/test_toolsets.py:2932–2952</code>; <code>tests/test_usage_limits.py:735–749, 1099–1160</code>: просмотрены relevant assertions, но тесты не запускались.</li>
+<li><code>docs/deferred-tools.md:91–108</code>; <code>docs/tools-advanced.md:635–667, 768–819</code>; <code>docs/toolsets.md:272–287, 454–509</code>; <code>docs/native-tools.md:1–20</code>: документационные границы.</li>
+</ul>
+<span id="контрольные-суммы-элементов"></span><h2 id="section-2">Контрольные суммы элементов</h2>
+<table>
+<thead>
+<tr>
+<th>Элемент ZIP</th>
+<th>SHA-256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LICENSE</code></td>
+<td><code>BC0E89738F36944C8106E1947C3D69631F9C33B8F1BCB60EC4F89D677D2DFCF4</code></td>
+</tr>
+<tr>
+<td><code>pydantic_ai_slim/pyproject.toml</code></td>
+<td><code>A220F9A2F2C60E7605F5DA5BAA62A786CABCFA4A33BF9D14BE46CC4D9BAFDA6E</code></td>
+</tr>
+<tr>
+<td><code>pydantic_ai_slim/pydantic_ai/toolsets/approval_required.py</code></td>
+<td><code>CF2606131D95AA9ACB79DD7A397835416AFCD6B9C00740A60334DEC9027D038A</code></td>
+</tr>
+<tr>
+<td><code>pydantic_ai_slim/pydantic_ai/toolsets/filtered.py</code></td>
+<td><code>B4EBB885CD5BBDADC39B4DBBF14FC0C09C46A5055D12230B88778594BEFED515</code></td>
+</tr>
+<tr>
+<td><code>pydantic_ai_slim/pydantic_ai/toolsets/function.py</code></td>
+<td><code>C8C79E789F5A1D15D6BAFB6895FCDCDCDE276CA1D7D138D83166B3AE4A48C378</code></td>
+</tr>
+<tr>
+<td><code>pydantic_ai_slim/pydantic_ai/tool_manager.py</code></td>
+<td><code>FD63624581E1EEEB2F2F095C509AEA3B7EEB3B1D710B8B7F2384D5E8DFD84F18</code></td>
+</tr>
+<tr>
+<td><code>pydantic_ai_slim/pydantic_ai/_tool_execution.py</code></td>
+<td><code>6C861BA895C795E6DA893A5B121B1236C32903083C4205A2BE819AC894DE0CFA</code></td>
+</tr>
+<tr>
+<td><code>pydantic_ai_slim/pydantic_ai/usage.py</code></td>
+<td><code>06D69730DB331B50663ADEF9156BDD37FE91623C29F7839934C8C936BB712D4F</code></td>
+</tr>
+<tr>
+<td><code>pydantic_ai_slim/pydantic_ai/capabilities/content_filter.py</code></td>
+<td><code>7E6EA23A7B6748E42EFEDE7B866FB736E5D6742F93F895C0B39BD6608AC9100B</code></td>
+</tr>
+<tr>
+<td><code>docs/deferred-tools.md</code></td>
+<td><code>3D399A87EBAB21AED8695B8EF137C17D7086B7EAE393501ADBBFFDBAC53FB91B</code></td>
+</tr>
+<tr>
+<td><code>docs/toolsets.md</code></td>
+<td><code>74B00F258A4DC3CD6C8C0FB3824B1D0CA1EC1D52CA30C7F7EB7C001601075D4F</code></td>
+</tr>
+<tr>
+<td><code>docs/tools-advanced.md</code></td>
+<td><code>8F88E322CD26AA7598ABA2F2A11DEF8465B03DADBC13138DC18D08839FDB5B7D</code></td>
+</tr>
+<tr>
+<td><code>docs/native-tools.md</code></td>
+<td><code>838EA0BC3EFA2FC29358DA68214C103A35524C191B331D852C894F1AB9768830</code></td>
+</tr>
+<tr>
+<td><code>tests/test_agent.py</code></td>
+<td><code>58369E61854DD42EA2469E4DAAF530118540019F8B317F2C5C855CBDD1C965CA</code></td>
+</tr>
+<tr>
+<td><code>tests/test_toolsets.py</code></td>
+<td><code>08AEC346BF0ECC2332B90F5E789536F59737F2B2194374625BA2CE101DF5BDF5</code></td>
+</tr>
+<tr>
+<td><code>tests/test_usage_limits.py</code></td>
+<td><code>F2928E06489764EBB08884D075BF5B21821E5261E3030EFBC727D9BC43BFB975</code></td>
+</tr>
+</tbody>
+</table>
+<p>Аудит не охватывает все 3 098 элементов, всех провайдеров/MCP-интеграций и реальные runtime-условия; чтение upstream-тестов — не их исполнение. Локальной адаптации Pydantic AI в <code>policy-gateway</code> по заявленному реестру нет, код из ZIP не переносился. Следующий пакет A1.3/7 — Microsoft Agent Framework.</p>
+
+<footer>Локальная HTML-сборка из Markdown. Правки вносить в исходные .md, затем повторить сборку. Без сервера и внешних зависимостей.</footer></main></body></html>

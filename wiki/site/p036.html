@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'">
+<title>A1.3/5 — DeepSeek Harness: политика инструментов, настройки и изоляция — Security Lab Wiki</title><style>:root{color-scheme:light;--ink:#233247;--muted:#5d6a7c;--line:#dce3eb;--accent:#175d9c}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+a{color:var(--accent);text-underline-offset:3px}a:focus-visible{outline:3px solid #ecae44;outline-offset:3px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:320px;top:8px;background:white;z-index:9}
+aside{position:fixed;inset:0 auto 0 0;width:290px;overflow-y:auto;background:#f5f7fa;border-right:1px solid var(--line);padding:25px 18px}
+.brand{font-size:19px;font-weight:750;display:block;text-decoration:none}.caption{color:var(--muted);font-size:12px;margin:6px 0 22px}
+details{margin:12px 0}summary{font-size:13px;font-weight:750;cursor:pointer;padding:5px}
+nav a{display:block;padding:7px 10px;font-size:13px;line-height:1.45;text-decoration:none;border-radius:5px;margin:2px 0}
+nav a:hover{background:#e5edf6}nav a[aria-current=page]{background:#dceafa;color:#124d81;font-weight:650}
+main{margin-left:290px;padding:38px clamp(22px,5vw,85px);max-width:1350px}
+.meta{font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:24px;overflow-wrap:anywhere}
+h1{font-size:30px;line-height:1.25;margin-top:0}h2{font-size:22px;margin-top:32px}h3{font-size:18px}
+pre{background:#f3f6fa;border:1px solid var(--line);padding:16px;overflow:auto;border-radius:7px}
+code{font-size:.87em;background:#f3f6fa;overflow-wrap:anywhere}pre code{background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;margin:20px 0;max-width:100%}
+th,td{border:1px solid var(--line);padding:10px 12px;min-width:130px;vertical-align:top}th{background:#edf2f8;text-align:left}
+blockquote{border-left:3px solid #aac5df;margin-left:0;padding-left:18px;color:var(--muted)}
+.unavailable{color:#7c5261;text-decoration:underline dotted;cursor:help}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:15px;font-size:12px;color:var(--muted)}
+@media(max-width:780px){aside{position:static;width:auto;max-height:42vh;border-bottom:1px solid var(--line)}main{margin:0;padding:24px 18px}h1{font-size:25px}.skip:focus{left:10px}}
+@media print{aside,.skip,.meta{display:none}main{margin:0;padding:0}table{display:table}pre{white-space:pre-wrap}}</style></head>
+<body><a class="skip" href="#content">К содержимому</a><aside><a class="brand" href="index.html">Security Lab · Wiki</a>
+<p class="caption">Многоуровневая защита агента<br>Документация ≠ доказательство испытания</p><nav aria-label="Разделы Wiki"><details open><summary>Обзор</summary><a href="index.html">Вики проекта</a><a href="p060.html">Карта методов защиты</a><a href="p064.html">Реализованные политики: код, проверки и ограничения</a><a href="p004.html">Карта реализации многоуровневой защиты</a></details><details open><summary>L1 &#183; Вход и результаты</summary><a href="p051.html">L1: проверка входа</a><a href="p052.html">L1: происхождение данных</a><a href="p053.html">L1: повторная проверка результата инструмента</a></details><details open><summary>L3 &#183; Ограничения</summary><a href="p050.html">Оригинальный AGT: ограничение бюджета</a><a href="p054.html">L3: лимиты прототипа</a><a href="p055.html">L3: остановка сессии</a><a href="p056.html">L3: отказ при ошибке и запрет изменения политики</a><a href="p057.html">L3: подтверждение критического действия</a><a href="p058.html">L3: метки данных и сетевые адресаты</a><a href="p059.html">L3: инструменты и границы доступа</a></details><details open><summary>Источники</summary><a href="p063.html">Полезные ссылки и ресурсы</a><a href="p049.html">Источники и честные статусы проверки</a><a href="p061.html">Неудавшиеся проверки и открытые вопросы</a><a href="p062.html">Поиск источников при отладке</a><a href="p026.html">A1.3 — индекс последовательного аудита 14 ZIP</a></details><details open><summary>Аудит и покрытие L2</summary><a href="p027.html">Контрольная точка A1.3: 14 ZIP рассмотрены, A1 ещё не закрыт</a><a href="p028.html">Контрольная QA-сверка A1 после 14 отчётов</a><a href="p029.html">A1.4 — покрытие многоуровневой модели безопасности</a><a href="p030.html">Как пользователь будет проверять методы в VM</a><a href="p031.html">A1.2 — статическая сверка заявленных заимствований</a><a href="p032.html">Единый формат методички и отчёта</a><a href="p033.html">A1.3/1 — Agent Governance Toolkit в архиве ACS</a><a href="p034.html">M-AGT-APPROVAL — оригинальные правила согласования AGT</a><a href="p035.html">A1.3/11 — Dify: модерация, лимиты, sandbox и сетевой прокси</a><a href="p036.html" aria-current="page">A1.3/5 — DeepSeek Harness: политика инструментов, настройки и изоляция</a><a href="p037.html">A1.3/13 — GenAI Data Security Initiative: статический сканер и проверка трасс</a><a href="p038.html">A1.3/12 — GenAI Red Team Lab: испытательный корпус, не защитный middleware</a><a href="p039.html">A1.3/9 — Goose: инспекторы инструментов, разрешения и граница shell</a><a href="p040.html">A1.3/8 — Hermes Agent: approval, защищённые файлы и терминальная среда</a><a href="p041.html">A1.3/4 — LangGraph: ToolNode, interrupt и состояние</a><a href="p042.html">A1.3/7 — Microsoft Agent Framework: метки, политика инструментов и контейнерный shell</a><a href="p043.html">A1.3/2 — NeMo Guardrails: что действительно защищает L1</a><a href="p044.html">A1.3/3 — OpenAI Agents SDK: guardrails, approvals и граница sandbox</a><a href="p045.html">A1.3/10 — OpenHands: Agent Canvas и граница внешнего agent-server</a><a href="p046.html">A1.3/14 — OWASP CheatSheetSeries: рекомендации и иллюстративные примеры</a><a href="p047.html">A1.3/6 — Pydantic AI: toolsets, approval и лимиты</a><a href="p048.html">Wiki оригинальных методов защиты</a></details><details><summary>Лабораторные</summary><a href="p016.html">A3 — подготовка ЛР №0: среда для пилота AGT budgets</a><a href="p017.html">labs/00-environment/Протокол_локальной_A3_20260929.md</a><a href="p018.html">A3 — фактический протокол Azure-стенда для ЛР №0</a><a href="p019.html">Лабораторная работа №1 — пороги AGT budgets без LLM</a><a href="p020.html">AGT budgets — отчёт пилотного сеанса 29.09.2026</a></details><details><summary>Проект и код</summary><a href="p001.html">Материалы проекта для проверки</a><a href="p002.html">Firecracker — заметка для этапа 5</a><a href="p003.html">Перенос политик безопасности между DeepSeek Harness и LangGraph</a><a href="p005.html">Контракт событий и политик L1/L3 — черновик 0.4</a><a href="p006.html">Матрица настроек L3 и границ автономности</a><a href="p007.html">Аудит оригинальных механизмов и ручная лаборатория</a><a href="p008.html">План работ по политикам безопасности агента</a><a href="p009.html">Программа проверки политик в Azure VM — A3–A4</a><a href="p010.html">Ревью этапов 1–3</a><a href="p011.html">Этап 1. Модель угроз и каталог политик многоуровневой защиты</a><a href="p012.html">Этап 2. Реализация L1 и передача меток в L3</a><a href="p013.html">Этап 3 — декларативные политики L3 и контрольная плоскость</a><a href="p014.html">Этап 4 — критерии интеграции L1/L3 с ядром</a><a href="p015.html">Этап 5.2 — подготовка изолированной среды</a><a href="p021.html">Этап 5.1: адаптер контракта DSH</a><a href="p022.html">Симулятор политик L1/L3</a><a href="p023.html">Agent Governance Toolkit policy notice</a><a href="p024.html">NeMo Guardrails code provenance</a><a href="p025.html">AI Agent Security Lab</a></details></nav></aside>
+<main id="content"><div class="meta">wiki/аудит/DSH_A1.3.md · <a href="../../wiki/%D0%B0%D1%83%D0%B4%D0%B8%D1%82/DSH_A1.3.md">Markdown-исходник</a></div>
+<span id="a135--deepseek-harness-политика-инструментов-настройки-и-изоляция"></span><h1 id="a1.35-deepseek-harness">A1.3/5 — DeepSeek Harness: политика инструментов, настройки и изоляция</h1>
+<p>Дата: 27.09.2026. Источник: <code>C:\Users\abUser\Downloads\deepseek-harness-master.zip</code>, SHA-256 <code>7DDDFDB7A5E25001394B895A9EEA743C89DF9238BB0093EFF34CB5ABD1C4417E</code> (совпадает с реестром). ZIP содержит 15 181 элемент; ниже — <strong>выборочный содержательный аудит защитных маршрутов</strong>, а не заявление о чтении каждого элемента. Всё прочитано непосредственно из ZIP, без распаковки и запуска. Корневой <code>package.json</code> сообщает <code>0.1.7-rc.1</code>, <code>pnpm@11.7.0</code>, Node <code>^22.19.0 || &gt;=24.0.0</code>; <code>LICENSE</code> — MIT © 2026 DeepSeek. Точный commit предоставленного <code>master</code>-архива не установлен.</p>
+<span id="что-найдено-для-нашей-многоуровневой-модели"></span><h2 id="section">Что найдено для нашей многоуровневой модели</h2>
+<table>
+<thead>
+<tr>
+<th>Участок схемы</th>
+<th>Оригинальное решение и точка действия</th>
+<th>Граница доказанного</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L3, до инструмента</td>
+<td><code>ToolRuntime</code> пропускает вызов через <code>tools/pre-execute</code>, затем через монотонные <code>tools.guard()</code>, только после этого — <code>tools/execute</code> и тело инструмента. Listener может вернуть <code>deny</code> или <code>ask</code>; <code>guard</code> может запретить, но не отменить чужой запрет. Тест <code>tools.spec.ts:1761–1775</code> проверяет, что при <code>deny</code> стадия dispatch не достигается.</td>
+<td>Точка интеграции политики реальна, но <strong>по умолчанию waterfall возвращает <code>allow</code></strong>; наличие механизма не означает подключённую нашу политику. Ошибки превращаются в <code>isError</code>, но это не доказывает остановку всей сессии или уже начатого внешнего действия.</td>
+</tr>
+<tr>
+<td>L3, список инструментов</td>
+<td><code>tools.restrict({allow,deny})</code> маскирует <strong>глобальные</strong> инструменты в scope агента; scoped registrations остаются видимыми. <code>tools.guard()</code> проверяет вызов в том же реестре.</td>
+<td><code>restrict</code> не универсальный неизменяемый allowlist для всех будущих scoped-инструментов. Для политики потребуются явное покрытие регистрации, фактического вызова и композитного <code>run_code</code>/вложенных capabilities.</td>
+</tr>
+<tr>
+<td>L3, подтверждение</td>
+<td>Решение <code>ask</code> идёт в <code>ApprovalService</code>; только <code>allowed-once</code> разрешает конкретный вызов. Без сервиса, агента или ответчика получается отказ; <code>approval/policy='never'</code> запрещает запросы на согласование, <strong>а не все обычные инструменты</strong>. Есть пара событий <code>approval/asked</code>/<code>approval/decided</code>.</td>
+<td>HITL есть в исходнике, но нужно проверить владельца ответчика, привязку к действию и фактическую блокировку в собранном приложении. Штатные тесты читаем как спецификацию, не как результат нашего стенда.</td>
+</tr>
+<tr>
+<td>L3, конфигурация</td>
+<td><code>SandboxPolicyService</code> хранит default <code>read-only</code>, поддерживает <code>workspace-write</code> и <code>danger-full-access</code>; отдельные сессионные <code>sandbox/mode</code> и <code>approval/policy</code> переключаются. <code>PermissionPresetService</code> объединяет два параметра, по умолчанию предлагает <code>workspace-write + ask</code> и <code>danger-full-access + never</code>, позволяет задать свою таблицу и default.</td>
+<td><strong>Дефолт конкретной сборки определяется композицией плагинов</strong>: <code>read-only</code> базового policy-плагина не надо путать с default пресета. Если сочетание не соответствует таблице, требуется явный <code>defaultPreset</code>; таблица пресетов фиксируется на срок жизни плагина. <code>ConfigEditor</code> сохраняет профильный YAML-патч, но это не готовая страница настроек именно <em>нашей</em> политики.</td>
+</tr>
+<tr>
+<td>L3, файловые <code>write/edit</code></td>
+<td><code>tool-fs</code> получает per-call policy и передаёт её <code>SandboxedFileSystem</code>. <code>read-only</code> запрещает мутации; <code>workspace-write</code> проверяет канонический путь под рабочим корнем/разрешённым temp; <code>danger-full-access</code> пропускает без fence. Эскалация требует отдельного разрешения и действует на один вызов.</td>
+<td>Это <strong>проверка в доверенном коде</strong>, не kernel sandbox. Исходник признаёт остаточный TOCTOU при замене ancestor symlink. <code>read</code> здесь не ограничен этими режимами. Если вместо <code>fs-sandbox</code> подключён обычный <code>fs-local</code>, этот fence отсутствует.</td>
+</tr>
+<tr>
+<td>L3, shell sandbox</td>
+<td><code>SandboxPwshExecutor</code> при confined-режиме вызывает <code>ctx.sandbox.confine</code>; <code>danger-full-access</code> обходит его. <code>LocalSandboxProvider</code>: Linux — <code>bwrap</code>, затем Landlock; Windows — ACL/restricted-token runner; macOS — Seatbelt. При отсутствии пригодного runner confined-вызов должен завершаться <code>SANDBOX_UNAVAILABLE</code>, без автоматического unconfined fallback.</td>
+<td>Windows runner заявляет и тестирует <strong>частичное ограничение записей</strong>, не полноценную VM. Чтение, сеть и видимость процессов не ограничиваются этим Windows backend; hard links и AppContainer ACL дают дополнительные границы. Windows-кандидат выбирается без предварительного probe, отказ runner обрабатывается при запуске. Linux <code>bwrap</code>/Landlock тоже нужно проверять по фактической среде и профилю.</td>
+</tr>
+<tr>
+<td>L3, таймаут</td>
+<td>Отдельный <code>timeout-policy</code> оборачивает <code>tools/execute</code>, только если инструмент объявил <code>timeoutMs</code>; посылает сигнал и ожидает завершения его promise.</td>
+<td>Это кооперативный дедлайн, <strong>не счётчик запросов и не принудительное убийство процесса</strong>. Нельзя выдавать его за требуемый rate limiting.</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>Поиск точных строк <code>prompt injection</code>, <code>spotlighting</code>, <code>sandwich</code>, <code>datamarking</code>, <code>input guardrail</code> в <code>.ts</code>/<code>.md</code> файлах <code>packages/</code> и <code>docs/</code> размером до 200 КБ не дал совпадений.</td>
+<td>Это лишь отрицательный результат ограниченного поиска; он не доказывает отсутствие эквивалентной L1-защиты под другим названием или в иных файлах. В просмотренном маршруте инструмента L1-детектор не выявлен.</td>
+</tr>
+</tbody>
+</table>
+<span id="особо-важно-для-windows-11"></span><h3 id="windows-11">Особо важно для Windows 11</h3>
+<p><code>sandbox-windows-acl</code> создаёт процесс с <code>WRITE_RESTRICTED</code> token и Low integrity, добавляет разрешающие/запрещающие ACE и метки к дереву workspace. Собственная документация <code>packages/sandbox/sandbox-windows-acl/README.md:112–124, 170–181</code> отмечает последствия: постоянные изменения ACL/Low label рабочего дерева, частичную границу, чтение и сеть без ограничения, потенциальные проблемы с hard links и долгую первичную обработку большого дерева. Это <strong>не стоит проверять прямо на рабочем D: до отдельной методички и среды A3</strong>. Проектные e2e-тесты для PowerShell имеются (<code>packages/shell/pwsh-sandbox/tests/acl.e2e.ts:30–123</code>) и условно запускаются только на Windows при наличии <code>pwsh</code>; мы их не исполняли. В одном тесте команда сама перехватывает отказ записи и завершается кодом 0: <code>sandbox.denied=false</code> в таком случае не означает, что запись была разрешена (<code>:69–94</code>). Нужны проверка фактического файла и отрицательные сценарии, а не только итоговый флаг.</p>
+<span id="граница-нашего-текущего-прототипа"></span><h2 id="section-1">Граница нашего текущего прототипа</h2>
+<p><a href="../../policy-gateway/dsh-adapter/adapter.mjs" title="Исходный файл; переход к строке зависит от просмотрщика">Локальный DSH-адаптер</a> — собственная контрактная имитация вызова, а не подключённый <code>ToolRuntime</code> из этого ZIP. Настройки, per-session presets, Windows ACL runner и <code>fs-sandbox</code> из оригинала в него <strong>не перенесены и не испытаны</strong>. Этот A1.3-пакет ничего не меняет в исполняемом коде. Позднее, после отбора конкретного метода и A2, можно подготовить ручной опыт оригинала отдельно от адаптера; выбор Windows VM/контейнера пока открыт и не подменяется запуском на хосте.</p>
+<span id="просмотренные-пути-и-контрольные-суммы"></span><h2 id="section-2">Просмотренные пути и контрольные суммы</h2>
+<p>Пути — внутри <code>deepseek-harness-master/</code>; SHA-256 относится к байтам элемента ZIP:</p>
+<table>
+<thead>
+<tr>
+<th>Элемент</th>
+<th>SHA-256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LICENSE</code></td>
+<td><code>EBB4F09972AEE8608BE255DEBAF78451A68E95C290F55C240DEC2ECFA16EA6BE</code></td>
+</tr>
+<tr>
+<td><code>package.json</code></td>
+<td><code>8EFAA4A8CC4A9B32A1935C0A3A87F11E124DB3E0109F9661DCF13D43971B82D2</code></td>
+</tr>
+<tr>
+<td><code>packages/core/tools/src/index.ts</code></td>
+<td><code>8DB2CE69D9BE374845063B72EFD91917E174C961BC8AC37B3670CC17E8D494F0</code></td>
+</tr>
+<tr>
+<td><code>packages/core/tools/tests/tools.spec.ts</code></td>
+<td><code>6E057CC6E1FA254F60CAC074C95696543015152EF314CFE700845419E7277634</code></td>
+</tr>
+<tr>
+<td><code>packages/interaction/user-approval/src/index.ts</code></td>
+<td><code>6BBA9FEEF5257063AA41D89DDD51C31A1A474B5920C256C65D5EC2857CFF1FF6</code></td>
+</tr>
+<tr>
+<td><code>packages/interaction/user-approval/tests/approval.spec.ts</code></td>
+<td><code>3EF51AD1904E1D6845C86DECFE214427F872FF825A3CCF3185CB3E439EB3FD56</code></td>
+</tr>
+<tr>
+<td><code>packages/interaction/permission-presets/src/index.ts</code></td>
+<td><code>1FBC7EA549E27BA87D72F6598096BD54F6934E635E0979B77A467BFAC9211E58</code></td>
+</tr>
+<tr>
+<td><code>packages/sandbox/sandbox-policy/src/index.ts</code></td>
+<td><code>6FCE58E5BF63475F761871389BBF01043FBA859F22E44C805522C39AFBFF32D6</code></td>
+</tr>
+<tr>
+<td><code>packages/sandbox/sandbox-local/src/index.ts</code></td>
+<td><code>055F9A825A8D37E37E06DEAB9C020F6B9A57483BC4460281B17C7D232B175583</code></td>
+</tr>
+<tr>
+<td><code>packages/sandbox/sandbox-windows-acl/src/index.ts</code></td>
+<td><code>0F6F587F8BE2136254C7097515F6372AF5CBCF4021E7D6FE29A14E6AFB789E29</code></td>
+</tr>
+<tr>
+<td><code>packages/sandbox/sandbox-windows-acl/tests/runner.spec.ts</code></td>
+<td><code>671E8F624965B2C8A92FBFB2FA52D4C38EC34FB66154C331FFD5E548260EFA2C</code></td>
+</tr>
+<tr>
+<td><code>packages/fs/fs-sandbox/src/index.ts</code></td>
+<td><code>BABA926440E3BCAF9C5F70C4E7D5478EFD977D66C76E025C4DEB82534CE3256B</code></td>
+</tr>
+<tr>
+<td><code>packages/fs/fs-sandbox/tests/fs-sandbox.spec.ts</code></td>
+<td><code>A8959CF5EAA3C5D9E530DFF9C871BEC981AA7AFDB8E1A2FDEBDAD7563FFAF541</code></td>
+</tr>
+<tr>
+<td><code>packages/shell/pwsh-sandbox/src/index.ts</code></td>
+<td><code>4BB0357149F229F554AA7DB09140FCE0ECDC66149DCAB5D86480453267A069A6</code></td>
+</tr>
+<tr>
+<td><code>packages/shell/pwsh-sandbox/tests/acl.e2e.ts</code></td>
+<td><code>B9BF0B11681934A73FCD365032CD0CC2EFCB244E44280BCA107581BF1E2B214D</code></td>
+</tr>
+<tr>
+<td><code>packages/guard/timeout-policy/src/index.ts</code></td>
+<td><code>F4F2FC036FF273FF01588E29682504D1FF6FD3DB6386345F2E7085074BEC2959</code></td>
+</tr>
+<tr>
+<td><code>packages/boot/config-editor/src/index.ts</code></td>
+<td><code>EB80B31ED41A4D9FBC06A3DC5562E56FE50D2B9648BB73F57082B914FF9D244E</code></td>
+</tr>
+<tr>
+<td><code>docs/subsystems/sandbox.md</code></td>
+<td><code>B60D665A9D5681B2A264F780F51F03863E3855105049D803ACC85E44F48D4C1E</code></td>
+</tr>
+<tr>
+<td><code>docs/subsystems/approval.md</code></td>
+<td><code>5A427A89D2C7B3EDB8DD67DB25545A915F6869F57E627FDD1C80DC51D8065D98</code></td>
+</tr>
+</tbody>
+</table>
+<p>Кроме таблицы просмотрены относящиеся участки <code>packages/core/agent-loop/src/{agent,tool-calls}.ts</code>, <code>packages/fs/tool-fs/src/{read,write,edit,sandbox}.ts</code>, <code>packages/fs/fs-sandbox/src/containment.ts</code>, <code>packages/interaction/permission-presets/tests/permission-presets.spec.ts</code>, <code>packages/sandbox/sandbox-local/tests/local.spec.ts</code>, <code>packages/shell/pwsh-sandbox/tests/sandbox.spec.ts</code>, <code>docs/subsystems/{permission-presets,settings,tools}.md</code>, <code>packages/{sandbox/sandbox-local,sandbox/sandbox-windows-acl,sandbox/sandbox-policy,shell/pwsh-sandbox,interaction/permission-presets,settings/settings}/README.md</code>, <code>docs/cookbook/adding-a-settings-card.md</code>. Для больших файлов прочитаны относящиеся к выводу участки и имена тестов, а не каждая строка. Статические утверждения исходника/тестов не являются результатами испытаний на нашей машине. Следующий пакет A1.3/6 — Pydantic AI.</p>
+
+<footer>Локальная HTML-сборка из Markdown. Правки вносить в исходные .md, затем повторить сборку. Без сервера и внешних зависимостей.</footer></main></body></html>

@@ -24,7 +24,7 @@
 
 ## Точность существующей копии
 
-Локальный файл: [approval.rego](../../policy-gateway/third_party/agt/approval.rego).
+Локальный файл: approval.rego *(не включено в публичный комплект; см. ПЕРЕД_ОТПРАВКОЙ.md)*.
 
 SHA-256 локального файла: `6bf9faa9bfc07d8d018095e415742bcd8f13b9bf721acf4e2b270691407d5cb7`.
 

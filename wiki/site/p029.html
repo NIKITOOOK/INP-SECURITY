@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'">
+<title>A1.4 — покрытие многоуровневой модели безопасности — Security Lab Wiki</title><style>:root{color-scheme:light;--ink:#233247;--muted:#5d6a7c;--line:#dce3eb;--accent:#175d9c}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+a{color:var(--accent);text-underline-offset:3px}a:focus-visible{outline:3px solid #ecae44;outline-offset:3px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:320px;top:8px;background:white;z-index:9}
+aside{position:fixed;inset:0 auto 0 0;width:290px;overflow-y:auto;background:#f5f7fa;border-right:1px solid var(--line);padding:25px 18px}
+.brand{font-size:19px;font-weight:750;display:block;text-decoration:none}.caption{color:var(--muted);font-size:12px;margin:6px 0 22px}
+details{margin:12px 0}summary{font-size:13px;font-weight:750;cursor:pointer;padding:5px}
+nav a{display:block;padding:7px 10px;font-size:13px;line-height:1.45;text-decoration:none;border-radius:5px;margin:2px 0}
+nav a:hover{background:#e5edf6}nav a[aria-current=page]{background:#dceafa;color:#124d81;font-weight:650}
+main{margin-left:290px;padding:38px clamp(22px,5vw,85px);max-width:1350px}
+.meta{font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:24px;overflow-wrap:anywhere}
+h1{font-size:30px;line-height:1.25;margin-top:0}h2{font-size:22px;margin-top:32px}h3{font-size:18px}
+pre{background:#f3f6fa;border:1px solid var(--line);padding:16px;overflow:auto;border-radius:7px}
+code{font-size:.87em;background:#f3f6fa;overflow-wrap:anywhere}pre code{background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;margin:20px 0;max-width:100%}
+th,td{border:1px solid var(--line);padding:10px 12px;min-width:130px;vertical-align:top}th{background:#edf2f8;text-align:left}
+blockquote{border-left:3px solid #aac5df;margin-left:0;padding-left:18px;color:var(--muted)}
+.unavailable{color:#7c5261;text-decoration:underline dotted;cursor:help}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:15px;font-size:12px;color:var(--muted)}
+@media(max-width:780px){aside{position:static;width:auto;max-height:42vh;border-bottom:1px solid var(--line)}main{margin:0;padding:24px 18px}h1{font-size:25px}.skip:focus{left:10px}}
+@media print{aside,.skip,.meta{display:none}main{margin:0;padding:0}table{display:table}pre{white-space:pre-wrap}}</style></head>
+<body><a class="skip" href="#content">К содержимому</a><aside><a class="brand" href="index.html">Security Lab · Wiki</a>
+<p class="caption">Многоуровневая защита агента<br>Документация ≠ доказательство испытания</p><nav aria-label="Разделы Wiki"><details open><summary>Обзор</summary><a href="index.html">Вики проекта</a><a href="p060.html">Карта методов защиты</a><a href="p064.html">Реализованные политики: код, проверки и ограничения</a><a href="p004.html">Карта реализации многоуровневой защиты</a></details><details open><summary>L1 &#183; Вход и результаты</summary><a href="p051.html">L1: проверка входа</a><a href="p052.html">L1: происхождение данных</a><a href="p053.html">L1: повторная проверка результата инструмента</a></details><details open><summary>L3 &#183; Ограничения</summary><a href="p050.html">Оригинальный AGT: ограничение бюджета</a><a href="p054.html">L3: лимиты прототипа</a><a href="p055.html">L3: остановка сессии</a><a href="p056.html">L3: отказ при ошибке и запрет изменения политики</a><a href="p057.html">L3: подтверждение критического действия</a><a href="p058.html">L3: метки данных и сетевые адресаты</a><a href="p059.html">L3: инструменты и границы доступа</a></details><details open><summary>Источники</summary><a href="p063.html">Полезные ссылки и ресурсы</a><a href="p049.html">Источники и честные статусы проверки</a><a href="p061.html">Неудавшиеся проверки и открытые вопросы</a><a href="p062.html">Поиск источников при отладке</a><a href="p026.html">A1.3 — индекс последовательного аудита 14 ZIP</a></details><details open><summary>Аудит и покрытие L2</summary><a href="p027.html">Контрольная точка A1.3: 14 ZIP рассмотрены, A1 ещё не закрыт</a><a href="p028.html">Контрольная QA-сверка A1 после 14 отчётов</a><a href="p029.html" aria-current="page">A1.4 — покрытие многоуровневой модели безопасности</a><a href="p030.html">Как пользователь будет проверять методы в VM</a><a href="p031.html">A1.2 — статическая сверка заявленных заимствований</a><a href="p032.html">Единый формат методички и отчёта</a><a href="p033.html">A1.3/1 — Agent Governance Toolkit в архиве ACS</a><a href="p034.html">M-AGT-APPROVAL — оригинальные правила согласования AGT</a><a href="p035.html">A1.3/11 — Dify: модерация, лимиты, sandbox и сетевой прокси</a><a href="p036.html">A1.3/5 — DeepSeek Harness: политика инструментов, настройки и изоляция</a><a href="p037.html">A1.3/13 — GenAI Data Security Initiative: статический сканер и проверка трасс</a><a href="p038.html">A1.3/12 — GenAI Red Team Lab: испытательный корпус, не защитный middleware</a><a href="p039.html">A1.3/9 — Goose: инспекторы инструментов, разрешения и граница shell</a><a href="p040.html">A1.3/8 — Hermes Agent: approval, защищённые файлы и терминальная среда</a><a href="p041.html">A1.3/4 — LangGraph: ToolNode, interrupt и состояние</a><a href="p042.html">A1.3/7 — Microsoft Agent Framework: метки, политика инструментов и контейнерный shell</a><a href="p043.html">A1.3/2 — NeMo Guardrails: что действительно защищает L1</a><a href="p044.html">A1.3/3 — OpenAI Agents SDK: guardrails, approvals и граница sandbox</a><a href="p045.html">A1.3/10 — OpenHands: Agent Canvas и граница внешнего agent-server</a><a href="p046.html">A1.3/14 — OWASP CheatSheetSeries: рекомендации и иллюстративные примеры</a><a href="p047.html">A1.3/6 — Pydantic AI: toolsets, approval и лимиты</a><a href="p048.html">Wiki оригинальных методов защиты</a></details><details><summary>Лабораторные</summary><a href="p016.html">A3 — подготовка ЛР №0: среда для пилота AGT budgets</a><a href="p017.html">labs/00-environment/Протокол_локальной_A3_20260929.md</a><a href="p018.html">A3 — фактический протокол Azure-стенда для ЛР №0</a><a href="p019.html">Лабораторная работа №1 — пороги AGT budgets без LLM</a><a href="p020.html">AGT budgets — отчёт пилотного сеанса 29.09.2026</a></details><details><summary>Проект и код</summary><a href="p001.html">Материалы проекта для проверки</a><a href="p002.html">Firecracker — заметка для этапа 5</a><a href="p003.html">Перенос политик безопасности между DeepSeek Harness и LangGraph</a><a href="p005.html">Контракт событий и политик L1/L3 — черновик 0.4</a><a href="p006.html">Матрица настроек L3 и границ автономности</a><a href="p007.html">Аудит оригинальных механизмов и ручная лаборатория</a><a href="p008.html">План работ по политикам безопасности агента</a><a href="p009.html">Программа проверки политик в Azure VM — A3–A4</a><a href="p010.html">Ревью этапов 1–3</a><a href="p011.html">Этап 1. Модель угроз и каталог политик многоуровневой защиты</a><a href="p012.html">Этап 2. Реализация L1 и передача меток в L3</a><a href="p013.html">Этап 3 — декларативные политики L3 и контрольная плоскость</a><a href="p014.html">Этап 4 — критерии интеграции L1/L3 с ядром</a><a href="p015.html">Этап 5.2 — подготовка изолированной среды</a><a href="p021.html">Этап 5.1: адаптер контракта DSH</a><a href="p022.html">Симулятор политик L1/L3</a><a href="p023.html">Agent Governance Toolkit policy notice</a><a href="p024.html">NeMo Guardrails code provenance</a><a href="p025.html">AI Agent Security Lab</a></details></nav></aside>
+<main id="content"><div class="meta">wiki/аудит/Матрица_покрытия_A1.4.md · <a href="../../wiki/%D0%B0%D1%83%D0%B4%D0%B8%D1%82/%D0%9C%D0%B0%D1%82%D1%80%D0%B8%D1%86%D0%B0_%D0%BF%D0%BE%D0%BA%D1%80%D1%8B%D1%82%D0%B8%D1%8F_A1.4.md">Markdown-исходник</a></div>
+<span id="a14--покрытие-многоуровневой-модели-безопасности"></span><h1 id="a1.4">A1.4 — покрытие многоуровневой модели безопасности</h1>
+<p>Дата: 27.09.2026. Основание: <a href="p007.html">план 0.2</a>, <span class="unavailable" title="Файл не включён в Git-комплект; см. Markdown-исходник">схема и ЧТЗ</span>, <a href="p026.html">индекс 14 ZIP</a>, <a href="p028.html">контроль QA</a>. Это <strong>карта найденных оригиналов и пробелов</strong>, а не проект новой архитектуры и не утверждение о работающей защите. Исследованы относящиеся к безопасности пути выборочно; отсутствие найденной реализации не означает доказанного отсутствия во всём ZIP.</p>
+<span id="как-читать-статусы"></span><h2 id="section">Как читать статусы</h2>
+<ul>
+<li><strong>Реализация найдена:</strong> в предоставленном ZIP статически прочитан конкретный исполняемый механизм и связанные тесты/конфигурация. Это <strong>не</strong> значит «испытан» или «подключён к нашему агенту».</li>
+<li><strong>Только описание/пример:</strong> найдено объяснение или иллюстративный фрагмент, но не подтверждён завершённый применимый маршрут исполнения.</li>
+<li><strong>Не найдена в изученных путях:</strong> просмотренные места не подтвердили этот точный метод; глобальное отсутствие не доказано.</li>
+<li><strong>Не проверено:</strong> для данного блока недостаточно анализа или нет конечного ядра/среды для проверки эффекта.</li>
+</ul>
+<p>Для <strong>всех</strong> строк ниже статус исполнения оригинала — <strong>не запускался</strong>, интеграция в агент команды — <strong>не подтверждена</strong>. Локальный <code>policy-gateway</code> из <a href="p031.html">A1.2</a> остаётся объектом сравнения, а не доказательством работы upstream.</p>
+<span id="l1--входная-защита-и-границы-недоверенного-текста"></span><h2 id="l1">L1 — входная защита и границы недоверенного текста</h2>
+<table>
+<thead>
+<tr>
+<th>Блок исходной схемы</th>
+<th>Статус и найденный источник</th>
+<th>Что не доказано / следующий опыт</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Детекция prompt injection</td>
+<td><strong>Реализация найдена только для отдельных поверхностей:</strong> <a href="p043.html">NeMo</a> проверяет <code>user_message</code> на jailbreak; <a href="p039.html">Goose</a> анализирует shell tool call с контекстом, по умолчанию выключен и переводит сигнал в approval. <a href="p046.html">OWASP</a> содержит ограниченный regex-пример.</td>
+<td>Ни один из них не доказан как сквозная детекция <em>косвенной</em> инъекции из файлов, web, памяти и tool output. NeMo <code>injection_detection</code> — output rail по шаблонам кода/SQL/XSS, не этот блок. Ошибка детектора в локальном L1 даёт метки, не автоматический запрет.</td>
+</tr>
+<tr>
+<td>Валидация входных данных</td>
+<td><strong>Реализация найдена:</strong> <a href="p035.html">Dify</a> настраиваемо модерирует <code>inputs</code> и <code>query</code>; <a href="p043.html">NeMo</a> имеет input rails; <a href="p046.html">OWASP</a> даёт общие рекомендации.</td>
+<td>Keyword-модерация и схема данных не равны защите от prompt injection. Не проверено прохождение всех поверхностей ввода до модели и отказ при ошибке валидатора.</td>
+</tr>
+<tr>
+<td>Изоляция пользовательского/недоверенного ввода</td>
+<td><strong>Частичная смежная реализация:</strong> <a href="p042.html">Microsoft Agent Framework</a> маркирует результаты функций, может скрыть их за ссылкой и использует отдельный <code>quarantined_llm</code>. <a href="p040.html">Hermes</a> разграничивает правила оператора и текст команды во вспомогательном approval-запросе.</td>
+<td>Это не доказанная изоляция <strong>каждого пользовательского ввода</strong> нашего агента. При отсутствии quarantine client возможен placeholder; защита зависит от маршрута вызова.</td>
+</tr>
+<tr>
+<td>Spotlighting — разделители (delimiting)</td>
+<td><strong>Только описание/пример:</strong> <a href="p046.html">OWASP</a> показывает текстовые метки в одной строке; <a href="p040.html">Hermes</a> — <code>&lt;command&gt;</code> во вспомогательном запросе.</td>
+<td>Не найдена подтверждённая реализация Spotlighting для основного входа; метки сами по себе не препятствуют модели трактовать текст как инструкцию.</td>
+</tr>
+<tr>
+<td>Spotlighting — маркировка (datamarking)</td>
+<td><strong>Не найдена в изученных путях</strong> как преобразование недоверенного текста именно по этому методу. Метки provenance в <a href="p042.html">Microsoft Agent Framework</a> и локальном шлюзе — смежное управление данными.</td>
+<td>Эквивалентность datamarking не подтверждена; нужен точный алгоритм и проверка того, что модель видит маркированный материал.</td>
+</tr>
+<tr>
+<td>Spotlighting — кодирование (encoding)</td>
+<td><strong>Не найдена в изученных путях</strong> как защитное кодирование недоверенного ввода перед моделью.</td>
+<td>Не подменять обычным JSON/URL-encoding или сериализацией аргументов; эффективность и обратное преобразование не проверены.</td>
+</tr>
+<tr>
+<td>Prompt sandwiching</td>
+<td><strong>Не найдена в изученных путях</strong> как исполняемая схема «доверенная инструкция — недоверенный текст — повтор доверенной инструкции» для основного агента. <a href="p046.html">OWASP</a> даёт советы по структурированию prompt.</td>
+<td>Не заявлять реализацию по наличию разделителей. Сначала нужен конкретный исходник и точка формирования сообщений, затем модельный опыт.</td>
+</tr>
+</tbody>
+</table>
+<span id="l2--защита-на-уровне-модели"></span><h2 id="l2">L2 — защита на уровне модели</h2>
+<table>
+<thead>
+<tr>
+<th>Блок исходной схемы</th>
+<th>Статус и источник</th>
+<th>Граница ответственности</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Иерархия и приоритет инструкций</td>
+<td><strong>Только описание/использование ролей в рамках LLM API</strong>, но в исследованных путях нет доказанного механизма обучения или жёсткого соблюдения иерархии нашей моделью; см. <a href="p043.html">NeMo</a>, <a href="p046.html">OWASP</a>.</td>
+<td>Формирование <code>system</code>/<code>user</code> сообщений — не доказательство внутреннего приоритета модели. Проверка возможна позднее с конкретной моделью и негативными сценариями.</td>
+</tr>
+<tr>
+<td>Ролевые эмбеддинги</td>
+<td><strong>Не найдены в изученных путях</strong> как оригинальная реализация этого блока для нашего локального агента.</td>
+<td>Отсутствие в выборке не доказывает невозможность метода; модель/формат эмбеддингов и владелец этой задачи пока не определены.</td>
+</tr>
+<tr>
+<td>Security fine-tuning</td>
+<td><strong>Не найдена в изученных путях</strong> обучающая реализация, которую можно присвоить нашей части. <a href="p038.html">GenAI Red Team Lab</a> предоставляет испытательные сценарии, а не обучение защиты.</td>
+<td>ЧТЗ относит дообучение к общему проекту; наша часть фиксирует требования и интерфейс, не обучает модель без отдельного распределения работ.</td>
+</tr>
+</tbody>
+</table>
+<span id="l3--детерминированная-защита-системы"></span><h2 id="l3">L3 — детерминированная защита системы</h2>
+<table>
+<thead>
+<tr>
+<th>Блок исходной схемы</th>
+<th>Статус и найденный оригинал</th>
+<th>Критическая граница эффекта</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Allow/blocklists инструментов и навыков</td>
+<td><strong>Реализации найдены:</strong> <a href="p036.html">DSH</a> имеет <code>tools.restrict</code>/<code>guard</code>; <a href="p039.html">Goose</a> — permissions и <code>never_allow</code>; <a href="p040.html">Hermes</a> — terminal deny. Рассмотренные <a href="p033.html">AGT</a> Rego-модули не подтверждают allowlist <strong>имён инструментов</strong>; его <code>egress.rego</code> относится к сетевым адресатам (строка «Коннекторы и сетевой шлюз» ниже).</td>
+<td>Охват будущих/scoped инструментов, вложенных команд, отказа конфигурации и обходных путей различен. Ни один найденный список автоматически не закрывает все capabilities конечного агента.</td>
+</tr>
+<tr>
+<td>Ограничение скорости/числа запросов</td>
+<td><strong>Реализации найдены, но метрики разные:</strong> <a href="p035.html">Dify</a> ограничивает одновременные app requests через Redis; <a href="p047.html">Pydantic AI</a> считает вызовы инструментов в run; <a href="p033.html">AGT</a> сравнивает бюджеты snapshot с лимитами.</td>
+<td>Budget, concurrency и сетевой rate limit — разные механизмы. Штатный AGT Guardian заполняет budget counters нулями; атомарность Dify Redis-пути не доказана. Общая квота по пользователю/времени для нашего агента не найдена.</td>
+</tr>
+<tr>
+<td>Песочница (sandboxing)</td>
+<td><strong>Реализации/точки подключения найдены:</strong> <a href="p036.html">DSH</a> — file fence и Linux/Windows/macOS runner; <a href="p044.html">OpenAI Agents</a> — опциональный Docker backend; <a href="p040.html">Hermes</a> — опциональный Docker backend. <a href="p035.html">Dify</a> содержит клиент и Compose, но не исходник внешнего runtime.</td>
+<td>App-level path check не равен ОС-изоляции. На Windows DSH ACL runner ограничивает прежде всего записи, не сеть/чтение; может менять ACL дерева. Docker defaults и монтирования требуют отдельной проверки. Реальную VM/контейнер не запускали.</td>
+</tr>
+<tr>
+<td>Human-in-the-loop для критических действий</td>
+<td><strong>Реализации найдены:</strong> <a href="p033.html">AGT</a> возвращает <code>escalate</code>; <a href="p036.html">DSH</a>, <a href="p044.html">OpenAI Agents</a>, <a href="p047.html">Pydantic AI</a>, <a href="p042.html">Microsoft Agent Framework</a> имеют маршруты approval.</td>
+<td>Verdict <code>escalate</code> требует доверенного host/resolver. Подтверждение должно связываться с конкретным actor/tool/arguments и блокировать эффект до ответа; Pydantic AI может выполнить другие вызовы пачки раньше. End-to-end не проверено.</td>
+</tr>
+</tbody>
+</table>
+<span id="смежные-блоки-исходной-схемы--только-интерфейсы-нашей-части"></span><h2 id="section-1">Смежные блоки исходной схемы — только интерфейсы нашей части</h2>
+<table>
+<thead>
+<tr>
+<th>Блок ядра/окружения</th>
+<th>Что найдено и статус</th>
+<th>Что остаётся за пределами нашей разработки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Администрирование, конфигурация и аудит</td>
+<td><a href="p036.html">DSH</a> имеет presets/session config и события approval; <a href="p033.html">AGT</a> — manifest и policy data; <a href="p037.html">GenAI Data Security Initiative</a> — статический scanner/формат трасс. <strong>Реализации разных частей найдены.</strong></td>
+<td>Нет единого защищённого центра настроек/аудита конечного агента. Наши политики должны иметь владельца, версию, право изменения и запись решения; UI/БД не добавлять в A1.</td>
+</tr>
+<tr>
+<td>Интерпретатор, планировщик, внутренняя шина событий</td>
+<td><a href="p041.html">LangGraph</a> показывает <code>ToolNode</code>/<code>wrap_tool_call</code> как точку предисполнительного контроля; <a href="p036.html">DSH</a> — реальный маршрут инструмента и approval events. <strong>Интерфейсы найдены; шина конечного агента не проверена.</strong></td>
+<td>Наша обязанность — контракт события «запрос → policy decision → разрешённое исполнение/отказ → наблюдаемый эффект», а не разработка ядра или шины. Порядок L1→L2→L3 на рисунке нельзя принять за порядок в конкретном runtime.</td>
+</tr>
+<tr>
+<td>Память и знания</td>
+<td><a href="p042.html">Microsoft Agent Framework</a> маркирует/скрывает недоверенные результаты; <a href="p038.html">GenAI Red Team Lab</a> показывает уязвимое отравление памяти. <strong>Частичные методы и испытательный пример найдены.</strong></td>
+<td>Права памяти, provenance, долговременное хранение и защита vector DB конечного агента не реализованы нами и не испытаны.</td>
+</tr>
+<tr>
+<td>Коннекторы и сетевой шлюз</td>
+<td><a href="p033.html">AGT</a> даёт egress verdict по известному destination, <a href="p040.html">Hermes</a> — browser blocklist, <a href="p035.html">Dify</a> — SSRF proxy для использующих его клиентов. <strong>Разные прикладные границы найдены.</strong></td>
+<td>Не доказан принудительный сетевой egress-фильтр всех процессов/инструментов. При отсутствии destination или обходе прокси возможна непроверенная ветка; ОС/сетевая политика — отдельный барьер.</td>
+</tr>
+<tr>
+<td>Остановка, восстановление, доступность</td>
+<td><a href="p036.html">DSH</a> содержит timeout/cancel-контракты, <a href="p047.html">Pydantic AI</a> — usage limits, <a href="p041.html">LangGraph</a> — interrupt/checkpoint. <strong>Частичные механизмы найдены.</strong></td>
+<td>Нет доказательства принудительной остановки уже запущенного внешнего действия и отката совершённого эффекта; постоянная SQLite/новая БД не требуется для пилота A1–A4.</td>
+</tr>
+</tbody>
+</table>
+<span id="выбор-первого-пилота-по-критерию-a14"></span><h2 id="a1.4-1">Выбор первого пилота по критерию A1.4</h2>
+<p><strong>Выбран <a href="p033.html">AGT <code>budgets.rego</code> + <code>budgets_test.rego</code></a> для policy-level L3-пилота без LLM.</strong> Оба оригинала и тесты находятся в ZIP, соответствуют нашей зоне декларативных политик и дают наглядные случаи «ниже порога / на пороге / malformed present / missing snapshot». Это не замена всему L3: budget-limit не является сетевым rate limiting и не доказывает запрет настоящего инструмента.</p>
+<p>Ограничение выбора принципиально: в этом снимке <code>assemblePreToolCallSnapshot</code>/<code>assemblePostToolCallSnapshot</code> штатного Guardian создают нулевые budget counters, а <code>policy/lib/data.json</code> не задаёт budget-limit. Поэтому <strong>не</strong> брать обычный Guardian-demo как доказательство срабатывания лимита. На A2 подготовить неизменённые исходники/тесты, лицензию и отдельный внешний snapshot; на A4 пользователь в своей VM проверит оригинальный Rego/OPA verdict. Испытание связи policy decision с реальным tool execution — более поздняя отдельная работа, не часть этого первого пилота.</p>
+<span id="статус-перехода"></span><h2 id="section-2">Статус перехода</h2>
+<p><strong>A1.4 завершён как статическая матрица и отбор пилота; A1 завершён только как этап инвентаризации/аудита в рамках плана 0.2.</strong> Пробелы сохранены: точные commit ID предоставленных ZIP не подтверждены, применимость лицензий к выбранным файлам требует отдельной проверки, оригиналы и тесты не запускались, методный coverage не исчерпывающий. <a href="p028.html">QA</a> фиксирует 14/14 ZIP-хешей; 64 локальные ссылки существовали на момент независимой сверки пользователя, после добавления страницы A1.4 стало 65/65. Пользователь также сообщил о сверке 175 элементов внутри ZIP. Это не процент готовности ТЗ. Следующий возможный этап по плану — <strong>A2.1</strong>, но извлечение оригинала, зависимости и VM данным документом автоматически не начаты.</p>
+
+<footer>Локальная HTML-сборка из Markdown. Правки вносить в исходные .md, затем повторить сборку. Без сервера и внешних зависимостей.</footer></main></body></html>

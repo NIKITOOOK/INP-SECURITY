@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Контракт событий и политик L1/L3 — черновик 0.4 — Security Lab Wiki</title><style>:root{color-scheme:light;--ink:#233247;--muted:#5d6a7c;--line:#dce3eb;--accent:#175d9c}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+a{color:var(--accent);text-underline-offset:3px}a:focus-visible{outline:3px solid #ecae44;outline-offset:3px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:320px;top:8px;background:white;z-index:9}
+aside{position:fixed;inset:0 auto 0 0;width:290px;overflow-y:auto;background:#f5f7fa;border-right:1px solid var(--line);padding:25px 18px}
+.brand{font-size:19px;font-weight:750;display:block;text-decoration:none}.caption{color:var(--muted);font-size:12px;margin:6px 0 22px}
+details{margin:12px 0}summary{font-size:13px;font-weight:750;cursor:pointer;padding:5px}
+nav a{display:block;padding:7px 10px;font-size:13px;line-height:1.45;text-decoration:none;border-radius:5px;margin:2px 0}
+nav a:hover{background:#e5edf6}nav a[aria-current=page]{background:#dceafa;color:#124d81;font-weight:650}
+main{margin-left:290px;padding:38px clamp(22px,5vw,85px);max-width:1350px}
+.meta{font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:24px;overflow-wrap:anywhere}
+h1{font-size:30px;line-height:1.25;margin-top:0}h2{font-size:22px;margin-top:32px}h3{font-size:18px}
+pre{background:#f3f6fa;border:1px solid var(--line);padding:16px;overflow:auto;border-radius:7px}
+code{font-size:.87em;background:#f3f6fa;overflow-wrap:anywhere}pre code{background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;margin:20px 0;max-width:100%}
+th,td{border:1px solid var(--line);padding:10px 12px;min-width:130px;vertical-align:top}th{background:#edf2f8;text-align:left}
+blockquote{border-left:3px solid #aac5df;margin-left:0;padding-left:18px;color:var(--muted)}
+.unavailable{color:#7c5261;text-decoration:underline dotted;cursor:help}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:15px;font-size:12px;color:var(--muted)}
+@media(max-width:780px){aside{position:static;width:auto;max-height:42vh;border-bottom:1px solid var(--line)}main{margin:0;padding:24px 18px}h1{font-size:25px}.skip:focus{left:10px}}
+@media print{aside,.skip,.meta{display:none}main{margin:0;padding:0}table{display:table}pre{white-space:pre-wrap}}</style></head>
+<body><a class="skip" href="#content">К содержимому</a><aside><a class="brand" href="index.html">Security Lab · Wiki</a>
+<p class="caption">Многоуровневая защита агента<br>Документация ≠ доказательство испытания</p><nav aria-label="Разделы Wiki"><details open><summary>Обзор</summary><a href="index.html">Вики проекта</a><a href="p060.html">Карта методов защиты</a><a href="p064.html">Реализованные политики: код, проверки и ограничения</a><a href="p004.html">Карта реализации многоуровневой защиты</a></details><details open><summary>L1 &#183; Вход и результаты</summary><a href="p051.html">L1: проверка входа</a><a href="p052.html">L1: происхождение данных</a><a href="p053.html">L1: повторная проверка результата инструмента</a></details><details open><summary>L3 &#183; Ограничения</summary><a href="p050.html">Оригинальный AGT: ограничение бюджета</a><a href="p054.html">L3: лимиты прототипа</a><a href="p055.html">L3: остановка сессии</a><a href="p056.html">L3: отказ при ошибке и запрет изменения политики</a><a href="p057.html">L3: подтверждение критического действия</a><a href="p058.html">L3: метки данных и сетевые адресаты</a><a href="p059.html">L3: инструменты и границы доступа</a></details><details open><summary>Источники</summary><a href="p063.html">Полезные ссылки и ресурсы</a><a href="p049.html">Источники и честные статусы проверки</a><a href="p061.html">Неудавшиеся проверки и открытые вопросы</a><a href="p062.html">Поиск источников при отладке</a><a href="p026.html">A1.3 — индекс последовательного аудита 14 ZIP</a></details><details><summary>Аудит и покрытие L2</summary><a href="p027.html">Контрольная точка A1.3: 14 ZIP рассмотрены, A1 ещё не закрыт</a><a href="p028.html">Контрольная QA-сверка A1 после 14 отчётов</a><a href="p029.html">A1.4 — покрытие многоуровневой модели безопасности</a><a href="p030.html">Как пользователь будет проверять методы в VM</a><a href="p031.html">A1.2 — статическая сверка заявленных заимствований</a><a href="p032.html">Единый формат методички и отчёта</a><a href="p033.html">A1.3/1 — Agent Governance Toolkit в архиве ACS</a><a href="p034.html">M-AGT-APPROVAL — оригинальные правила согласования AGT</a><a href="p035.html">A1.3/11 — Dify: модерация, лимиты, sandbox и сетевой прокси</a><a href="p036.html">A1.3/5 — DeepSeek Harness: политика инструментов, настройки и изоляция</a><a href="p037.html">A1.3/13 — GenAI Data Security Initiative: статический сканер и проверка трасс</a><a href="p038.html">A1.3/12 — GenAI Red Team Lab: испытательный корпус, не защитный middleware</a><a href="p039.html">A1.3/9 — Goose: инспекторы инструментов, разрешения и граница shell</a><a href="p040.html">A1.3/8 — Hermes Agent: approval, защищённые файлы и терминальная среда</a><a href="p041.html">A1.3/4 — LangGraph: ToolNode, interrupt и состояние</a><a href="p042.html">A1.3/7 — Microsoft Agent Framework: метки, политика инструментов и контейнерный shell</a><a href="p043.html">A1.3/2 — NeMo Guardrails: что действительно защищает L1</a><a href="p044.html">A1.3/3 — OpenAI Agents SDK: guardrails, approvals и граница sandbox</a><a href="p045.html">A1.3/10 — OpenHands: Agent Canvas и граница внешнего agent-server</a><a href="p046.html">A1.3/14 — OWASP CheatSheetSeries: рекомендации и иллюстративные примеры</a><a href="p047.html">A1.3/6 — Pydantic AI: toolsets, approval и лимиты</a><a href="p048.html">Wiki оригинальных методов защиты</a></details><details><summary>Лабораторные</summary><a href="p016.html">A3 — подготовка ЛР №0: среда для пилота AGT budgets</a><a href="p017.html">labs/00-environment/Протокол_локальной_A3_20260929.md</a><a href="p018.html">A3 — фактический протокол Azure-стенда для ЛР №0</a><a href="p019.html">Лабораторная работа №1 — пороги AGT budgets без LLM</a><a href="p020.html">AGT budgets — отчёт пилотного сеанса 29.09.2026</a></details><details open><summary>Проект и код</summary><a href="p001.html">Материалы проекта для проверки</a><a href="p002.html">Firecracker — заметка для этапа 5</a><a href="p003.html">Перенос политик безопасности между DeepSeek Harness и LangGraph</a><a href="p005.html" aria-current="page">Контракт событий и политик L1/L3 — черновик 0.4</a><a href="p006.html">Матрица настроек L3 и границ автономности</a><a href="p007.html">Аудит оригинальных механизмов и ручная лаборатория</a><a href="p008.html">План работ по политикам безопасности агента</a><a href="p009.html">Программа проверки политик в Azure VM — A3–A4</a><a href="p010.html">Ревью этапов 1–3</a><a href="p011.html">Этап 1. Модель угроз и каталог политик многоуровневой защиты</a><a href="p012.html">Этап 2. Реализация L1 и передача меток в L3</a><a href="p013.html">Этап 3 — декларативные политики L3 и контрольная плоскость</a><a href="p014.html">Этап 4 — критерии интеграции L1/L3 с ядром</a><a href="p015.html">Этап 5.2 — подготовка изолированной среды</a><a href="p021.html">Этап 5.1: адаптер контракта DSH</a><a href="p022.html">Симулятор политик L1/L3</a><a href="p023.html">Agent Governance Toolkit policy notice</a><a href="p024.html">NeMo Guardrails code provenance</a><a href="p025.html">AI Agent Security Lab</a></details></nav></aside>
+<main id="content"><div class="meta">Контракт_шины_и_политики_v0.1.md · <a href="../../%D0%9A%D0%BE%D0%BD%D1%82%D1%80%D0%B0%D0%BA%D1%82_%D1%88%D0%B8%D0%BD%D1%8B_%D0%B8_%D0%BF%D0%BE%D0%BB%D0%B8%D1%82%D0%B8%D0%BA%D0%B8_v0.1.md">Markdown-исходник</a></div>
+<span id="контракт-событий-и-политик-l1l3--черновик-04"></span><h1 id="l1l3-0.4">Контракт событий и политик L1/L3 — черновик 0.4</h1>
+<p>Дата: 24.09.2026. Область: исследовательский прототип многоуровневой защиты агента. Основание: схема ядра агента, предоставленная пользователем, и статический просмотр DeepSeek Harness 0.1.7-rc.1 из локального ZIP с SHA-256 <code>7DDDFDB7A5E25001394B895A9EEA743C89DF9238BB0093EFF34CB5ABD1C4417E</code>.</p>
+<span id="1-граница-первой-итерации"></span><h2 id="section">1. Граница первой итерации</h2>
+<p>Компоненты ядра публикуют сведения о вводе, предложенных действиях и результатах во внутреннюю шину. L1 анализирует входные данные и добавляет метки. L3 проверяет полномочия перед действием. L2 остаётся в контракте как возможный потребитель меток, но в первом профиле выключен. Схема дополняется позднее; приведённый набор событий не претендует на полноту.</p>
+<pre><code class="language-text">интерпретатор / LLM / память / инструменты
+             │
+             ▼
+       внутренняя шина
+        │          │
+        ▼          ▼
+   L1: метки    L3: решение перед исполнением
+        │          │
+        └────┬─────┘
+             ▼
+       журнал решений
+</code></pre>
+<p>Шина имеет два разных механизма:</p>
+<ul>
+<li><strong>Уведомление</strong> (<code>emit</code>): сообщает о полученном вводе и завершённом действии; слушатель не способен задержать уже совершённый эффект.</li>
+<li><strong>Запрос решения</strong> (<code>gate</code>): ожидает ответ до вызова инструмента. Ошибка, отсутствие обработчика или некорректное решение дают <code>deny</code> для защищённого действия.</li>
+</ul>
+<p>Это различие обязательно: запись <code>tool/call</code> или <code>session/event</code> в журнал не является разрешением на исполнение.</p>
+<span id="2-минимальный-конверт-события"></span><h2 id="section-1">2. Минимальный конверт события</h2>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Смысл</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>event_id</code>, <code>timestamp</code></td>
+<td>Уникальность и порядок событий</td>
+</tr>
+<tr>
+<td><code>session_id</code>, <code>task_id</code>, <code>actor_id</code></td>
+<td>Контекст пользователя и задачи; неизвестное значение не даёт привилегий</td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td>Тип события из версии словаря</td>
+</tr>
+<tr>
+<td><code>origin</code></td>
+<td><code>user</code>, <code>model</code>, <code>tool</code>, <code>web</code>, <code>file</code>, <code>memory</code> или <code>system</code></td>
+</tr>
+<tr>
+<td><code>trust</code></td>
+<td><code>trusted</code>, <code>untrusted</code>, <code>unknown</code>; внешние результаты по умолчанию <code>untrusted</code></td>
+</tr>
+<tr>
+<td><code>labels</code></td>
+<td>Например <code>prompt_injection_suspected</code>, <code>secret</code>, <code>personal</code></td>
+</tr>
+<tr>
+<td><code>payload_ref</code></td>
+<td>Ссылка на содержимое; в журнале решений хранится хеш/краткое описание, а не секретный текст</td>
+</tr>
+<tr>
+<td><code>causation_id</code>, <code>call_id</code></td>
+<td>Связь входа с предлагаемым вызовом и результатом</td>
+</tr>
+<tr>
+<td><code>source_event_ids</code></td>
+<td>Входные события, которые доверенный конвейер связал с вызовом; модель не задаёт это поле</td>
+</tr>
+<tr>
+<td><code>data_labels</code></td>
+<td>Объединённые метки связанных входов; отсутствие надёжной связи даёт <code>unknown</code> и <code>untrusted</code></td>
+</tr>
+<tr>
+<td><code>policy_version</code></td>
+<td>Неизменяемая версия правил, применённая к данному решению</td>
+</tr>
+</tbody>
+</table>
+<p>Первый словарь событий: <code>input.received</code>, <code>input.checked</code>, <code>tool.requested</code>, <code>tool.decided</code>, <code>tool.completed</code>, <code>memory.write.requested</code>. Последнее зарезервировано для следующего этапа и пока не реализуется. Для <code>tool.requested</code> дополнительно нужны канонические <code>tool_name</code>, <code>operation</code>, <code>arguments</code>, <code>resource</code>, <code>source_event_ids</code>, <code>data_labels</code>. Проверка выполняется по окончательным аргументам непосредственно перед исполнением. В лабораторном конвейере <code>L1Pipeline</code> хранит результат <code>input.checked</code> и сам формирует два поля происхождения; попытка передать их в исходном запросе инструмента отклоняется.</p>
+<span id="3-решения-и-порядок-применения"></span><h2 id="section-2">3. Решения и порядок применения</h2>
+<p>На вход L3 поступают событие <code>tool.requested</code>, метки L1 и снимок активной конфигурации. На выходе: <code>allow</code>, <code>deny</code> или <code>require_review</code> с <code>rule_id</code> и причиной. <code>sanitize</code> относится к обработке данных L1, а не к разрешению инструмента: DSH запрещает менять аргументы уже зарегистрированного вызова в <code>tools/pre-execute</code>.</p>
+<p>При одновременном срабатывании правил приоритет: <code>deny</code> выше <code>require_review</code>, <code>require_review</code> выше <code>allow</code>. Отсутствие подходящего разрешения означает <code>deny</code>. Одобрение человека действует только на конкретный <code>call_id</code> и хеш окончательных аргументов; если они изменились, требуется новая проверка.</p>
+<p>Отключение проверки может существовать в исследовательском профиле для сравнения результатов, но не должно превращать отсутствие проверки в <code>allow</code> на исполняющем контуре. Профиль выбирает оператор вне процесса агента; модель не меняет его. Версия профиля фиксируется для сеанса. Вопрос о горячем обновлении остаётся открытым до проектирования контрольной плоскости.</p>
+<span id="4-исполняемые-правила-лабораторного-профиля"></span><h2 id="section-3">4. Исполняемые правила лабораторного профиля</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Вход / условие</th>
+<th>Результат</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>P01_INPUT_PROVENANCE</code></td>
+<td><code>input.received</code> из <code>web</code>, <code>file</code>, <code>tool</code> или <code>memory</code> без проверенного доверия</td>
+<td>L1 ставит <code>untrusted</code>; детектор может добавить <code>prompt_injection_suspected</code></td>
+<td>Не считать внешний текст распоряжением</td>
+</tr>
+<tr>
+<td><code>P02_TOOL_ALLOWLIST</code></td>
+<td><code>tool.requested</code>: инструмент или операция отсутствует в разрешённом наборе задачи</td>
+<td><code>deny</code></td>
+<td>Запрет по умолчанию</td>
+</tr>
+<tr>
+<td><code>P03_WORKSPACE_BOUNDARY</code></td>
+<td>Чтение/запись/удаление в путь вне канонического workspace либо путь нельзя разрешить</td>
+<td><code>deny</code></td>
+<td>Ограничить доступ к файлам</td>
+</tr>
+<tr>
+<td><code>P04_RATE_LIMIT</code></td>
+<td>Счётчик вызовов инструмента за окно превышает лимит</td>
+<td><code>deny</code> с <code>retry_after</code></td>
+<td>Ограничить скорость/число запросов</td>
+</tr>
+<tr>
+<td><code>P05_CRITICAL_APPROVAL</code></td>
+<td>Удаление, отправка данных во внешнюю службу или изменение политики</td>
+<td><code>require_review</code>; после одноразового одобрения — <code>allow</code>, при недоступности канала — <code>deny</code></td>
+<td>HITL для опасного действия</td>
+</tr>
+<tr>
+<td><code>N03_DATA_FLOW</code></td>
+<td>Класс данных выше допуска получателя либо адресат сетевого действия отсутствует в allowlist</td>
+<td><code>deny</code> до HITL</td>
+<td>Не допустить передачи <code>protected</code> в <code>public</code>-приёмник и отправки неизвестному адресу</td>
+</tr>
+<tr>
+<td><code>N04_STOP</code></td>
+<td>Доверенный управляющий контур остановил <code>session_id</code></td>
+<td><code>deny</code> для всех новых решений; ожидающие подтверждения и grants аннулируются</td>
+<td>После команды остановки не выдавать новые разрешения</td>
+</tr>
+<tr>
+<td><code>N05_POLICY_INTEGRITY</code></td>
+<td>Инструмент модели предлагает <code>policy.modify</code></td>
+<td>безусловный <code>deny</code></td>
+<td>Отделить администрирование политики от инструментов агента</td>
+</tr>
+</tbody>
+</table>
+<p><code>prompt_injection_suspected</code> является сигналом L1, а не доказательством атаки. L3 не разрешает утечку или опасное действие лишь потому, что детектор не нашёл инъекцию. Поток данных проверяется отдельно: лабораторные метки <code>class:public</code> и <code>class:protected</code> сравниваются с допуском инструмента; при отсутствии классификации применяется консервативное <code>protected</code>. Это испытательная классификация, а не утверждённые категории корпоративных данных.</p>
+<span id="5-связь-с-deepseek-harness"></span><h2 id="deepseek-harness">5. Связь с DeepSeek Harness</h2>
+<table>
+<thead>
+<tr>
+<th>Потребность проекта</th>
+<th>Найденная точка DSH</th>
+<th>Ограничение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Решение до запуска инструмента</td>
+<td><code>packages/core/tools/src/index.ts</code>: <code>tools/pre-execute</code>, <code>PreToolDecision</code></td>
+<td>Возвращает <code>allow</code>, <code>deny</code>, <code>cancel</code>, <code>ask</code>; аргументы уже зарегистрированы и не переписываются</td>
+</tr>
+<tr>
+<td>Одобрение человека</td>
+<td><code>docs/subsystems/approval.md</code>, <code>ctx.approval.request</code></td>
+<td><code>allowed-once</code> — единственное положительное решение; отказ и недоступность закрывают вызов</td>
+</tr>
+<tr>
+<td>Проверка результата</td>
+<td><code>tools/post-execute</code></td>
+<td>Может блокировать/заменять результат для модели, но не отменяет уже сделанное внешнее действие</td>
+</tr>
+<tr>
+<td>Аудит и восстановление</td>
+<td><code>docs/subsystems/session.md</code>, <code>tool/call</code>/<code>tool/result</code>; <code>docs/subsystems/persistence.md</code></td>
+<td>Записи журнала не являются предисполнительным шлюзом</td>
+</tr>
+<tr>
+<td>Файловая песочница</td>
+<td><code>docs/subsystems/sandbox.md</code>, <code>ctx.sandboxPolicy</code></td>
+<td>Режимы ограничивают файловые эффекты; сеть и видимость процессов за их пределами</td>
+</tr>
+<tr>
+<td>Конфигурация</td>
+<td><code>docs/subsystems/settings.md</code>, <code>docs/subsystems/permission-presets.md</code></td>
+<td>Переключатели DSH надо сопоставить с профилями проекта; права на изменение конфигурации ещё требуется определить</td>
+</tr>
+</tbody>
+</table>
+<p>Для первой интеграции вероятен отдельный DSH-плагин, подписанный на <code>tools/pre-execute</code> и <code>tools/post-execute</code>. Точку перехвата пользовательского ввода L1 нужно подтвердить отдельным статическим обзором; пока это наш проектный контракт, а не обнаруженный готовый API DSH.</p>
+<span id="6-проверка-на-синтетических-событиях"></span><h2 id="section-4">6. Проверка на синтетических событиях</h2>
+<table>
+<thead>
+<tr>
+<th>Тест</th>
+<th>Событие</th>
+<th>Ожидаемый результат</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T01</td>
+<td>Веб-страница содержит «игнорируй инструкции»</td>
+<td><code>untrusted</code>, <code>prompt_injection_suspected</code>; сам по себе текст не вызывает инструмент</td>
+</tr>
+<tr>
+<td>T02</td>
+<td>Неизвестный инструмент <code>send_email</code> в задаче чтения</td>
+<td><code>deny</code>, <code>P02_TOOL_ALLOWLIST</code></td>
+</tr>
+<tr>
+<td>T03</td>
+<td>Запись за пределы workspace через <code>..</code> или ссылку</td>
+<td><code>deny</code>, <code>P03_WORKSPACE_BOUNDARY</code></td>
+</tr>
+<tr>
+<td>T04</td>
+<td>Шестой вызов при лимите пять за минуту</td>
+<td><code>deny</code>, <code>P04_RATE_LIMIT</code></td>
+</tr>
+<tr>
+<td>T05</td>
+<td>Разрешённый инструмент запрашивает удаление</td>
+<td><code>require_review</code>, <code>P05_CRITICAL_APPROVAL</code>; без ответа — <code>deny</code></td>
+</tr>
+<tr>
+<td>T06</td>
+<td><code>class:protected</code> направляется через public network sink либо домен отсутствует в allowlist</td>
+<td><code>deny</code>, <code>N03_DATA_FLOW</code></td>
+</tr>
+<tr>
+<td>T07</td>
+<td>Аргументы удаления меняются после подтверждения</td>
+<td>прежний токен недействителен; требуется новое подтверждение</td>
+</tr>
+<tr>
+<td>T08</td>
+<td>Достигнут накопительный бюджет либо переполнена очередь HITL</td>
+<td><code>deny</code> до тела инструмента</td>
+</tr>
+<tr>
+<td>T09</td>
+<td>Доверенный контур останавливает сеанс</td>
+<td>новые решения <code>deny</code>, pending/grants аннулированы</td>
+</tr>
+<tr>
+<td>T10</td>
+<td>Агент предлагает <code>policy.modify</code> или профиль не проходит схему</td>
+<td><code>deny</code> либо отказ загрузки</td>
+</tr>
+</tbody>
+</table>
+<p>Реализованы Python-симулятор <code>policy-gateway/engine.py</code>, строгая проверка YAML и <code>policy-gateway/l1/pipeline.py</code>. Метки L1 связываются с конкретным запросом L3 на лабораторном конвейере; неизвестная связь остаётся <code>unknown/untrusted</code>. На L3 добавлены накопительный бюджет сеанса, права памяти, решётка потоков данных, allowlist сетевых получателей, доверенная остановка выдачи новых разрешений и запрет <code>policy.modify</code>. Семантика budget/approval/egress/IFC ограниченно адаптирована из MIT-модулей AGT; OPA не установлен, а сохранённые Rego-файлы сами по себе не исполняются. <code>stop_session()</code> реализует контрольную плоскость шлюза и аннулирование HITL-состояния; отмена уже запущенного действия требует API выбранного ядра. В DSH найдены <code>Agent.cancel(...)</code>, <code>whenIdle()</code> и обязательный <code>AbortSignal</code> инструмента, но они ещё не подключены к адаптеру. Добавлен адаптированный клиент локального NeMo Guardrails detector endpoint (<code>l1/nemo_jailbreak.py</code>, Apache-2.0), но сам классификатор/модель не установлен и не запускался. DSH- и LangGraph-адаптеры пока не имеют реального входного hook и поэтому передают <code>unknown/untrusted</code>; консервативная классификация стенда для такого случая — <code>protected</code>. Текущий стенд не доказывает распространение меток в настоящем ядре и не проверяет изоляцию ОС.</p>
+<span id="7-открытые-решения"></span><h2 id="section-5">7. Открытые решения</h2>
+<ol>
+<li>Какие события ввода и памяти реально доступны через расширения DSH; лабораторный <code>L1Pipeline</code> готов, но его нужно подключить к настоящему входному hook.</li>
+<li>Как хранить и защищать настройки: путь, ACL, владелец и разрешённый механизм изменения.</li>
+<li>Какие действия считать критическими для HITL в демонстрационном сценарии.</li>
+<li>Какой лимит частоты выбрать и считать ли его по пользователю, задаче или инструменту.</li>
+<li>Какой экспериментальный профиль изоляции ОС использовать при запуске DSH в VirtualBox.</li>
+</ol>
+<span id="8-происхождение-и-ограничения"></span><h2 id="section-6">8. Происхождение и ограничения</h2>
+<p>Наименования <code>tools/pre-execute</code>, <code>tools/post-execute</code>, <code>approval.request</code>, <code>sandboxPolicy</code> и виды решений взяты из указанной выше локальной копии DSH; остальные имена событий и правила <code>P01</code>–<code>P05</code> — предлагаемая спецификация проекта. Клиент NeMo в <code>policy-gateway/l1/nemo_jailbreak.py</code> адаптирован из <code>nemoguardrails/library/jailbreak_detection/request.py</code>; уведомление и лицензия находятся в <code>policy-gateway/third_party/NEMO_GUARDRAILS_NOTICE.md</code>. Точный commit исходных ZIP остаётся неподтверждённым.</p>
+
+<footer>Локальная HTML-сборка из Markdown. Правки вносить в исходные .md, затем повторить сборку. Без сервера и внешних зависимостей.</footer></main></body></html>

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Оригинальный AGT: ограничение бюджета — Security Lab Wiki</title><style>:root{color-scheme:light;--ink:#233247;--muted:#5d6a7c;--line:#dce3eb;--accent:#175d9c}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+a{color:var(--accent);text-underline-offset:3px}a:focus-visible{outline:3px solid #ecae44;outline-offset:3px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:320px;top:8px;background:white;z-index:9}
+aside{position:fixed;inset:0 auto 0 0;width:290px;overflow-y:auto;background:#f5f7fa;border-right:1px solid var(--line);padding:25px 18px}
+.brand{font-size:19px;font-weight:750;display:block;text-decoration:none}.caption{color:var(--muted);font-size:12px;margin:6px 0 22px}
+details{margin:12px 0}summary{font-size:13px;font-weight:750;cursor:pointer;padding:5px}
+nav a{display:block;padding:7px 10px;font-size:13px;line-height:1.45;text-decoration:none;border-radius:5px;margin:2px 0}
+nav a:hover{background:#e5edf6}nav a[aria-current=page]{background:#dceafa;color:#124d81;font-weight:650}
+main{margin-left:290px;padding:38px clamp(22px,5vw,85px);max-width:1350px}
+.meta{font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:24px;overflow-wrap:anywhere}
+h1{font-size:30px;line-height:1.25;margin-top:0}h2{font-size:22px;margin-top:32px}h3{font-size:18px}
+pre{background:#f3f6fa;border:1px solid var(--line);padding:16px;overflow:auto;border-radius:7px}
+code{font-size:.87em;background:#f3f6fa;overflow-wrap:anywhere}pre code{background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;margin:20px 0;max-width:100%}
+th,td{border:1px solid var(--line);padding:10px 12px;min-width:130px;vertical-align:top}th{background:#edf2f8;text-align:left}
+blockquote{border-left:3px solid #aac5df;margin-left:0;padding-left:18px;color:var(--muted)}
+.unavailable{color:#7c5261;text-decoration:underline dotted;cursor:help}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:15px;font-size:12px;color:var(--muted)}
+@media(max-width:780px){aside{position:static;width:auto;max-height:42vh;border-bottom:1px solid var(--line)}main{margin:0;padding:24px 18px}h1{font-size:25px}.skip:focus{left:10px}}
+@media print{aside,.skip,.meta{display:none}main{margin:0;padding:0}table{display:table}pre{white-space:pre-wrap}}</style></head>
+<body><a class="skip" href="#content">К содержимому</a><aside><a class="brand" href="index.html">Security Lab · Wiki</a>
+<p class="caption">Многоуровневая защита агента<br>Документация ≠ доказательство испытания</p><nav aria-label="Разделы Wiki"><details open><summary>Обзор</summary><a href="index.html">Вики проекта</a><a href="p060.html">Карта методов защиты</a><a href="p064.html">Реализованные политики: код, проверки и ограничения</a><a href="p004.html">Карта реализации многоуровневой защиты</a></details><details open><summary>L1 &#183; Вход и результаты</summary><a href="p051.html">L1: проверка входа</a><a href="p052.html">L1: происхождение данных</a><a href="p053.html">L1: повторная проверка результата инструмента</a></details><details open><summary>L3 &#183; Ограничения</summary><a href="p050.html" aria-current="page">Оригинальный AGT: ограничение бюджета</a><a href="p054.html">L3: лимиты прототипа</a><a href="p055.html">L3: остановка сессии</a><a href="p056.html">L3: отказ при ошибке и запрет изменения политики</a><a href="p057.html">L3: подтверждение критического действия</a><a href="p058.html">L3: метки данных и сетевые адресаты</a><a href="p059.html">L3: инструменты и границы доступа</a></details><details open><summary>Источники</summary><a href="p063.html">Полезные ссылки и ресурсы</a><a href="p049.html">Источники и честные статусы проверки</a><a href="p061.html">Неудавшиеся проверки и открытые вопросы</a><a href="p062.html">Поиск источников при отладке</a><a href="p026.html">A1.3 — индекс последовательного аудита 14 ZIP</a></details><details><summary>Аудит и покрытие L2</summary><a href="p027.html">Контрольная точка A1.3: 14 ZIP рассмотрены, A1 ещё не закрыт</a><a href="p028.html">Контрольная QA-сверка A1 после 14 отчётов</a><a href="p029.html">A1.4 — покрытие многоуровневой модели безопасности</a><a href="p030.html">Как пользователь будет проверять методы в VM</a><a href="p031.html">A1.2 — статическая сверка заявленных заимствований</a><a href="p032.html">Единый формат методички и отчёта</a><a href="p033.html">A1.3/1 — Agent Governance Toolkit в архиве ACS</a><a href="p034.html">M-AGT-APPROVAL — оригинальные правила согласования AGT</a><a href="p035.html">A1.3/11 — Dify: модерация, лимиты, sandbox и сетевой прокси</a><a href="p036.html">A1.3/5 — DeepSeek Harness: политика инструментов, настройки и изоляция</a><a href="p037.html">A1.3/13 — GenAI Data Security Initiative: статический сканер и проверка трасс</a><a href="p038.html">A1.3/12 — GenAI Red Team Lab: испытательный корпус, не защитный middleware</a><a href="p039.html">A1.3/9 — Goose: инспекторы инструментов, разрешения и граница shell</a><a href="p040.html">A1.3/8 — Hermes Agent: approval, защищённые файлы и терминальная среда</a><a href="p041.html">A1.3/4 — LangGraph: ToolNode, interrupt и состояние</a><a href="p042.html">A1.3/7 — Microsoft Agent Framework: метки, политика инструментов и контейнерный shell</a><a href="p043.html">A1.3/2 — NeMo Guardrails: что действительно защищает L1</a><a href="p044.html">A1.3/3 — OpenAI Agents SDK: guardrails, approvals и граница sandbox</a><a href="p045.html">A1.3/10 — OpenHands: Agent Canvas и граница внешнего agent-server</a><a href="p046.html">A1.3/14 — OWASP CheatSheetSeries: рекомендации и иллюстративные примеры</a><a href="p047.html">A1.3/6 — Pydantic AI: toolsets, approval и лимиты</a><a href="p048.html">Wiki оригинальных методов защиты</a></details><details><summary>Лабораторные</summary><a href="p016.html">A3 — подготовка ЛР №0: среда для пилота AGT budgets</a><a href="p017.html">labs/00-environment/Протокол_локальной_A3_20260929.md</a><a href="p018.html">A3 — фактический протокол Azure-стенда для ЛР №0</a><a href="p019.html">Лабораторная работа №1 — пороги AGT budgets без LLM</a><a href="p020.html">AGT budgets — отчёт пилотного сеанса 29.09.2026</a></details><details><summary>Проект и код</summary><a href="p001.html">Материалы проекта для проверки</a><a href="p002.html">Firecracker — заметка для этапа 5</a><a href="p003.html">Перенос политик безопасности между DeepSeek Harness и LangGraph</a><a href="p005.html">Контракт событий и политик L1/L3 — черновик 0.4</a><a href="p006.html">Матрица настроек L3 и границ автономности</a><a href="p007.html">Аудит оригинальных механизмов и ручная лаборатория</a><a href="p008.html">План работ по политикам безопасности агента</a><a href="p009.html">Программа проверки политик в Azure VM — A3–A4</a><a href="p010.html">Ревью этапов 1–3</a><a href="p011.html">Этап 1. Модель угроз и каталог политик многоуровневой защиты</a><a href="p012.html">Этап 2. Реализация L1 и передача меток в L3</a><a href="p013.html">Этап 3 — декларативные политики L3 и контрольная плоскость</a><a href="p014.html">Этап 4 — критерии интеграции L1/L3 с ядром</a><a href="p015.html">Этап 5.2 — подготовка изолированной среды</a><a href="p021.html">Этап 5.1: адаптер контракта DSH</a><a href="p022.html">Симулятор политик L1/L3</a><a href="p023.html">Agent Governance Toolkit policy notice</a><a href="p024.html">NeMo Guardrails code provenance</a><a href="p025.html">AI Agent Security Lab</a></details></nav></aside>
+<main id="content"><div class="meta">wiki/методы/AGT_Оригинальный_бюджет.md · <a href="../../wiki/%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D1%8B/AGT_%D0%9E%D1%80%D0%B8%D0%B3%D0%B8%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9_%D0%B1%D1%8E%D0%B4%D0%B6%D0%B5%D1%82.md">Markdown-исходник</a></div>
+<span id="оригинальный-agt-ограничение-бюджета"></span><h1 id="agt">Оригинальный AGT: ограничение бюджета</h1>
+<p><a href="p060.html">Карта методов</a> · <a href="p054.html">Лимиты Python-прототипа</a></p>
+<span id="статус-и-источник"></span><h2 id="section">Статус и источник</h2>
+<p>Частичный локальный пилот 29.09.2026: 16/16 оригинальных Rego-тестов и четыре ручных входа по <a href="p020.html">отчёту</a>. Полные журналы ещё в VM, на D: сохранён отчёт по наблюдавшемуся выводу. Реальное блокирование инструмента полной цепочкой не доказано.</p>
+<p>Источник: ACS, архив <code>agent-control-standard-integration.zip</code>; файл <code>reference-implementations/agt/policy/lib/budgets.rego</code>, штатный тест <code>budgets_test.rego</code>. Репозиторий указан в <a href="p023.html">notice</a>, SHA-256 файлов и лицензирование — в <a href="p033.html">аудите AGT</a>. Точный commit самого ACS ZIP неизвестен; commit вложенного bundle из agt.lock не равен подтверждённому commit архива. Лицензия указанного policy/lib — MIT © Microsoft.</p>
+<p>Комплект A2.1 сверялся побайтно: 8/8 файлов. Локальный путь оригинала от корня проекта: <code>originals/agt-budgets/upstream/reference-implementations/agt/policy/lib/budgets.rego</code>. Оригиналы исключены из Git-комплекта; после клонирования нельзя считать их автоматически доступными. Изменённые Rego из прототипа не использовать вместо оригинала.</p>
+<span id="принцип"></span><h2 id="section-1">Принцип</h2>
+<p>Helper сравнивает счётчики snapshot с заданными порогами: при достижении лимита возвращает deny. Подготовка доверенных счётчиков и исполнение решения — задачи вызывающей стороны. Отсутствие результата helper (<code>undefined</code>) не равно доказанному разрешению или запрету инструмента.</p>
+<span id="небольшой-опыт-в-vm"></span><h2 id="vm">Небольшой опыт в VM</h2>
+<p>Модель не нужна. Только ГОСТЬ после <a href="p060.html#%D0%BF%D0%BE%D0%B2%D1%82%D0%BE%D1%80%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BE%D0%BA">проверки среды</a>, с подготовленным OPA и проверенными оригиналами. Пошаговые команды повторения — в <a href="p019.html">методичке ЛР №1</a>; фактические версии и команды прошлого сеанса — в <a href="p020.html">отчёте</a>. Исторические фразы методички «не запускалось» не отменяют более поздний частичный пилот.</p>
+<ol>
+<li>Сверить комплект и версии с отчётом, сохранить окружение.</li>
+<li>Выполнить штатные budgets-тесты оригинала.</li>
+<li>Выполнить четыре eval по одному, не изменяя Rego; меняются только наши входные JSON.</li>
+<li>Сохранить полный вывод и коды возврата, сравнить с таблицей. Заполнить новый протокол отдельно от прошлого результата.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Вход</th>
+<th>Ожидаемое и наблюдавшееся 29.09 по отчёту</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../labs/01-agt-budgets/inputs/01-below-limit.json" title="Исходный файл; переход к строке зависит от просмотрщика">Ниже лимита</a></td>
+<td>undefined: helper не вернул deny</td>
+</tr>
+<tr>
+<td><a href="../../labs/01-agt-budgets/inputs/02-at-limit.json" title="Исходный файл; переход к строке зависит от просмотрщика">На лимите</a></td>
+<td>deny: budget_tool_calls_exceeded</td>
+</tr>
+<tr>
+<td><a href="../../labs/01-agt-budgets/inputs/03-malformed-present.json" title="Исходный файл; переход к строке зависит от просмотрщика">Некорректный присутствующий счётчик</a></td>
+<td>deny: budget_counter_invalid</td>
+</tr>
+<tr>
+<td><a href="../../labs/01-agt-budgets/inputs/04-missing-snapshot.json" title="Исходный файл; переход к строке зависит от просмотрщика">Отсутствующий snapshot</a></td>
+<td>undefined, не доказанный allow</td>
+</tr>
+</tbody>
+</table>
+<p>Новый запуск при создании Wiki не выполнялся. 77/77 тестов выбранных обработчиков ACS — отдельный результат; govern-step использовал mock Guardian. Печатные ACTION_EXECUTED/ACTION_BLOCKED не являются наблюдением реального эффекта.</p>
+<span id="ограничения-и-продолжение"></span><h2 id="section-2">Ограничения и продолжение</h2>
+<p>По статическому аудиту штатный Guardian подаёт нулевые бюджеты, а штатная конфигурация не задаёт нужные budget thresholds. Поэтому успешный helper-тест не доказывает работоспособность полного ограничения агента.</p>
+<p>Сначала экспортировать гостевые журналы и сверить хеши, не теряя старые результаты. Далее отдельным разрешённым опытом проверить реальные счётчики, пороги и цепочку Guardian/SDK → OPA → инструмент, включая ошибки. Не объявлять все политики испытанными по этому пилоту.</p>
+
+<footer>Локальная HTML-сборка из Markdown. Правки вносить в исходные .md, затем повторить сборку. Без сервера и внешних зависимостей.</footer></main></body></html>

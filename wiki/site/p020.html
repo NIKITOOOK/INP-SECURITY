@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'">
+<title>AGT budgets — отчёт пилотного сеанса 29.09.2026 — Security Lab Wiki</title><style>:root{color-scheme:light;--ink:#233247;--muted:#5d6a7c;--line:#dce3eb;--accent:#175d9c}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+a{color:var(--accent);text-underline-offset:3px}a:focus-visible{outline:3px solid #ecae44;outline-offset:3px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:320px;top:8px;background:white;z-index:9}
+aside{position:fixed;inset:0 auto 0 0;width:290px;overflow-y:auto;background:#f5f7fa;border-right:1px solid var(--line);padding:25px 18px}
+.brand{font-size:19px;font-weight:750;display:block;text-decoration:none}.caption{color:var(--muted);font-size:12px;margin:6px 0 22px}
+details{margin:12px 0}summary{font-size:13px;font-weight:750;cursor:pointer;padding:5px}
+nav a{display:block;padding:7px 10px;font-size:13px;line-height:1.45;text-decoration:none;border-radius:5px;margin:2px 0}
+nav a:hover{background:#e5edf6}nav a[aria-current=page]{background:#dceafa;color:#124d81;font-weight:650}
+main{margin-left:290px;padding:38px clamp(22px,5vw,85px);max-width:1350px}
+.meta{font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:24px;overflow-wrap:anywhere}
+h1{font-size:30px;line-height:1.25;margin-top:0}h2{font-size:22px;margin-top:32px}h3{font-size:18px}
+pre{background:#f3f6fa;border:1px solid var(--line);padding:16px;overflow:auto;border-radius:7px}
+code{font-size:.87em;background:#f3f6fa;overflow-wrap:anywhere}pre code{background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;margin:20px 0;max-width:100%}
+th,td{border:1px solid var(--line);padding:10px 12px;min-width:130px;vertical-align:top}th{background:#edf2f8;text-align:left}
+blockquote{border-left:3px solid #aac5df;margin-left:0;padding-left:18px;color:var(--muted)}
+.unavailable{color:#7c5261;text-decoration:underline dotted;cursor:help}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:15px;font-size:12px;color:var(--muted)}
+@media(max-width:780px){aside{position:static;width:auto;max-height:42vh;border-bottom:1px solid var(--line)}main{margin:0;padding:24px 18px}h1{font-size:25px}.skip:focus{left:10px}}
+@media print{aside,.skip,.meta{display:none}main{margin:0;padding:0}table{display:table}pre{white-space:pre-wrap}}</style></head>
+<body><a class="skip" href="#content">К содержимому</a><aside><a class="brand" href="index.html">Security Lab · Wiki</a>
+<p class="caption">Многоуровневая защита агента<br>Документация ≠ доказательство испытания</p><nav aria-label="Разделы Wiki"><details open><summary>Обзор</summary><a href="index.html">Вики проекта</a><a href="p060.html">Карта методов защиты</a><a href="p064.html">Реализованные политики: код, проверки и ограничения</a><a href="p004.html">Карта реализации многоуровневой защиты</a></details><details open><summary>L1 &#183; Вход и результаты</summary><a href="p051.html">L1: проверка входа</a><a href="p052.html">L1: происхождение данных</a><a href="p053.html">L1: повторная проверка результата инструмента</a></details><details open><summary>L3 &#183; Ограничения</summary><a href="p050.html">Оригинальный AGT: ограничение бюджета</a><a href="p054.html">L3: лимиты прототипа</a><a href="p055.html">L3: остановка сессии</a><a href="p056.html">L3: отказ при ошибке и запрет изменения политики</a><a href="p057.html">L3: подтверждение критического действия</a><a href="p058.html">L3: метки данных и сетевые адресаты</a><a href="p059.html">L3: инструменты и границы доступа</a></details><details open><summary>Источники</summary><a href="p063.html">Полезные ссылки и ресурсы</a><a href="p049.html">Источники и честные статусы проверки</a><a href="p061.html">Неудавшиеся проверки и открытые вопросы</a><a href="p062.html">Поиск источников при отладке</a><a href="p026.html">A1.3 — индекс последовательного аудита 14 ZIP</a></details><details><summary>Аудит и покрытие L2</summary><a href="p027.html">Контрольная точка A1.3: 14 ZIP рассмотрены, A1 ещё не закрыт</a><a href="p028.html">Контрольная QA-сверка A1 после 14 отчётов</a><a href="p029.html">A1.4 — покрытие многоуровневой модели безопасности</a><a href="p030.html">Как пользователь будет проверять методы в VM</a><a href="p031.html">A1.2 — статическая сверка заявленных заимствований</a><a href="p032.html">Единый формат методички и отчёта</a><a href="p033.html">A1.3/1 — Agent Governance Toolkit в архиве ACS</a><a href="p034.html">M-AGT-APPROVAL — оригинальные правила согласования AGT</a><a href="p035.html">A1.3/11 — Dify: модерация, лимиты, sandbox и сетевой прокси</a><a href="p036.html">A1.3/5 — DeepSeek Harness: политика инструментов, настройки и изоляция</a><a href="p037.html">A1.3/13 — GenAI Data Security Initiative: статический сканер и проверка трасс</a><a href="p038.html">A1.3/12 — GenAI Red Team Lab: испытательный корпус, не защитный middleware</a><a href="p039.html">A1.3/9 — Goose: инспекторы инструментов, разрешения и граница shell</a><a href="p040.html">A1.3/8 — Hermes Agent: approval, защищённые файлы и терминальная среда</a><a href="p041.html">A1.3/4 — LangGraph: ToolNode, interrupt и состояние</a><a href="p042.html">A1.3/7 — Microsoft Agent Framework: метки, политика инструментов и контейнерный shell</a><a href="p043.html">A1.3/2 — NeMo Guardrails: что действительно защищает L1</a><a href="p044.html">A1.3/3 — OpenAI Agents SDK: guardrails, approvals и граница sandbox</a><a href="p045.html">A1.3/10 — OpenHands: Agent Canvas и граница внешнего agent-server</a><a href="p046.html">A1.3/14 — OWASP CheatSheetSeries: рекомендации и иллюстративные примеры</a><a href="p047.html">A1.3/6 — Pydantic AI: toolsets, approval и лимиты</a><a href="p048.html">Wiki оригинальных методов защиты</a></details><details open><summary>Лабораторные</summary><a href="p016.html">A3 — подготовка ЛР №0: среда для пилота AGT budgets</a><a href="p017.html">labs/00-environment/Протокол_локальной_A3_20260929.md</a><a href="p018.html">A3 — фактический протокол Azure-стенда для ЛР №0</a><a href="p019.html">Лабораторная работа №1 — пороги AGT budgets без LLM</a><a href="p020.html" aria-current="page">AGT budgets — отчёт пилотного сеанса 29.09.2026</a></details><details><summary>Проект и код</summary><a href="p001.html">Материалы проекта для проверки</a><a href="p002.html">Firecracker — заметка для этапа 5</a><a href="p003.html">Перенос политик безопасности между DeepSeek Harness и LangGraph</a><a href="p005.html">Контракт событий и политик L1/L3 — черновик 0.4</a><a href="p006.html">Матрица настроек L3 и границ автономности</a><a href="p007.html">Аудит оригинальных механизмов и ручная лаборатория</a><a href="p008.html">План работ по политикам безопасности агента</a><a href="p009.html">Программа проверки политик в Azure VM — A3–A4</a><a href="p010.html">Ревью этапов 1–3</a><a href="p011.html">Этап 1. Модель угроз и каталог политик многоуровневой защиты</a><a href="p012.html">Этап 2. Реализация L1 и передача меток в L3</a><a href="p013.html">Этап 3 — декларативные политики L3 и контрольная плоскость</a><a href="p014.html">Этап 4 — критерии интеграции L1/L3 с ядром</a><a href="p015.html">Этап 5.2 — подготовка изолированной среды</a><a href="p021.html">Этап 5.1: адаптер контракта DSH</a><a href="p022.html">Симулятор политик L1/L3</a><a href="p023.html">Agent Governance Toolkit policy notice</a><a href="p024.html">NeMo Guardrails code provenance</a><a href="p025.html">AI Agent Security Lab</a></details></nav></aside>
+<main id="content"><div class="meta">labs/01-agt-budgets/Отчёт_пилота_20260929.md · <a href="../../labs/01-agt-budgets/%D0%9E%D1%82%D1%87%D1%91%D1%82_%D0%BF%D0%B8%D0%BB%D0%BE%D1%82%D0%B0_20260929.md">Markdown-исходник</a></div>
+<span id="agt-budgets--отчёт-пилотного-сеанса-29092026"></span><h1 id="agt-budgets-29.09.2026">AGT budgets — отчёт пилотного сеанса 29.09.2026</h1>
+<p>Статус: частично выполненный локальный пилот. Записано по подтверждённым выводам консоли в этом чате; полные исходные журналы остаются внутри VM. Формальная приёмка всей A3 и редакции плана 0.3 не заявляется. Остальные архивы этим сеансом не испытаны.</p>
+<span id="цель"></span><h2 id="section">Цель</h2>
+<p>Проверить политику L3 ограничения счётчиков бюджета: штатные Rego-тесты, четыре входа и обработку решений в выбранных тестах оригинальной ACS-интеграции. Проверка фактической остановки реального инструмента остаётся отдельным шагом.</p>
+<span id="среда-и-происхождение"></span><h2 id="section-1">Среда и происхождение</h2>
+<ul>
+<li>VirtualBox: Ubuntu-Server-24.04.5; hostname agent-lab-a3, пользователь labuser; Ubuntu 24.04.5, kernel 6.8.0-142-generic, 2 CPU, 4096 MiB RAM. Исходный снимок: before-agt-budgets.</li>
+<li>OPA: 1.21.0, Rego v1, linux/amd64. Файл /home/labuser/opa_linux_amd64_static; SHA-256: 5eef70644868bb04d0556bcc795ee42f2ab379e73f51d1bfa30f83e1305bc9b9.</li>
+<li>Bun: 1.3.14; /home/labuser/tools/bun-1.3.14/bun. Архив bun-linux-x64-baseline.zip сверён с опубликованной суммой: a063908ae08b7852ca10939bbdc6ceed3ddabce8fb9402dce83d65d73b36e6c7.</li>
+<li>ACS: D:\AI-Agent-Security-Lab\source-archives\agent-control-standard-integration.zip; SHA-256 BF87CB8EA31C7AB5CD2AF673C1AA41589E556BC715385C843FC0CE6AC35B6EAA. Точный commit всего ACS неизвестен. Commit 81955d48025c6b11deb3fc9dabf89f74f4145775 в agt.lock относится к вложенному bundle, не всему ACS.</li>
+<li>Первый read-only ISO: agt-budgets-a3-20260929.iso; SHA-256 54eacf14b44936f1d0c31c0f7a8c58d5a2798ee9897f7fee85ba164c7c37be4f. Все 12 записей SHA256SUMS прошли гостевую сверку: 8 выбранных оригиналов и 4 наших JSON-входа.</li>
+<li>Полный ACS ZIP перенесён через VISO как /mnt/agt-source; hash совпал. После извлечения все 367 обычных файлов сверены с ZIP. Оригинальная логика не правилась.</li>
+<li>Гостевой каталог ACS: /home/labuser/lab-source/acs-20260929/agent-control-standard-integration/reference-implementations/agt.</li>
+<li>Модель/LLM не использовалась.</li>
+</ul>
+<span id="фактический-ход"></span><h2 id="section-2">Фактический ход</h2>
+<ol>
+<li>После ошибки Permission denied для OPA добавлено право исполнения пользователю; подтверждены версия и хеш.</li>
+<li>Выполнены оригинальные budgets.rego и budgets_test.rego через opa test --fail-on-empty -v: 16/16 passed, exit 0.</li>
+<li>Выполнены четыре opa eval с запросом data.agt.budgets.deny_if_budget_exceeded(input.thresholds); все команды завершились с exit 0.</li>
+<li>Наша учебная Python-симуляция сравнила два обработчика отсутствующего deny. ACTION_EXECUTED/ACTION_BLOCKED были только печатными маркерами, не исполнением инструментов. Это не оригинальная интеграция.</li>
+<li>Пользователь временно включил NAT для снабжения. Bun загружен только в VM; зависимости установлены через bun install --frozen-lockfile --ignore-scripts --no-progress: exit 0, 82 packages; bun.lock не изменился. Во время этого снабжения оригинальные тесты не запускались.</li>
+<li>Пользователь отключил виртуальный кабель. Перед тестами подтверждены enp0s3 DOWN/NO-CARRIER, отсутствие маршрутов IPv4/IPv6 (Network is unreachable), ошибка DNS HTTPS-запроса к registry.npmjs.org (exit 6). Адаптер остаётся настроенным как NAT; абсолютная безопасность гипервизора не доказана.</li>
+<li>В каталоге AGT выполнено:</li>
+</ol>
+<pre><code class="language-sh">timeout 90s /home/labuser/tools/bun-1.3.14/bun test --timeout 10000 ./packages/guardian/test/map-verdict.test.ts ./packages/host-adapter/test/govern-step.test.ts
+</code></pre>
+<p>Результат: 77 pass, 0 fail, 165 expect calls; 2 файла, exit 0. Проверена оригинальная логика обработчиков; govern-step использует mock Guardian. Полная цепочка SDK → OPA → реальный инструмент этим не проверена.
+8. В VM записаны CONTINUE-HERE.md и архив session-evidence-20260929.tar.gz с контрольной суммой. gzip -t и sha256sum -c завершились успешно. Значение SHA-256 архива в этот отчёт не перенесено.</p>
+<span id="результаты-четырёх-входов"></span><h2 id="section-3">Результаты четырёх входов</h2>
+<table>
+<thead>
+<tr>
+<th>Вход</th>
+<th>Ожидаемое по исходникам</th>
+<th>Фактическое</th>
+<th>Журнал в VM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01-below-limit</td>
+<td>Нет deny от helper</td>
+<td>undefined</td>
+<td>agt-budgets-20260929/01-below-limit.txt</td>
+</tr>
+<tr>
+<td>02-at-limit</td>
+<td>deny при tool_call_count 5 и лимите 5</td>
+<td>deny, budget_tool_calls_exceeded</td>
+<td>agt-budgets-20260929/02-at-limit.txt</td>
+</tr>
+<tr>
+<td>03-malformed-present</td>
+<td>deny для присутствующего нечислового счётчика</td>
+<td>deny, budget_counter_invalid</td>
+<td>agt-budgets-20260929/03-malformed-present.txt</td>
+</tr>
+<tr>
+<td>04-missing-snapshot</td>
+<td>Отсутствие решения helper</td>
+<td>undefined</td>
+<td>agt-budgets-20260929/04-missing-snapshot.txt</td>
+</tr>
+</tbody>
+</table>
+<p>undefined означает отсутствие результата данного helper, а не доказанный allow или обход. Итог зависит от вызывающего кода и его конфигурации.</p>
+<span id="журналы-и-состояние-переноса"></span><h2 id="section-4">Журналы и состояние переноса</h2>
+<p>Базовый гостевой путь: /home/labuser/lab-results/.</p>
+<ul>
+<li>a3-20260929/protocol.txt — первоначальная подготовка.</li>
+<li>agt-budgets-20260929/unit-tests.txt и unit-tests.exit; четыре входа .txt/.exit; handler-simulation.txt.</li>
+<li>acs-preparation-20260929/extraction.txt, dependencies.txt, dependencies.exit, bun-lock-before.sha256, network-after-disconnect.txt.</li>
+<li>acs-integration-20260929/decision-handlers.txt и decision-handlers.exit.</li>
+<li>CONTINUE-HERE.md, session-evidence-20260929.tar.gz и session-evidence-20260929.tar.gz.sha256.</li>
+</ul>
+<p><strong>Полные журналы и архив ещё не экспортированы на D:.</strong> Этот отчёт фиксирует наблюдавшиеся результаты и пути, но не заменяет исходные логи. Не удалять гостевые результаты и не откатывать VM до их переноса. Перенос согласовать с пользователем; не включать общие папки, буфер обмена или сеть автоматически.</p>
+<span id="вывод-и-контрольные-вопросы"></span><h2 id="section-5">Вывод и контрольные вопросы</h2>
+<ul>
+<li>Что делает OPA? Вычисляет решение Rego по входу и данным; само вычисление verdict не доказывает прекращение действия инструментом.</li>
+<li>Где проходит порог? В испытанном случае счётчик, равный лимиту 5, вызывает deny.</li>
+<li>Как обработан плохой счётчик? Присутствующий нечисловой счётчик дал budget_counter_invalid.</li>
+<li>Что означает отсутствующий snapshot? Helper не выдал verdict; доверенный обработчик должен отдельно определить поведение.</li>
+<li>Что подтвердили 77 тестов? Выбранную логику отображения verdict и governStep с mock Guardian, не полноценную интеграцию с настоящим OPA/инструментом.</li>
+<li>Что ещё не доказано? Фактический enforcement, получение реальных счётчиков, полнота пороговой конфигурации и устойчивость полной цепочки к отказам.</li>
+</ul>
+<p>По статическому чтению zeroedBudgets() задаёт нулевые счётчики, штатный policy/lib/data.json не содержит budget thresholds, а вызов helper в agt_default.rego зависит от наличия cfg.budgets. Это направления следующей проверки, не доказанная уязвимость.</p>
+<span id="продолжение-и-завершение"></span><h2 id="section-6">Продолжение и завершение</h2>
+<ol>
+<li>Пользователь открывает проект на D:; другой чат читает AGENTS.md, ПЕРЕДАЧА.md и этот отчёт.</li>
+<li>До нового запуска сверить снимок/состояние VM, изоляцию и сохранившиеся журналы. Перед каждым вводом объяснять проверку и ожидаемый эффект, предупреждать и оставлять возможность прервать.</li>
+<li>Следующий блок пилота: реальные Guardian/SDK/OPA и связь verdict с эффектом; затем счётчики, thresholds и отказные случаи. Объяснять каждую проверку заранее. Это не разрешение сразу запускать все 14 архивов.</li>
+<li>Экспортировать архив журналов на D: и сверить гостевой/хостовый SHA-256; дополнить этот отчёт доказательствами.</li>
+<li>Штатное выключение и новый снимок выполняет пользователь. По скриншоту пользователя 29.09 выключение и наличие снимка agt-prepared-results-20260929 подтверждены; восстановление и содержимое снимка не проверялись. Текущее состояние Azure повторно не проверено.</li>
+</ol>
+<p>Источники: <a href="p019.html">методичка ЛР №1</a>, <span class="unavailable" title="Файл не включён в Git-комплект; см. Markdown-исходник">карточка оригинала</span>, <a href="p017.html">локальный протокол A3</a>. Команды выше — запись гостевого опыта, не поручение исполнять их на Windows.</p>
+<span id="завершение-сеанса-подтверждено-пользователем--29092026"></span><h2 id="section-7">Завершение сеанса подтверждено пользователем — 29.09.2026</h2>
+<p>По предоставленному скриншоту VirtualBox Manager: Ubuntu-Server-24.04.5 имеет состояние «Выключена»; существует снимок agt-prepared-results-20260929, время создания в интерфейсе 29.09.2026 03:53. Его родитель — before-agt-budgets. Интерфейс показывает «Текущее состояние (изменено)»; это не сообщение об ошибке и не доказательство потери результатов. Содержимое снимка и восстановление из него отдельно не проверялись.</p>
+<p>Это уточнение заменяет прежнюю отметку «выключение и новый снимок не подтверждены» для локальной VM. При следующем согласованном сеансе запускать текущее состояние; автоматически не восстанавливать снимки и не откатываться к before-agt-budgets. После входа проверить наличие /home/labuser/lab-results/session-evidence-20260929.tar.gz и его контрольную сумму, затем состояние изоляции. Архив логов ещё не перенесён на D:. Состояние Azure этим скриншотом не подтверждается.</p>
+
+<footer>Локальная HTML-сборка из Markdown. Правки вносить в исходные .md, затем повторить сборку. Без сервера и внешних зависимостей.</footer></main></body></html>

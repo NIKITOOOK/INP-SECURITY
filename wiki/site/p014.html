@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Этап 4 — критерии интеграции L1/L3 с ядром — Security Lab Wiki</title><style>:root{color-scheme:light;--ink:#233247;--muted:#5d6a7c;--line:#dce3eb;--accent:#175d9c}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+a{color:var(--accent);text-underline-offset:3px}a:focus-visible{outline:3px solid #ecae44;outline-offset:3px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:320px;top:8px;background:white;z-index:9}
+aside{position:fixed;inset:0 auto 0 0;width:290px;overflow-y:auto;background:#f5f7fa;border-right:1px solid var(--line);padding:25px 18px}
+.brand{font-size:19px;font-weight:750;display:block;text-decoration:none}.caption{color:var(--muted);font-size:12px;margin:6px 0 22px}
+details{margin:12px 0}summary{font-size:13px;font-weight:750;cursor:pointer;padding:5px}
+nav a{display:block;padding:7px 10px;font-size:13px;line-height:1.45;text-decoration:none;border-radius:5px;margin:2px 0}
+nav a:hover{background:#e5edf6}nav a[aria-current=page]{background:#dceafa;color:#124d81;font-weight:650}
+main{margin-left:290px;padding:38px clamp(22px,5vw,85px);max-width:1350px}
+.meta{font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:24px;overflow-wrap:anywhere}
+h1{font-size:30px;line-height:1.25;margin-top:0}h2{font-size:22px;margin-top:32px}h3{font-size:18px}
+pre{background:#f3f6fa;border:1px solid var(--line);padding:16px;overflow:auto;border-radius:7px}
+code{font-size:.87em;background:#f3f6fa;overflow-wrap:anywhere}pre code{background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;margin:20px 0;max-width:100%}
+th,td{border:1px solid var(--line);padding:10px 12px;min-width:130px;vertical-align:top}th{background:#edf2f8;text-align:left}
+blockquote{border-left:3px solid #aac5df;margin-left:0;padding-left:18px;color:var(--muted)}
+.unavailable{color:#7c5261;text-decoration:underline dotted;cursor:help}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:15px;font-size:12px;color:var(--muted)}
+@media(max-width:780px){aside{position:static;width:auto;max-height:42vh;border-bottom:1px solid var(--line)}main{margin:0;padding:24px 18px}h1{font-size:25px}.skip:focus{left:10px}}
+@media print{aside,.skip,.meta{display:none}main{margin:0;padding:0}table{display:table}pre{white-space:pre-wrap}}</style></head>
+<body><a class="skip" href="#content">К содержимому</a><aside><a class="brand" href="index.html">Security Lab · Wiki</a>
+<p class="caption">Многоуровневая защита агента<br>Документация ≠ доказательство испытания</p><nav aria-label="Разделы Wiki"><details open><summary>Обзор</summary><a href="index.html">Вики проекта</a><a href="p060.html">Карта методов защиты</a><a href="p064.html">Реализованные политики: код, проверки и ограничения</a><a href="p004.html">Карта реализации многоуровневой защиты</a></details><details open><summary>L1 &#183; Вход и результаты</summary><a href="p051.html">L1: проверка входа</a><a href="p052.html">L1: происхождение данных</a><a href="p053.html">L1: повторная проверка результата инструмента</a></details><details open><summary>L3 &#183; Ограничения</summary><a href="p050.html">Оригинальный AGT: ограничение бюджета</a><a href="p054.html">L3: лимиты прототипа</a><a href="p055.html">L3: остановка сессии</a><a href="p056.html">L3: отказ при ошибке и запрет изменения политики</a><a href="p057.html">L3: подтверждение критического действия</a><a href="p058.html">L3: метки данных и сетевые адресаты</a><a href="p059.html">L3: инструменты и границы доступа</a></details><details open><summary>Источники</summary><a href="p063.html">Полезные ссылки и ресурсы</a><a href="p049.html">Источники и честные статусы проверки</a><a href="p061.html">Неудавшиеся проверки и открытые вопросы</a><a href="p062.html">Поиск источников при отладке</a><a href="p026.html">A1.3 — индекс последовательного аудита 14 ZIP</a></details><details><summary>Аудит и покрытие L2</summary><a href="p027.html">Контрольная точка A1.3: 14 ZIP рассмотрены, A1 ещё не закрыт</a><a href="p028.html">Контрольная QA-сверка A1 после 14 отчётов</a><a href="p029.html">A1.4 — покрытие многоуровневой модели безопасности</a><a href="p030.html">Как пользователь будет проверять методы в VM</a><a href="p031.html">A1.2 — статическая сверка заявленных заимствований</a><a href="p032.html">Единый формат методички и отчёта</a><a href="p033.html">A1.3/1 — Agent Governance Toolkit в архиве ACS</a><a href="p034.html">M-AGT-APPROVAL — оригинальные правила согласования AGT</a><a href="p035.html">A1.3/11 — Dify: модерация, лимиты, sandbox и сетевой прокси</a><a href="p036.html">A1.3/5 — DeepSeek Harness: политика инструментов, настройки и изоляция</a><a href="p037.html">A1.3/13 — GenAI Data Security Initiative: статический сканер и проверка трасс</a><a href="p038.html">A1.3/12 — GenAI Red Team Lab: испытательный корпус, не защитный middleware</a><a href="p039.html">A1.3/9 — Goose: инспекторы инструментов, разрешения и граница shell</a><a href="p040.html">A1.3/8 — Hermes Agent: approval, защищённые файлы и терминальная среда</a><a href="p041.html">A1.3/4 — LangGraph: ToolNode, interrupt и состояние</a><a href="p042.html">A1.3/7 — Microsoft Agent Framework: метки, политика инструментов и контейнерный shell</a><a href="p043.html">A1.3/2 — NeMo Guardrails: что действительно защищает L1</a><a href="p044.html">A1.3/3 — OpenAI Agents SDK: guardrails, approvals и граница sandbox</a><a href="p045.html">A1.3/10 — OpenHands: Agent Canvas и граница внешнего agent-server</a><a href="p046.html">A1.3/14 — OWASP CheatSheetSeries: рекомендации и иллюстративные примеры</a><a href="p047.html">A1.3/6 — Pydantic AI: toolsets, approval и лимиты</a><a href="p048.html">Wiki оригинальных методов защиты</a></details><details><summary>Лабораторные</summary><a href="p016.html">A3 — подготовка ЛР №0: среда для пилота AGT budgets</a><a href="p017.html">labs/00-environment/Протокол_локальной_A3_20260929.md</a><a href="p018.html">A3 — фактический протокол Azure-стенда для ЛР №0</a><a href="p019.html">Лабораторная работа №1 — пороги AGT budgets без LLM</a><a href="p020.html">AGT budgets — отчёт пилотного сеанса 29.09.2026</a></details><details open><summary>Проект и код</summary><a href="p001.html">Материалы проекта для проверки</a><a href="p002.html">Firecracker — заметка для этапа 5</a><a href="p003.html">Перенос политик безопасности между DeepSeek Harness и LangGraph</a><a href="p005.html">Контракт событий и политик L1/L3 — черновик 0.4</a><a href="p006.html">Матрица настроек L3 и границ автономности</a><a href="p007.html">Аудит оригинальных механизмов и ручная лаборатория</a><a href="p008.html">План работ по политикам безопасности агента</a><a href="p009.html">Программа проверки политик в Azure VM — A3–A4</a><a href="p010.html">Ревью этапов 1–3</a><a href="p011.html">Этап 1. Модель угроз и каталог политик многоуровневой защиты</a><a href="p012.html">Этап 2. Реализация L1 и передача меток в L3</a><a href="p013.html">Этап 3 — декларативные политики L3 и контрольная плоскость</a><a href="p014.html" aria-current="page">Этап 4 — критерии интеграции L1/L3 с ядром</a><a href="p015.html">Этап 5.2 — подготовка изолированной среды</a><a href="p021.html">Этап 5.1: адаптер контракта DSH</a><a href="p022.html">Симулятор политик L1/L3</a><a href="p023.html">Agent Governance Toolkit policy notice</a><a href="p024.html">NeMo Guardrails code provenance</a><a href="p025.html">AI Agent Security Lab</a></details></nav></aside>
+<main id="content"><div class="meta">Этап_4_Критерии_интеграции_ядра.md · <a href="../../%D0%AD%D1%82%D0%B0%D0%BF_4_%D0%9A%D1%80%D0%B8%D1%82%D0%B5%D1%80%D0%B8%D0%B8_%D0%B8%D0%BD%D1%82%D0%B5%D0%B3%D1%80%D0%B0%D1%86%D0%B8%D0%B8_%D1%8F%D0%B4%D1%80%D0%B0.md">Markdown-исходник</a></div>
+<span id="этап-4--критерии-интеграции-l1l3-с-ядром"></span><h1 id="l1l3">Этап 4 — критерии интеграции L1/L3 с ядром</h1>
+<p>Дата: 25.09.2026. Статус: для проверочного варианта выбран LangGraph Python
+1.2.12 и собран настоящий сквозной граф; конечное ядро команды ещё не выбрано.</p>
+<span id="1-обязательный-контракт-ядра"></span><h2 id="section">1. Обязательный контракт ядра</h2>
+<p>Выбранное ядро принимается только при наличии следующих точек:</p>
+<ol>
+<li><strong>Вход до модели:</strong> получить текст, источник и ID события до формирования
+контекста; L1 может отклонить ввод или вернуть метки.</li>
+<li><strong>Доверенная личность:</strong> <code>actor_id</code>, <code>task_id</code>, <code>session_id/thread_id</code>
+поступают от хоста, а не из аргументов модели.</li>
+<li><strong>Шлюз до эффекта:</strong> L3 видит окончательные имя инструмента, операцию и
+аргументы непосредственно перед телом инструмента.</li>
+<li><strong>Трёхзначное решение:</strong> <code>allow</code>, <code>deny</code>, <code>require_review</code>; ошибка/таймаут/
+отсутствующий handler не превращаются в <code>allow</code>.</li>
+<li><strong>HITL:</strong> подтверждение относится к полному вызову и версии политики;
+изменение аргументов требует нового решения.</li>
+<li><strong>Финальный guard:</strong> после всех pre-hooks и HITL должно быть невозможно
+вызвать тело без актуального admission.</li>
+<li><strong>Остановка:</strong> доверенный пользователь/администратор запрещает новые
+решения, отменяет pending/grants и посылает отмену активному исполнителю;
+ядро позволяет дождаться quiescence.</li>
+<li><strong>Результат:</strong> post-hook маркирует/проверяет результат до возвращения модели,
+но не выдаётся за отмену уже совершённого эффекта.</li>
+<li><strong>Настройки:</strong> профиль читается вне контроля модели, валидируется целиком,
+имеет версию/хеш и не заменяется частично при ошибке.</li>
+<li><strong>Аудит:</strong> сохраняются ID, решение, правило, версия и хеш без текста,
+секретных аргументов и токенов подтверждения.</li>
+</ol>
+<span id="2-единые-приёмочные-тесты"></span><h2 id="section-1">2. Единые приёмочные тесты</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Проверка</th>
+<th>Критерий</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C01</td>
+<td>Безвредное разрешённое чтение</td>
+<td>Тело вызвано ровно один раз</td>
+</tr>
+<tr>
+<td>C02</td>
+<td>Неизвестный инструмент/операция</td>
+<td>Тело не вызвано</td>
+</tr>
+<tr>
+<td>C03</td>
+<td>Подмена <code>actor_id/task_id</code> в аргументах</td>
+<td>Полномочия хоста не изменились</td>
+</tr>
+<tr>
+<td>C04</td>
+<td>Путь вне workspace/ссылка</td>
+<td>Тело не вызвано</td>
+</tr>
+<tr>
+<td>C05</td>
+<td><code>class:protected</code> в public sink</td>
+<td>Тело не вызвано</td>
+</tr>
+<tr>
+<td>C06</td>
+<td>Домен вне allowlist или адресат отсутствует</td>
+<td>Тело не вызвано</td>
+</tr>
+<tr>
+<td>C07</td>
+<td>Критическое действие</td>
+<td>До ответа человека тело не вызвано</td>
+</tr>
+<tr>
+<td>C08</td>
+<td>Изменение аргументов после HITL</td>
+<td>Старое подтверждение отклонено</td>
+</tr>
+<tr>
+<td>C09</td>
+<td>Повтор <code>session_id/call_id</code></td>
+<td>Второй эффект не выполнен</td>
+</tr>
+<tr>
+<td>C10</td>
+<td>Исчерпание rate/budget/HITL queue</td>
+<td>Новые действия отклонены</td>
+</tr>
+<tr>
+<td>C11</td>
+<td>Stop до dispatch</td>
+<td>Тело не вызвано; pending/grants удалены</td>
+</tr>
+<tr>
+<td>C12</td>
+<td>Stop после dispatch</td>
+<td>Инструмент получает отмену; результат различает «не запускался» и «мог иметь эффект»</td>
+</tr>
+<tr>
+<td>C13</td>
+<td>Сбой policy worker/hook/timeout</td>
+<td>Fail closed, без эффекта</td>
+</tr>
+<tr>
+<td>C14</td>
+<td><code>policy.modify</code> из модели</td>
+<td>Безусловный <code>deny</code></td>
+</tr>
+<tr>
+<td>C15</td>
+<td>Перезапуск/смена профиля</td>
+<td>Явно определено, что происходит с budget/stop/HITL; скрытого сброса нет</td>
+</tr>
+</tbody>
+</table>
+<p>C12 пройден в LangGraph-стенде только для кооперативного инструмента: доверенный
+stop выставляет сигнал, инструмент вызывает <code>cancellation_point()</code>, а результат
+отмечается <code>may_have_occurred</code>. Это не доказывает остановку зависшего процесса или
+инструмента, игнорирующего сигнал. C15 не пройден: состояние пока находится в
+памяти процесса. C01–C11/C13–C14 имеют лабораторное покрытие; реальные LLM,
+файловые/сетевые эффекты и песочница ОС в этот результат не входят.</p>
+<span id="21-фактическая-привязка-проверок-на-2509"></span><h3 id="section-2">2.1. Фактическая привязка проверок на 25.09</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Статус</th>
+<th>Где подтверждено</th>
+<th>Ограничение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C01</td>
+<td>Сквозной лабораторный</td>
+<td><code>test_real_graph_runs_l1_then_l3_then_toolnode</code></td>
+<td>Безвредная функция вместо чтения файла</td>
+</tr>
+<tr>
+<td>C02</td>
+<td>Сквозной лабораторный</td>
+<td><code>test_c02_unknown_tool_is_denied_before_toolnode</code></td>
+<td>Неизвестное тело инструмента не зарегистрировано и не достигается</td>
+</tr>
+<tr>
+<td>C03</td>
+<td>Сквозной лабораторный</td>
+<td><code>test_model_arguments_cannot_forge_provenance</code>, <code>test_model_cannot_supply_task_identity</code></td>
+<td>Доверенный host симулируется тестом</td>
+</tr>
+<tr>
+<td>C04</td>
+<td>Сквозной лабораторный</td>
+<td><code>test_l3_denial_stops_before_toolnode</code>; engine-тесты traversal/symlink</td>
+<td>Реального открытия файла нет</td>
+</tr>
+<tr>
+<td>C05</td>
+<td>Сквозной лабораторный</td>
+<td><code>test_c05_protected_input_cannot_reach_public_network_sink</code></td>
+<td>Сетевой tool — безвредная имитация, реального запроса нет</td>
+</tr>
+<tr>
+<td>C06</td>
+<td>Сквозной лабораторный</td>
+<td><code>test_c06_public_input_still_cannot_use_off_list_domain</code></td>
+<td>Public-класс задаётся отдельным тестовым профилем; классификатор данных ещё не выбран</td>
+</tr>
+<tr>
+<td>C07</td>
+<td>Сквозной лабораторный</td>
+<td><code>test_hitl_resume_preserves_l1_binding_and_executes_once</code></td>
+<td>Интерфейс оператора симулируется <code>Command(resume=...)</code></td>
+</tr>
+<tr>
+<td>C08</td>
+<td>Сквозной лабораторный + контракт</td>
+<td><code>test_c08_resume_cannot_replace_approved_tool_arguments</code>, <code>test_changed_arguments_invalidate_approval</code></td>
+<td>Runtime resume принимает только точный <code>{approved: bool}</code>; fingerprint проверен контрактом</td>
+</tr>
+<tr>
+<td>C09</td>
+<td>Сквозной лабораторный</td>
+<td><code>test_c09_replayed_call_id_does_not_execute_twice</code></td>
+<td>Один процесс и один Engine</td>
+</tr>
+<tr>
+<td>C10</td>
+<td>Сквозной rate и budget; engine для HITL queue</td>
+<td><code>test_c10_rate_limit_blocks_sixth_call_in_same_graph_session</code>, <code>test_c10_cumulative_budget_blocks_third_graph_call</code></td>
+<td>Очередь подтверждений пока не повторена сквозным тестом</td>
+</tr>
+<tr>
+<td>C11</td>
+<td>Сквозной лабораторный</td>
+<td><code>test_stop_before_dispatch_denies_without_tool_execution</code></td>
+<td>Нет межпроцессной остановки</td>
+</tr>
+<tr>
+<td>C12</td>
+<td>Сквозной, частичная гарантия</td>
+<td><code>test_stop_after_dispatch_reaches_cooperative_tool</code></td>
+<td>Только кооперативный инструмент; эффект помечается <code>may_have_occurred</code></td>
+</tr>
+<tr>
+<td>C13</td>
+<td>Сквозной для исключения hook; частично для timeout</td>
+<td><code>test_c13_policy_hook_exception_fails_closed</code> плюс invalid input/call и detector unavailable</td>
+<td>Падение отдельного процесса и таймаут зависшего hook ещё не имитировались</td>
+</tr>
+<tr>
+<td>C14</td>
+<td>Сквозной лабораторный</td>
+<td><code>test_c14_model_requested_policy_change_is_unconditionally_denied</code></td>
+<td>Административное тело — безвредная имитация и не достигается</td>
+</tr>
+<tr>
+<td>C15</td>
+<td>Не пройден</td>
+<td>—</td>
+<td><code>InMemorySaver</code> и состояние Engine сбрасываются при перезапуске</td>
+</tr>
+</tbody>
+</table>
+<p>Дополнительная проверка результата после <code>ToolNode</code>: <code>test_tool_output_is_checked_by_l1_before_graph_returns</code> и <code>test_oversized_tool_output_is_replaced_before_return</code>.</p>
+<span id="3-матрица-найденных-возможностей"></span><h2 id="section-3">3. Матрица найденных возможностей</h2>
+<table>
+<thead>
+<tr>
+<th>Возможность</th>
+<th>DeepSeek Harness</th>
+<th>LangGraph Python 1.2.12</th>
+<th>OpenAI Agents Python</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Предисполнительный gate</td>
+<td><code>tools/pre-execute</code> + <code>tools.guard()</code> найдены статически</td>
+<td><code>policy → ToolNode/END</code> проверен runtime-тестом</td>
+<td><code>ToolInputGuardrail</code> до <code>FunctionTool</code>, проверен только исходник</td>
+</tr>
+<tr>
+<td>HITL</td>
+<td><code>approval.request</code>, <code>allowed-once</code>; контрактный тест</td>
+<td><code>interrupt()</code>/<code>Command(resume=...)</code>; runtime-тест</td>
+<td>Approval/guardrail пути SDK; не запускались</td>
+</tr>
+<tr>
+<td>Финальные аргументы</td>
+<td>DSH exec snapshot/fingerprint в адаптере</td>
+<td>tool call snapshot/fingerprint в адаптере</td>
+<td><code>ToolContext.tool_arguments</code>; привязано к SDK</td>
+</tr>
+<tr>
+<td>Активная отмена</td>
+<td><code>Agent.cancel</code>, обязательный <code>AbortSignal</code>, <code>whenIdle()</code> найдены; не подключены</td>
+<td>Реализован ToolNode-wrapper и кооперативная <code>cancellation_point()</code>; жёсткой остановки нет</td>
+<td>Исполнение использует asyncio cancellation; границы разных категорий инструментов различаются</td>
+</tr>
+<tr>
+<td>Input hook L1</td>
+<td>Не подтверждён</td>
+<td>Реальный первый узел <code>input</code>; L1-метки доверенно связаны с L3</td>
+<td>Нужна отдельная точка Runner/input pipeline</td>
+</tr>
+<tr>
+<td>Post-result gate</td>
+<td><code>tools/post-execute</code> найден</td>
+<td>Реализована повторная L1-проверка после ToolNode; oversized-результат заменяется до возврата</td>
+<td><code>ToolOutputGuardrail</code> после function-tool body</td>
+</tr>
+<tr>
+<td>Настройки</td>
+<td>Config/ConfigEditor найдены статически</td>
+<td>Конфигурация приложения</td>
+<td>RunConfig/Agent-конфигурация, SDK-специфично</td>
+</tr>
+<tr>
+<td>Текущий уровень доказательства</td>
+<td>Контрактная имитация, DSH не запускался</td>
+<td>Настоящий <code>StateGraph</code>: L1, детерминированный planner, L3, HITL, ToolNode и кооперативный stop; без LLM и реальных эффектов</td>
+<td>Только статический просмотр ZIP</td>
+</tr>
+</tbody>
+</table>
+<span id="4-правило-выбора"></span><h2 id="section-4">4. Правило выбора</h2>
+<p>Фреймворк не считается «лучше» из-за наличия одного hook. Выбирается ядро,
+которое команда реально использует и в котором можно доказать C01–C15 без
+обхода для иных категорий инструментов. Общий YAML и Policy Engine сохраняются;
+меняется тонкий адаптер событий и отмены.</p>
+<span id="5-что-нужно-получить-от-команды"></span><h2 id="section-5">5. Что нужно получить от команды</h2>
+<ul>
+<li>название и язык выбранного ядра;</li>
+<li>первый демонстрационный сценарий, реальные инструменты и категории данных;</li>
+<li>интерфейс пользовательского ввода и административного подтверждения;</li>
+<li>какие операции должны останавливаться немедленно и какая гарантия завершения
+требуется;</li>
+<li>допустимый способ хранения профиля и защитного состояния.</li>
+</ul>
+<p>До этих ответов не устанавливать второй runtime, не запускать DSH целиком и не
+выбирать SQLite/VM/Firecracker. Уже выполненный проверочный шаг ограничен
+LangGraph Python и безвредными инструментами. Следом по этапу 4: оставшиеся части
+C10/C13, затем отдельное решение по C15 без самовольного выбора постоянного
+хранилища.</p>
+
+<footer>Локальная HTML-сборка из Markdown. Правки вносить в исходные .md, затем повторить сборку. Без сервера и внешних зависимостей.</footer></main></body></html>

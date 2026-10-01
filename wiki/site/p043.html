@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'">
+<title>A1.3/2 — NeMo Guardrails: что действительно защищает L1 — Security Lab Wiki</title><style>:root{color-scheme:light;--ink:#233247;--muted:#5d6a7c;--line:#dce3eb;--accent:#175d9c}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+a{color:var(--accent);text-underline-offset:3px}a:focus-visible{outline:3px solid #ecae44;outline-offset:3px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:320px;top:8px;background:white;z-index:9}
+aside{position:fixed;inset:0 auto 0 0;width:290px;overflow-y:auto;background:#f5f7fa;border-right:1px solid var(--line);padding:25px 18px}
+.brand{font-size:19px;font-weight:750;display:block;text-decoration:none}.caption{color:var(--muted);font-size:12px;margin:6px 0 22px}
+details{margin:12px 0}summary{font-size:13px;font-weight:750;cursor:pointer;padding:5px}
+nav a{display:block;padding:7px 10px;font-size:13px;line-height:1.45;text-decoration:none;border-radius:5px;margin:2px 0}
+nav a:hover{background:#e5edf6}nav a[aria-current=page]{background:#dceafa;color:#124d81;font-weight:650}
+main{margin-left:290px;padding:38px clamp(22px,5vw,85px);max-width:1350px}
+.meta{font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:24px;overflow-wrap:anywhere}
+h1{font-size:30px;line-height:1.25;margin-top:0}h2{font-size:22px;margin-top:32px}h3{font-size:18px}
+pre{background:#f3f6fa;border:1px solid var(--line);padding:16px;overflow:auto;border-radius:7px}
+code{font-size:.87em;background:#f3f6fa;overflow-wrap:anywhere}pre code{background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;margin:20px 0;max-width:100%}
+th,td{border:1px solid var(--line);padding:10px 12px;min-width:130px;vertical-align:top}th{background:#edf2f8;text-align:left}
+blockquote{border-left:3px solid #aac5df;margin-left:0;padding-left:18px;color:var(--muted)}
+.unavailable{color:#7c5261;text-decoration:underline dotted;cursor:help}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:15px;font-size:12px;color:var(--muted)}
+@media(max-width:780px){aside{position:static;width:auto;max-height:42vh;border-bottom:1px solid var(--line)}main{margin:0;padding:24px 18px}h1{font-size:25px}.skip:focus{left:10px}}
+@media print{aside,.skip,.meta{display:none}main{margin:0;padding:0}table{display:table}pre{white-space:pre-wrap}}</style></head>
+<body><a class="skip" href="#content">К содержимому</a><aside><a class="brand" href="index.html">Security Lab · Wiki</a>
+<p class="caption">Многоуровневая защита агента<br>Документация ≠ доказательство испытания</p><nav aria-label="Разделы Wiki"><details open><summary>Обзор</summary><a href="index.html">Вики проекта</a><a href="p060.html">Карта методов защиты</a><a href="p064.html">Реализованные политики: код, проверки и ограничения</a><a href="p004.html">Карта реализации многоуровневой защиты</a></details><details open><summary>L1 &#183; Вход и результаты</summary><a href="p051.html">L1: проверка входа</a><a href="p052.html">L1: происхождение данных</a><a href="p053.html">L1: повторная проверка результата инструмента</a></details><details open><summary>L3 &#183; Ограничения</summary><a href="p050.html">Оригинальный AGT: ограничение бюджета</a><a href="p054.html">L3: лимиты прототипа</a><a href="p055.html">L3: остановка сессии</a><a href="p056.html">L3: отказ при ошибке и запрет изменения политики</a><a href="p057.html">L3: подтверждение критического действия</a><a href="p058.html">L3: метки данных и сетевые адресаты</a><a href="p059.html">L3: инструменты и границы доступа</a></details><details open><summary>Источники</summary><a href="p063.html">Полезные ссылки и ресурсы</a><a href="p049.html">Источники и честные статусы проверки</a><a href="p061.html">Неудавшиеся проверки и открытые вопросы</a><a href="p062.html">Поиск источников при отладке</a><a href="p026.html">A1.3 — индекс последовательного аудита 14 ZIP</a></details><details open><summary>Аудит и покрытие L2</summary><a href="p027.html">Контрольная точка A1.3: 14 ZIP рассмотрены, A1 ещё не закрыт</a><a href="p028.html">Контрольная QA-сверка A1 после 14 отчётов</a><a href="p029.html">A1.4 — покрытие многоуровневой модели безопасности</a><a href="p030.html">Как пользователь будет проверять методы в VM</a><a href="p031.html">A1.2 — статическая сверка заявленных заимствований</a><a href="p032.html">Единый формат методички и отчёта</a><a href="p033.html">A1.3/1 — Agent Governance Toolkit в архиве ACS</a><a href="p034.html">M-AGT-APPROVAL — оригинальные правила согласования AGT</a><a href="p035.html">A1.3/11 — Dify: модерация, лимиты, sandbox и сетевой прокси</a><a href="p036.html">A1.3/5 — DeepSeek Harness: политика инструментов, настройки и изоляция</a><a href="p037.html">A1.3/13 — GenAI Data Security Initiative: статический сканер и проверка трасс</a><a href="p038.html">A1.3/12 — GenAI Red Team Lab: испытательный корпус, не защитный middleware</a><a href="p039.html">A1.3/9 — Goose: инспекторы инструментов, разрешения и граница shell</a><a href="p040.html">A1.3/8 — Hermes Agent: approval, защищённые файлы и терминальная среда</a><a href="p041.html">A1.3/4 — LangGraph: ToolNode, interrupt и состояние</a><a href="p042.html">A1.3/7 — Microsoft Agent Framework: метки, политика инструментов и контейнерный shell</a><a href="p043.html" aria-current="page">A1.3/2 — NeMo Guardrails: что действительно защищает L1</a><a href="p044.html">A1.3/3 — OpenAI Agents SDK: guardrails, approvals и граница sandbox</a><a href="p045.html">A1.3/10 — OpenHands: Agent Canvas и граница внешнего agent-server</a><a href="p046.html">A1.3/14 — OWASP CheatSheetSeries: рекомендации и иллюстративные примеры</a><a href="p047.html">A1.3/6 — Pydantic AI: toolsets, approval и лимиты</a><a href="p048.html">Wiki оригинальных методов защиты</a></details><details><summary>Лабораторные</summary><a href="p016.html">A3 — подготовка ЛР №0: среда для пилота AGT budgets</a><a href="p017.html">labs/00-environment/Протокол_локальной_A3_20260929.md</a><a href="p018.html">A3 — фактический протокол Azure-стенда для ЛР №0</a><a href="p019.html">Лабораторная работа №1 — пороги AGT budgets без LLM</a><a href="p020.html">AGT budgets — отчёт пилотного сеанса 29.09.2026</a></details><details><summary>Проект и код</summary><a href="p001.html">Материалы проекта для проверки</a><a href="p002.html">Firecracker — заметка для этапа 5</a><a href="p003.html">Перенос политик безопасности между DeepSeek Harness и LangGraph</a><a href="p005.html">Контракт событий и политик L1/L3 — черновик 0.4</a><a href="p006.html">Матрица настроек L3 и границ автономности</a><a href="p007.html">Аудит оригинальных механизмов и ручная лаборатория</a><a href="p008.html">План работ по политикам безопасности агента</a><a href="p009.html">Программа проверки политик в Azure VM — A3–A4</a><a href="p010.html">Ревью этапов 1–3</a><a href="p011.html">Этап 1. Модель угроз и каталог политик многоуровневой защиты</a><a href="p012.html">Этап 2. Реализация L1 и передача меток в L3</a><a href="p013.html">Этап 3 — декларативные политики L3 и контрольная плоскость</a><a href="p014.html">Этап 4 — критерии интеграции L1/L3 с ядром</a><a href="p015.html">Этап 5.2 — подготовка изолированной среды</a><a href="p021.html">Этап 5.1: адаптер контракта DSH</a><a href="p022.html">Симулятор политик L1/L3</a><a href="p023.html">Agent Governance Toolkit policy notice</a><a href="p024.html">NeMo Guardrails code provenance</a><a href="p025.html">AI Agent Security Lab</a></details></nav></aside>
+<main id="content"><div class="meta">wiki/аудит/NeMo_A1.3.md · <a href="../../wiki/%D0%B0%D1%83%D0%B4%D0%B8%D1%82/NeMo_A1.3.md">Markdown-исходник</a></div>
+<span id="a132--nemo-guardrails-что-действительно-защищает-l1"></span><h1 id="a1.32-nemo-guardrails-l1">A1.3/2 — NeMo Guardrails: что действительно защищает L1</h1>
+<p>Дата: 26.09.2026. Источник: <code>C:\Users\abUser\Downloads\Guardrails-develop.zip</code>, SHA-256 <code>B739A7970A4E4FE187BAA7A152CED3D2A7109EFE8A02C3D54AD5B27FFA1B718D</code>. Содержимое прочитано из ZIP без извлечения, импорта, установки библиотек, загрузки моделей и сетевых запросов. В архиве нет установленного нами точного upstream commit; имя <code>develop</code> не является фиксацией ревизии. Файлы рассмотренных модулей имеют SPDX Apache-2.0; перед переносом проверить применимые LICENSE/NOTICE по каждому оригиналу.</p>
+<span id="разделить-три-разных-вида-инъекции"></span><h2 id="section">Разделить три разных вида «инъекции»</h2>
+<table>
+<thead>
+<tr>
+<th>Реализация</th>
+<th>Где срабатывает и что ищет</th>
+<th>Связь с нашей схемой</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>library/jailbreak_detection</code></td>
+<td>Input rail над <code>user_message</code>. Эвристики (perplexity GPT-2 Large) или классификатор (Snowflake embedding + ONNX); возможен HTTP endpoint/NIM.</td>
+<td>Кандидат для <strong>L1/детекция jailbreak</strong>. Это не универсальная детекция косвенных prompt-injection в retrieved documents, памяти и tool output.</td>
+</tr>
+<tr>
+<td><code>library/injection_detection</code></td>
+<td>Manifest явно задаёт <strong>output</strong> rail над <code>bot_message</code>; YARA-правила <code>code</code>, <code>sqli</code>, <code>template</code>, <code>xss</code>, действие <code>reject</code> или <code>omit</code>.</td>
+<td>Защита от шаблонных SQL/кодовых/XSS фрагментов в выходе. <strong>Не засчитывать как реализованный L1 prompt-injection detector.</strong> Относится к выходной валидации/санитизации, если этот выход дальше интерпретируется.</td>
+</tr>
+<tr>
+<td><code>library/prompt_security</code></td>
+<td>Input/output rail, но обращается к внешнему Prompt Security Protect API, передаёт пользовательский/бот-текст.</td>
+<td>Внешний сервис-кандидат, не локальная автономная защита. При сбое API код по умолчанию возвращает <code>log</code>/allow.</td>
+</tr>
+<tr>
+<td><code>library/self_check/input_check</code></td>
+<td>LLM получает отдельный prompt-задание и решает, разрешить ли вход пользователя. Пустой input блокируется.</td>
+<td>L1/LLM-based self-check; эффективность зависит от выбранной модели и задания. Не детерминированный барьер ОС или инструментов.</td>
+</tr>
+<tr>
+<td><code>library/sensitive_data_detection</code></td>
+<td>Presidio + spaCy на input/output/retrieval; detect блокирует или mask трансформирует.</td>
+<td>Конфиденциальность на границе данных; требует отдельных зависимостей и языковой/качественной проверки. Это не sandbox.</td>
+</tr>
+</tbody>
+</table>
+<span id="цепочка-jailbreak-и-важные-режимы-отказа"></span><h2 id="jailbreak">Цепочка jailbreak и важные режимы отказа</h2>
+<p><code>jailbreak_detection/rail.py</code> регистрирует два input surface; <code>flows.co</code> при <code>is_blocked</code> прерывает поток, а <code>actions.py</code> выбирает локальную эвристику, локальный классификатор, HTTP detector или NIM. <code>request.py</code> возвращает <code>None</code> при HTTP-ошибке/отсутствующем поле <code>jailbreak</code>; соответствующие unit-тесты присутствуют. <strong>Штатный action на <code>None</code> возвращает allow</strong>. При <code>RuntimeError</code> или <code>ImportError</code> локального классификатора <code>jailbreak_detection_model</code> также ставит <code>False</code> и возвращает allow. Это политика отказа upstream, а не предположение. Наш <a href="../../policy-gateway/l1/nemo_jailbreak.py" title="Исходный файл; переход к строке зависит от просмотрщика"><code>nemo_jailbreak.py</code></a> при недостоверном ответе бросает <code>DetectorUnavailable</code>, но <a href="../../policy-gateway/l1/pipeline.py" title="Исходный файл; переход к строке зависит от просмотрщика"><code>L1Pipeline.inspect()</code></a> перехватывает исключение и добавляет метки <code>detector_unavailable</code> и <code>untrusted</code>, <strong>не запрещая вход автоматически</strong>. Это закреплено в <a href="../../policy-gateway/test_l1_pipeline.py" title="Исходный файл; переход к строке зависит от просмотрщика"><code>test_detector_failure_is_visible_and_untrusted</code></a>. Дальнейшее действие зависит от отдельной политики L3; блокировка при отказе детектора не доказана и требует end-to-end проверки. Даже метка <code>prompt_injection_suspected</code> сама по себе не гарантирует запрет: в <code>test_nemo_signal_and_provenance_reach_l3</code> запрос <code>file.read</code> получает <code>allow</code>.</p>
+<p>Локальная эвристика <code>heuristics/checks.py</code> загружает <code>gpt2-large</code> при импорте модуля через <code>from_pretrained</code>; не импортировать этот код на хосте для «просто проверки». <code>model_based/checks.py</code> при отсутствии <code>snowflake.onnx</code> обращается к Hugging Face Hub за <code>nvidia/NemoGuard-JailbreakDetect</code>; <code>model_based/models.py</code> загружает <code>Snowflake/snowflake-arctic-embed-m-long</code> с <code>trust_remote_code=True</code>, затем ONNX classifier. Поэтому «локальный детектор» без заранее проверенных весов, зависимостей и сетевых ограничений не равен офлайн-опыту. <code>requirements.txt</code> включает Torch, Transformers, ONNX Runtime и др.; ресурсная пригодность для Windows 11/VM ещё не измерялась. Пример <code>examples/configs/jailbreak_detection/config.yml</code> использует <code>engine: openai</code> и оба input-flow — <strong>это не настройка локальной модели по умолчанию</strong>.</p>
+<p><code>injection_detection/actions.py</code> при отсутствии загруженных YARA-правил возвращает allow с предупреждением; при синтаксической ошибке правила <code>_load_rules</code> возвращает <code>None</code>. Тест <code>test_malformed_inline_yara_rule_fails_gracefully</code> прямо описывает detection no-op. Конфиг допускает только <code>reject|omit</code>; <code>sanitize</code> в функции не реализован, несмотря на оставшийся enum/ветку. Нельзя переносить название «injection detection» без указания поверхности и типа угрозы.</p>
+<span id="просмотренные-исходники-и-тестовые-доказательства"></span><h2 id="section-1">Просмотренные исходники и тестовые доказательства</h2>
+<p>Пути ниже отсчитываются от корня <code>Guardrails-develop/</code> внутри ZIP. Выборочные хеши — SHA-256 содержимого элемента ZIP:</p>
+<table>
+<thead>
+<tr>
+<th>Путь</th>
+<th>SHA-256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nemoguardrails/library/jailbreak_detection/actions.py</code></td>
+<td><code>753E0B84444DB2C7D64EC2949E9CB1BCF07722B44CADFA1116430922E168A322</code></td>
+</tr>
+<tr>
+<td><code>nemoguardrails/library/jailbreak_detection/request.py</code></td>
+<td><code>6DF94B2776D781240B1DE6388FCB1DFBC4FA311093E7578C2ADF5495FBDBE826</code></td>
+</tr>
+<tr>
+<td><code>nemoguardrails/library/jailbreak_detection/rail.py</code></td>
+<td><code>63EF3BE7EC9C818CCBA89028EADC7859CB00657AAF689448D4F8FC223D5C3F49</code></td>
+</tr>
+<tr>
+<td><code>nemoguardrails/library/jailbreak_detection/heuristics/checks.py</code></td>
+<td><code>6D27D57FDF47C6D562C7144B0654DF34538887DF969334FDDCD3317D0BDA4444</code></td>
+</tr>
+<tr>
+<td><code>nemoguardrails/library/jailbreak_detection/model_based/models.py</code></td>
+<td><code>D39BC88B34512B3D2EEF2D54D04FD0788594B6BBD2FDBBF54F405F01D877EFED</code></td>
+</tr>
+<tr>
+<td><code>nemoguardrails/library/injection_detection/rail.py</code></td>
+<td><code>580420513AA36EC88E1CA78BD82C3B5FF0E4655ACD0EED2364A954E4D5F2B0F2</code></td>
+</tr>
+<tr>
+<td><code>nemoguardrails/library/injection_detection/actions.py</code></td>
+<td><code>282C0361607F5094A3179CCA8B1E40010618BC0AA41726471A56CC1D84EC6F58</code></td>
+</tr>
+<tr>
+<td><code>nemoguardrails/library/prompt_security/actions.py</code></td>
+<td><code>8418DFC9CD01A4E542C8D56592FBD9FF0A53D120118550201E4D0AA985D5BE4E</code></td>
+</tr>
+<tr>
+<td><code>tests/test_jailbreak_request.py</code></td>
+<td><code>C82D61833D7A6E56FBB44D0381A49D9E8710D93991E7C5D117475C2E461AEF57</code></td>
+</tr>
+<tr>
+<td><code>tests/test_injection_detection.py</code></td>
+<td><code>98A6D6E4AC8810F6C74CBAEC399EA8677F7439DE7CA2C908B1CEA89345FC824C</code></td>
+</tr>
+</tbody>
+</table>
+<p>Дополнительно статически просмотрены <code>jailbreak_detection/{rail_config.py,flows.co,model_based/checks.py,requirements.txt}</code>, <code>injection_detection/{rail_config.py,yara_config.py,flows.co,yara_rules/{code,sqli,template,xss}.yara}</code>, <code>prompt_security/{rail.py,flows.co}</code>, <code>self_check/input_check/{rail.py,actions.py,flows.co}</code>, <code>sensitive_data_detection/{rail.py,rail_config.py,actions.py,flows.co}</code>, примеры YAML, а в тестах <code>test_jailbreak_{actions,config,heuristics,model_based,request}.py</code>, <code>test_injection_detection.py</code>, <code>test_prompt_security.py</code>, <code>test_self_check_actions.py</code>, <code>test_sensitive_data_detection.py</code> и recorded rail-тестах проверены наборы сценариев и критические ветви отказа. Это не означает, что каждое утверждение каждого теста было повторно исполнено или что все модули NeMo исследованы.</p>
+<span id="решение-для-нашего-проекта-на-этом-этапе"></span><h2 id="section-2">Решение для нашего проекта на этом этапе</h2>
+<ul>
+<li>Не копировать NeMo-конфигурации «как есть»: пример jailbreak может обращаться к OpenAI/внешнему NIM, а локальная модель может инициировать скачивание и доверенный запуск кода модели. Все такие действия требуют отдельного решения и изолированной среды пользователя.</li>
+<li>Не считать наличие <code>nemo_jailbreak.py</code> полноценной L1-детекцией: сейчас это <strong>клиент контракта</strong>, без установленного/проверенного детектора.</li>
+<li>Для будущих L1-испытаний разделить сценарии: безопасный/вредоносный user prompt, недоверенный retrieved/tool текст, недоступный detector, malformed ответ, ресурсная нагрузка. Отрицательное решение должно проверяться до передачи текста планировщику; синтетический <code>bool</code> без привязки к потоку агента недостаточен.</li>
+</ul>
+<p>Следующий пакет по плану — OpenAI Agents ZIP. VM, зависимости и исполняемый код этим аудитом не менялись.</p>
+
+<footer>Локальная HTML-сборка из Markdown. Правки вносить в исходные .md, затем повторить сборку. Без сервера и внешних зависимостей.</footer></main></body></html>

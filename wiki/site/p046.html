@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'">
+<title>A1.3/14 — OWASP CheatSheetSeries: рекомендации и иллюстративные примеры — Security Lab Wiki</title><style>:root{color-scheme:light;--ink:#233247;--muted:#5d6a7c;--line:#dce3eb;--accent:#175d9c}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+a{color:var(--accent);text-underline-offset:3px}a:focus-visible{outline:3px solid #ecae44;outline-offset:3px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:320px;top:8px;background:white;z-index:9}
+aside{position:fixed;inset:0 auto 0 0;width:290px;overflow-y:auto;background:#f5f7fa;border-right:1px solid var(--line);padding:25px 18px}
+.brand{font-size:19px;font-weight:750;display:block;text-decoration:none}.caption{color:var(--muted);font-size:12px;margin:6px 0 22px}
+details{margin:12px 0}summary{font-size:13px;font-weight:750;cursor:pointer;padding:5px}
+nav a{display:block;padding:7px 10px;font-size:13px;line-height:1.45;text-decoration:none;border-radius:5px;margin:2px 0}
+nav a:hover{background:#e5edf6}nav a[aria-current=page]{background:#dceafa;color:#124d81;font-weight:650}
+main{margin-left:290px;padding:38px clamp(22px,5vw,85px);max-width:1350px}
+.meta{font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:24px;overflow-wrap:anywhere}
+h1{font-size:30px;line-height:1.25;margin-top:0}h2{font-size:22px;margin-top:32px}h3{font-size:18px}
+pre{background:#f3f6fa;border:1px solid var(--line);padding:16px;overflow:auto;border-radius:7px}
+code{font-size:.87em;background:#f3f6fa;overflow-wrap:anywhere}pre code{background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;margin:20px 0;max-width:100%}
+th,td{border:1px solid var(--line);padding:10px 12px;min-width:130px;vertical-align:top}th{background:#edf2f8;text-align:left}
+blockquote{border-left:3px solid #aac5df;margin-left:0;padding-left:18px;color:var(--muted)}
+.unavailable{color:#7c5261;text-decoration:underline dotted;cursor:help}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:15px;font-size:12px;color:var(--muted)}
+@media(max-width:780px){aside{position:static;width:auto;max-height:42vh;border-bottom:1px solid var(--line)}main{margin:0;padding:24px 18px}h1{font-size:25px}.skip:focus{left:10px}}
+@media print{aside,.skip,.meta{display:none}main{margin:0;padding:0}table{display:table}pre{white-space:pre-wrap}}</style></head>
+<body><a class="skip" href="#content">К содержимому</a><aside><a class="brand" href="index.html">Security Lab · Wiki</a>
+<p class="caption">Многоуровневая защита агента<br>Документация ≠ доказательство испытания</p><nav aria-label="Разделы Wiki"><details open><summary>Обзор</summary><a href="index.html">Вики проекта</a><a href="p060.html">Карта методов защиты</a><a href="p064.html">Реализованные политики: код, проверки и ограничения</a><a href="p004.html">Карта реализации многоуровневой защиты</a></details><details open><summary>L1 &#183; Вход и результаты</summary><a href="p051.html">L1: проверка входа</a><a href="p052.html">L1: происхождение данных</a><a href="p053.html">L1: повторная проверка результата инструмента</a></details><details open><summary>L3 &#183; Ограничения</summary><a href="p050.html">Оригинальный AGT: ограничение бюджета</a><a href="p054.html">L3: лимиты прототипа</a><a href="p055.html">L3: остановка сессии</a><a href="p056.html">L3: отказ при ошибке и запрет изменения политики</a><a href="p057.html">L3: подтверждение критического действия</a><a href="p058.html">L3: метки данных и сетевые адресаты</a><a href="p059.html">L3: инструменты и границы доступа</a></details><details open><summary>Источники</summary><a href="p063.html">Полезные ссылки и ресурсы</a><a href="p049.html">Источники и честные статусы проверки</a><a href="p061.html">Неудавшиеся проверки и открытые вопросы</a><a href="p062.html">Поиск источников при отладке</a><a href="p026.html">A1.3 — индекс последовательного аудита 14 ZIP</a></details><details open><summary>Аудит и покрытие L2</summary><a href="p027.html">Контрольная точка A1.3: 14 ZIP рассмотрены, A1 ещё не закрыт</a><a href="p028.html">Контрольная QA-сверка A1 после 14 отчётов</a><a href="p029.html">A1.4 — покрытие многоуровневой модели безопасности</a><a href="p030.html">Как пользователь будет проверять методы в VM</a><a href="p031.html">A1.2 — статическая сверка заявленных заимствований</a><a href="p032.html">Единый формат методички и отчёта</a><a href="p033.html">A1.3/1 — Agent Governance Toolkit в архиве ACS</a><a href="p034.html">M-AGT-APPROVAL — оригинальные правила согласования AGT</a><a href="p035.html">A1.3/11 — Dify: модерация, лимиты, sandbox и сетевой прокси</a><a href="p036.html">A1.3/5 — DeepSeek Harness: политика инструментов, настройки и изоляция</a><a href="p037.html">A1.3/13 — GenAI Data Security Initiative: статический сканер и проверка трасс</a><a href="p038.html">A1.3/12 — GenAI Red Team Lab: испытательный корпус, не защитный middleware</a><a href="p039.html">A1.3/9 — Goose: инспекторы инструментов, разрешения и граница shell</a><a href="p040.html">A1.3/8 — Hermes Agent: approval, защищённые файлы и терминальная среда</a><a href="p041.html">A1.3/4 — LangGraph: ToolNode, interrupt и состояние</a><a href="p042.html">A1.3/7 — Microsoft Agent Framework: метки, политика инструментов и контейнерный shell</a><a href="p043.html">A1.3/2 — NeMo Guardrails: что действительно защищает L1</a><a href="p044.html">A1.3/3 — OpenAI Agents SDK: guardrails, approvals и граница sandbox</a><a href="p045.html">A1.3/10 — OpenHands: Agent Canvas и граница внешнего agent-server</a><a href="p046.html" aria-current="page">A1.3/14 — OWASP CheatSheetSeries: рекомендации и иллюстративные примеры</a><a href="p047.html">A1.3/6 — Pydantic AI: toolsets, approval и лимиты</a><a href="p048.html">Wiki оригинальных методов защиты</a></details><details><summary>Лабораторные</summary><a href="p016.html">A3 — подготовка ЛР №0: среда для пилота AGT budgets</a><a href="p017.html">labs/00-environment/Протокол_локальной_A3_20260929.md</a><a href="p018.html">A3 — фактический протокол Azure-стенда для ЛР №0</a><a href="p019.html">Лабораторная работа №1 — пороги AGT budgets без LLM</a><a href="p020.html">AGT budgets — отчёт пилотного сеанса 29.09.2026</a></details><details><summary>Проект и код</summary><a href="p001.html">Материалы проекта для проверки</a><a href="p002.html">Firecracker — заметка для этапа 5</a><a href="p003.html">Перенос политик безопасности между DeepSeek Harness и LangGraph</a><a href="p005.html">Контракт событий и политик L1/L3 — черновик 0.4</a><a href="p006.html">Матрица настроек L3 и границ автономности</a><a href="p007.html">Аудит оригинальных механизмов и ручная лаборатория</a><a href="p008.html">План работ по политикам безопасности агента</a><a href="p009.html">Программа проверки политик в Azure VM — A3–A4</a><a href="p010.html">Ревью этапов 1–3</a><a href="p011.html">Этап 1. Модель угроз и каталог политик многоуровневой защиты</a><a href="p012.html">Этап 2. Реализация L1 и передача меток в L3</a><a href="p013.html">Этап 3 — декларативные политики L3 и контрольная плоскость</a><a href="p014.html">Этап 4 — критерии интеграции L1/L3 с ядром</a><a href="p015.html">Этап 5.2 — подготовка изолированной среды</a><a href="p021.html">Этап 5.1: адаптер контракта DSH</a><a href="p022.html">Симулятор политик L1/L3</a><a href="p023.html">Agent Governance Toolkit policy notice</a><a href="p024.html">NeMo Guardrails code provenance</a><a href="p025.html">AI Agent Security Lab</a></details></nav></aside>
+<main id="content"><div class="meta">wiki/аудит/OWASP_CheatSheetSeries_A1.3.md · <a href="../../wiki/%D0%B0%D1%83%D0%B4%D0%B8%D1%82/OWASP_CheatSheetSeries_A1.3.md">Markdown-исходник</a></div>
+<span id="a1314--owasp-cheatsheetseries-рекомендации-и-иллюстративные-примеры"></span><h1 id="a1.314-owasp-cheatsheetseries">A1.3/14 — OWASP CheatSheetSeries: рекомендации и иллюстративные примеры</h1>
+<p>Дата: 27.09.2026. Источник: <code>C:\Users\abUser\Downloads\CheatSheetSeries-master.zip</code>, 16 288 455 байт, SHA-256 <code>ECF313E7F872DDBF262478547D8B5FA02CD4AF53B881397137285926314CB45A</code>, 358 элементов. ZIP открылся штатно; выбранные элементы прочитаны и хешированы без распаковки/исполнения. Полная CRC-проверка всех элементов не проводилась. Корневой <code>LICENSE.md</code> — CC BY-SA 4.0. README рекомендует ссылаться на официальный опубликованный сайт, а не на рабочие Markdown-файлы репозитория; локальные пути и хеши ниже служат фиксации именно предоставленного ZIP. Точный commit не установлен.</p>
+<span id="главное-разграничение"></span><h2 id="section">Главное разграничение</h2>
+<p>CheatSheetSeries — <strong>руководства и фрагменты примеров</strong>, не готовый исполняемый модуль политики агента. Примеры Python в AI Agent Security и LLM Prompt Injection Prevention не подключены к DSH, LangGraph или нашей шине событий. Наличие кода в Markdown не доказывает его пригодность к прямому копированию, полноту зависимостей, тестирование или безопасность в нашем runtime.</p>
+<span id="карта-к-многоуровневой-модели"></span><h2 id="section-1">Карта к многоуровневой модели</h2>
+<table>
+<thead>
+<tr>
+<th>Блок</th>
+<th>Что описывает источник</th>
+<th>Граница применения</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1 / валидация и детекция</td>
+<td>LLM Prompt Injection Prevention показывает простой <code>PromptInjectionFilter</code>: regex для фраз, минимальное anagram-подобие для типогликемии, замена совпадений и предел длины. AI Agent Security рекомендует считать внешние документы, API-ответы и письма недоверенными.</td>
+<td>Сам документ называет fuzzy helper минимальным. Фильтр не доказывает устойчивость к косвенным, многоязычным или закодированным инъекциям; показатель <code>blocked / len(test_attacks)</code> в примере — счётчик на наборе строк, не доказательство защиты реального агента.</td>
+</tr>
+<tr>
+<td>L1 / изоляция ввода</td>
+<td>Пример <code>create_structured_prompt</code> визуально отделяет <code>SYSTEM_INSTRUCTIONS</code> от <code>USER_DATA_TO_PROCESS</code>; документ рекомендует разделять данные и инструкции.</td>
+<td>Функция возвращает <strong>одну строку</strong> с маркерами, а не разные protocol roles или механизм datamarking. Она не гарантирует, что модель не выполнит инструкцию из <code>user_data</code>. Это иллюстрация идеи, не подтверждённый Spotlighting, prompt sandwiching или строгая граница доверия.</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Упоминаются роли, model-based guardrails и dual-LLM pattern (привилегированная модель отделена от чтения недоверенного контента).</td>
+<td>Нет весов модели, role embeddings или fine-tuning; описанная схема требует реализации и проверки вне этого ZIP. Сам документ предупреждает, что guardrail LLM тоже уязвим к prompt injection.</td>
+</tr>
+<tr>
+<td>L3 / инструменты и HITL</td>
+<td>AI Agent Security рекомендует минимальный набор инструментов, scope по ресурсу/операции, предисполнительную авторизацию, подтверждение высокорисковых действий. Отдельно требует связывать approval с точным actor/tool/target/parameters/expiry и проверять решение независимым исполнителем. Authorization Cheat Sheet требует deny-by-default и проверки <strong>каждого</strong> запроса.</td>
+<td>Python-декоратор <code>require_confirmation</code> — фрагмент: в нём используется неопределённая <code>sanitize_for_display</code>, а флаг <code>context.user_confirmed</code> сам по себе не удостоверяет подпись, срок, параметры и отсутствие replay. Нельзя переносить его как готовую HITL-политику.</td>
+</tr>
+<tr>
+<td>L3 / ОС sandbox</td>
+<td>Docker Security Cheat Sheet рекомендует не передавать daemon socket, непривилегированного пользователя, ограничение capabilities, seccomp/AppArmor/SELinux, лимиты ресурсов и read-only ФС/тома.</td>
+<td>Это checklist для будущего профиля гостя/контейнера, не конфигурация нашего стенда и не доказательство изоляции Windows/VirtualBox. Контейнер и VM по-прежнему нужно испытывать отдельно.</td>
+</tr>
+<tr>
+<td>Администрирование / аудит</td>
+<td>AI Agent Security задаёт abuse-case matrix: tool misuse, memory poisoning, exfiltration, approval bypass и др.; Logging Cheat Sheet требует журналировать отказы, но не записывать токены, пароли и личные данные как есть.</td>
+<td>Матрица — критерии будущих испытаний, а не выполненные тесты. Лог не доказывает отсутствие побочного эффекта; для этого нужен отдельный наблюдатель.</td>
+</tr>
+</tbody>
+</table>
+<span id="значение-для-проекта"></span><h2 id="section-2">Значение для проекта</h2>
+<ol>
+<li>Использовать документы как <strong>нормативные критерии отбора и испытаний</strong>: проверка каждого tool call, минимальные полномочия, привязка approval к точному действию, внешние данные как недоверенные, отдельная проверка фактического эффекта.</li>
+<li>Не считать regex-пример оригинальным надёжным L1-детектором, а Markdown-фрагмент middleware — готовой L3-интеграцией. Если на A2 потребуется заимствование именно кода, потребуется отдельно проверить лицензию, полноту примера и происхождение конкретного файла.</li>
+<li>Для L2 фиксировать отсутствие проверяемого метода в данном ZIP: рекомендации по модели не являются весами, обучением или механизмом иерархии.</li>
+<li>Чек-лист Docker применим как источник вопросов к будущей методичке, но не поручает сейчас запуск контейнера, менять ACL/сеть хоста или управлять VM.</li>
+</ol>
+<span id="опорные-места-в-zip"></span><h2 id="zip">Опорные места в ZIP</h2>
+<p>Пути относительно <code>CheatSheetSeries-master/</code>; номера строк — у элементов архива:</p>
+<ul>
+<li><code>LICENSE.md:1–15</code>; <code>README.md:1–10</code> — лицензия и статус Markdown-источников.</li>
+<li><code>cheatsheets/AI_Agent_Security_Cheat_Sheet.md:25–97, 178–218, 259–268, 689–724</code> — tool scope, L1, HITL и матрица проверок.</li>
+<li><code>cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.md:144–202, 204–235, 334–351, 353–379, 422–455</code> — учебный regex-фильтр, однострочная prompt-структура, model guardrails и условный test score.</li>
+<li><code>cheatsheets/Authorization_Cheat_Sheet.md:15–48, 109–135</code> — least privilege, deny by default, проверка каждого запроса и тесты.</li>
+<li><code>cheatsheets/Docker_Security_Cheat_Sheet.md:17–31, 71–83, 178–226</code> — daemon socket, capabilities, профили ОС и read-only ФС.</li>
+<li><code>cheatsheets/Logging_Cheat_Sheet.md:88–105, 182–205</code> — события и исключение секретов из журналов.</li>
+<li><code>cheatsheets/Input_Validation_Cheat_Sheet.md:24–50, 124–146</code> — общий принцип server-side allowlist валидации; не prompt-injection detector.</li>
+</ul>
+<span id="sha-256-выбранных-элементов"></span><h2 id="sha-256">SHA-256 выбранных элементов</h2>
+<table>
+<thead>
+<tr>
+<th>Элемент ZIP</th>
+<th>SHA-256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LICENSE.md</code></td>
+<td><code>2B47ECDD5078E948395BC5980226933854228FF688F10D1DD059208BE4956084</code></td>
+</tr>
+<tr>
+<td><code>README.md</code></td>
+<td><code>C1CCB21255A86E0C78201922260D6BC97615F2557C89DA0E056F2F25A7444BE3</code></td>
+</tr>
+<tr>
+<td><code>cheatsheets/AI_Agent_Security_Cheat_Sheet.md</code></td>
+<td><code>CDAB974F422C3CC3568D3C3E7364A98AB34FE965CE85AED3F4488C428ECCFC6D</code></td>
+</tr>
+<tr>
+<td><code>cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.md</code></td>
+<td><code>581A9BB96BC934FA277FDE7610B6E05FDD485D79FF617851DE99FC1262F56F74</code></td>
+</tr>
+<tr>
+<td><code>cheatsheets/Docker_Security_Cheat_Sheet.md</code></td>
+<td><code>D99B021376354C801D57ABCBA458F20FA5D931B21CF9B55B68D7A436BFD6CDD4</code></td>
+</tr>
+<tr>
+<td><code>cheatsheets/Authorization_Cheat_Sheet.md</code></td>
+<td><code>DD56DB698A11513111FC0A8E99E4F0E2492C86A5D82528C5A1DB35434CA18CFC</code></td>
+</tr>
+<tr>
+<td><code>cheatsheets/Input_Validation_Cheat_Sheet.md</code></td>
+<td><code>474509F8BC6D06DAB110BAD0D0D5055CC9C6F2A63D2F464CE2966BE634246772</code></td>
+</tr>
+<tr>
+<td><code>cheatsheets/Logging_Cheat_Sheet.md</code></td>
+<td><code>7D069FC66AF314B59E2B0729FA05FFD1973B12BCC43C857115ADAA4ACF1194A8</code></td>
+</tr>
+<tr>
+<td><code>cheatsheets/Secrets_Management_Cheat_Sheet.md</code></td>
+<td><code>302A2E4CB2153616A3C41D8A79D7407F24C03207FE60752892B71EC2776BC60C</code></td>
+</tr>
+</tbody>
+</table>
+<p>Это выборочный статический аудит относящихся к схеме документов, не прочтение всех 358 элементов. Код и тесты не запускались, конфигурации хоста/VM не менялись, перенос в агент не выполнялся. Этим завершена последовательность <strong>14 отчётов A1.3</strong>; далее — контрольная точка A1 и перечень пробелов, не A2 автоматически.</p>
+
+<footer>Локальная HTML-сборка из Markdown. Правки вносить в исходные .md, затем повторить сборку. Без сервера и внешних зависимостей.</footer></main></body></html>

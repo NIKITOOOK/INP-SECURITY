@@ -47,8 +47,12 @@ secrets/
 /AGENTS.md
 /ПЕРЕДАЧА.md
 /logs/
+/AUDIT/
 /Архив_плана_безопасности_v0.1.md
-/references/
+/references/*
+!/references/rendered/
+/references/rendered/*
+!/references/rendered/IMP-2026-links-wiki-updated.html
 /originals/
 /research/archive-inventory.json
 /README_корень_D.md
@@ -67,3 +71,4 @@ secrets/
 **/*chtz*
 **/upstream/
 /labs/00-environment/transfer/
+# Offline HTML documentation is included for download-and-open usage.

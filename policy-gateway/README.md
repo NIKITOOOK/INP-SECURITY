@@ -2,12 +2,11 @@
 
 Рабочий прототип читает YAML и принимает синтетические события. Сам движок возвращает решение и ID правила. L1-конвейер связывает проверенный вход с метками конкретного запроса L3. Для дополнительной детекции подключён адаптированный Apache-2.0 клиент контракта NeMo Guardrails `POST {prompt} -> {jailbreak: bool}`; он принимает только loopback endpoint и не скачивает модель. Проверочный LangGraph-стенд выполняет настоящий путь `L1 → детерминированный планировщик → L3 → ToolNode/END`, HITL и кооперативную остановку, используя только безвредные лабораторные функции.
 
-## Запуск на Windows
+## Повторение только в подготовленной VM
 
-```powershell
-D:\AI-Agent-Security-Lab\workspace-current\runtime\langgraph-py\Scripts\python.exe D:\AI-Agent-Security-Lab\workspace-current\policy-gateway\demo.py
-D:\AI-Agent-Security-Lab\workspace-current\runtime\langgraph-py\Scripts\python.exe D:\AI-Agent-Security-Lab\workspace-current\policy-gateway\verify.py
-```
+Не запускать этот код на Windows-хосте. Сначала согласовать опыт, проверить изоляцию гостя и зависимости ниже. Наличие AGT/Bun/OPA в VM не подтверждает наличие Python/LangGraph/Node для этого прототипа. Команды и гостевой путь фиксируются в отдельном протоколе перед повтором.
+
+Сохранённый результат от 25.09.2026 — 84 Python + 16 Node-тестов; новых прогонов при актуализации документации не было. [AGT-пилот 29.09](../labs/01-agt-budgets/Отчёт_пилота_20260929.md) — отдельный опыт оригиналов, его результаты не засчитываются прототипу.
 
 `demo.py` выводит JSON с решениями. `verify.py` повторяет тесты Python и Node-адаптера, сохраняет рядом `test-results.json`, `test-results.txt` и `adapter-test-results.tap`. Если в текущем Python установлен LangGraph, он также запускает реальные runtime-тесты; версия записывается в отчёт. Конфигурация находится на уровень выше: `Политики_L1_L3_v0.1.yaml`. Требуются Python 3.10+, PyYAML, `langgraph==1.2.12` для runtime-тестов и Node для тестов DSH-адаптера. Требования самого DSH выше; его зависимости не устанавливались.
 
@@ -40,7 +39,7 @@ L1 помечает внешние источники и ищет несколь
 
 ## Происхождение L3-модулей
 
-`third_party/agt/approval.rego` и `budgets.rego` — сокращённые адаптации готовых MIT-модулей Microsoft AGT из предоставленного `agent-control-standard-integration.zip`. Лицензия и точные пути источников сохранены в `third_party/AGT_POLICY_NOTICE.md`. Исполняемый адаптер `l3/agt_controls.py` переносит ограниченную семантику approval/budget, а также egress/IFC из соседних модулей. OPA в стенде не установлен, поэтому Rego не выдаётся за активный runtime.
+`third_party/agt/approval.rego` и `budgets.rego` — сокращённые адаптации готовых MIT-модулей Microsoft AGT из предоставленного `agent-control-standard-integration.zip`. Лицензия и точные пути источников сохранены в `third_party/AGT_POLICY_NOTICE.md`. Исполняемый адаптер `l3/agt_controls.py` переносит ограниченную семантику approval/budget, а также egress/IFC из соседних модулей. Прототип не использует OPA как runtime. Отдельно в гостевой VM пилота запускался OPA 1.21.0 с оригинальными политиками; это не подключение Rego к этому прототипу.
 
 `Engine.stop_session()` основан на требовании N04 и сверке со штатной моделью отмены DSH: `Agent.cancel({ kind: 'user' })` очищает очередь и передаёт отмену активному turn, а инструменты получают обязательный `AbortSignal`. Шлюз пока лишь перестаёт выдавать разрешения и очищает HITL-состояние. Реальный DSH-адаптер должен дополнительно вызвать `Agent.cancel` и дождаться `whenIdle()`; иначе нельзя утверждать, что уже начатый эффект остановлен.
 
@@ -58,7 +57,7 @@ L1 помечает внешние источники и ищет несколь
 
 ## Следующее подключение
 
-Основная точка DSH — `tools/pre-execute` и финальная `tools.guard()` в `packages/core/tools/src/index.ts`. В `dsh-adapter` реализованы сопоставления для read/write/edit, контекст сеанса, обмен с постоянным Python-процессом и передача HITL через approval.request. Пройдены контрактные тесты с имитацией ToolRuntime; установка и запуск DSH пока не выполнялись. Следом: изолированная совместимая среда (5.2), настоящий ToolRuntime (5.3), страница настроек ConfigEditor (6).
+Основная точка DSH — `tools/pre-execute` и финальная `tools.guard()` в `packages/core/tools/src/index.ts`. В `dsh-adapter` реализованы сопоставления для read/write/edit, контекст сеанса, обмен с постоянным Python-процессом и передача HITL через approval.request. Пройдены контрактные тесты с имитацией ToolRuntime; установка и запуск DSH пока не выполнялись. Эти направления прежнего прототипа не являются текущим разрешением на разработку. Текущий приоритет — аудит и испытания оригиналов по основному плану; UI/ConfigEditor не добавлять без отдельного поручения.
 
 ## LangGraph runtime spike
 

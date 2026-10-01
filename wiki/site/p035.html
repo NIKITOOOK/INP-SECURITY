@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'">
+<title>A1.3/11 — Dify: модерация, лимиты, sandbox и сетевой прокси — Security Lab Wiki</title><style>:root{color-scheme:light;--ink:#233247;--muted:#5d6a7c;--line:#dce3eb;--accent:#175d9c}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+a{color:var(--accent);text-underline-offset:3px}a:focus-visible{outline:3px solid #ecae44;outline-offset:3px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:320px;top:8px;background:white;z-index:9}
+aside{position:fixed;inset:0 auto 0 0;width:290px;overflow-y:auto;background:#f5f7fa;border-right:1px solid var(--line);padding:25px 18px}
+.brand{font-size:19px;font-weight:750;display:block;text-decoration:none}.caption{color:var(--muted);font-size:12px;margin:6px 0 22px}
+details{margin:12px 0}summary{font-size:13px;font-weight:750;cursor:pointer;padding:5px}
+nav a{display:block;padding:7px 10px;font-size:13px;line-height:1.45;text-decoration:none;border-radius:5px;margin:2px 0}
+nav a:hover{background:#e5edf6}nav a[aria-current=page]{background:#dceafa;color:#124d81;font-weight:650}
+main{margin-left:290px;padding:38px clamp(22px,5vw,85px);max-width:1350px}
+.meta{font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:24px;overflow-wrap:anywhere}
+h1{font-size:30px;line-height:1.25;margin-top:0}h2{font-size:22px;margin-top:32px}h3{font-size:18px}
+pre{background:#f3f6fa;border:1px solid var(--line);padding:16px;overflow:auto;border-radius:7px}
+code{font-size:.87em;background:#f3f6fa;overflow-wrap:anywhere}pre code{background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;margin:20px 0;max-width:100%}
+th,td{border:1px solid var(--line);padding:10px 12px;min-width:130px;vertical-align:top}th{background:#edf2f8;text-align:left}
+blockquote{border-left:3px solid #aac5df;margin-left:0;padding-left:18px;color:var(--muted)}
+.unavailable{color:#7c5261;text-decoration:underline dotted;cursor:help}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:15px;font-size:12px;color:var(--muted)}
+@media(max-width:780px){aside{position:static;width:auto;max-height:42vh;border-bottom:1px solid var(--line)}main{margin:0;padding:24px 18px}h1{font-size:25px}.skip:focus{left:10px}}
+@media print{aside,.skip,.meta{display:none}main{margin:0;padding:0}table{display:table}pre{white-space:pre-wrap}}</style></head>
+<body><a class="skip" href="#content">К содержимому</a><aside><a class="brand" href="index.html">Security Lab · Wiki</a>
+<p class="caption">Многоуровневая защита агента<br>Документация ≠ доказательство испытания</p><nav aria-label="Разделы Wiki"><details open><summary>Обзор</summary><a href="index.html">Вики проекта</a><a href="p060.html">Карта методов защиты</a><a href="p064.html">Реализованные политики: код, проверки и ограничения</a><a href="p004.html">Карта реализации многоуровневой защиты</a></details><details open><summary>L1 &#183; Вход и результаты</summary><a href="p051.html">L1: проверка входа</a><a href="p052.html">L1: происхождение данных</a><a href="p053.html">L1: повторная проверка результата инструмента</a></details><details open><summary>L3 &#183; Ограничения</summary><a href="p050.html">Оригинальный AGT: ограничение бюджета</a><a href="p054.html">L3: лимиты прототипа</a><a href="p055.html">L3: остановка сессии</a><a href="p056.html">L3: отказ при ошибке и запрет изменения политики</a><a href="p057.html">L3: подтверждение критического действия</a><a href="p058.html">L3: метки данных и сетевые адресаты</a><a href="p059.html">L3: инструменты и границы доступа</a></details><details open><summary>Источники</summary><a href="p063.html">Полезные ссылки и ресурсы</a><a href="p049.html">Источники и честные статусы проверки</a><a href="p061.html">Неудавшиеся проверки и открытые вопросы</a><a href="p062.html">Поиск источников при отладке</a><a href="p026.html">A1.3 — индекс последовательного аудита 14 ZIP</a></details><details open><summary>Аудит и покрытие L2</summary><a href="p027.html">Контрольная точка A1.3: 14 ZIP рассмотрены, A1 ещё не закрыт</a><a href="p028.html">Контрольная QA-сверка A1 после 14 отчётов</a><a href="p029.html">A1.4 — покрытие многоуровневой модели безопасности</a><a href="p030.html">Как пользователь будет проверять методы в VM</a><a href="p031.html">A1.2 — статическая сверка заявленных заимствований</a><a href="p032.html">Единый формат методички и отчёта</a><a href="p033.html">A1.3/1 — Agent Governance Toolkit в архиве ACS</a><a href="p034.html">M-AGT-APPROVAL — оригинальные правила согласования AGT</a><a href="p035.html" aria-current="page">A1.3/11 — Dify: модерация, лимиты, sandbox и сетевой прокси</a><a href="p036.html">A1.3/5 — DeepSeek Harness: политика инструментов, настройки и изоляция</a><a href="p037.html">A1.3/13 — GenAI Data Security Initiative: статический сканер и проверка трасс</a><a href="p038.html">A1.3/12 — GenAI Red Team Lab: испытательный корпус, не защитный middleware</a><a href="p039.html">A1.3/9 — Goose: инспекторы инструментов, разрешения и граница shell</a><a href="p040.html">A1.3/8 — Hermes Agent: approval, защищённые файлы и терминальная среда</a><a href="p041.html">A1.3/4 — LangGraph: ToolNode, interrupt и состояние</a><a href="p042.html">A1.3/7 — Microsoft Agent Framework: метки, политика инструментов и контейнерный shell</a><a href="p043.html">A1.3/2 — NeMo Guardrails: что действительно защищает L1</a><a href="p044.html">A1.3/3 — OpenAI Agents SDK: guardrails, approvals и граница sandbox</a><a href="p045.html">A1.3/10 — OpenHands: Agent Canvas и граница внешнего agent-server</a><a href="p046.html">A1.3/14 — OWASP CheatSheetSeries: рекомендации и иллюстративные примеры</a><a href="p047.html">A1.3/6 — Pydantic AI: toolsets, approval и лимиты</a><a href="p048.html">Wiki оригинальных методов защиты</a></details><details><summary>Лабораторные</summary><a href="p016.html">A3 — подготовка ЛР №0: среда для пилота AGT budgets</a><a href="p017.html">labs/00-environment/Протокол_локальной_A3_20260929.md</a><a href="p018.html">A3 — фактический протокол Azure-стенда для ЛР №0</a><a href="p019.html">Лабораторная работа №1 — пороги AGT budgets без LLM</a><a href="p020.html">AGT budgets — отчёт пилотного сеанса 29.09.2026</a></details><details><summary>Проект и код</summary><a href="p001.html">Материалы проекта для проверки</a><a href="p002.html">Firecracker — заметка для этапа 5</a><a href="p003.html">Перенос политик безопасности между DeepSeek Harness и LangGraph</a><a href="p005.html">Контракт событий и политик L1/L3 — черновик 0.4</a><a href="p006.html">Матрица настроек L3 и границ автономности</a><a href="p007.html">Аудит оригинальных механизмов и ручная лаборатория</a><a href="p008.html">План работ по политикам безопасности агента</a><a href="p009.html">Программа проверки политик в Azure VM — A3–A4</a><a href="p010.html">Ревью этапов 1–3</a><a href="p011.html">Этап 1. Модель угроз и каталог политик многоуровневой защиты</a><a href="p012.html">Этап 2. Реализация L1 и передача меток в L3</a><a href="p013.html">Этап 3 — декларативные политики L3 и контрольная плоскость</a><a href="p014.html">Этап 4 — критерии интеграции L1/L3 с ядром</a><a href="p015.html">Этап 5.2 — подготовка изолированной среды</a><a href="p021.html">Этап 5.1: адаптер контракта DSH</a><a href="p022.html">Симулятор политик L1/L3</a><a href="p023.html">Agent Governance Toolkit policy notice</a><a href="p024.html">NeMo Guardrails code provenance</a><a href="p025.html">AI Agent Security Lab</a></details></nav></aside>
+<main id="content"><div class="meta">wiki/аудит/Dify_A1.3.md · <a href="../../wiki/%D0%B0%D1%83%D0%B4%D0%B8%D1%82/Dify_A1.3.md">Markdown-исходник</a></div>
+<span id="a1311--dify-модерация-лимиты-sandbox-и-сетевой-прокси"></span><h1 id="a1.311-dify-sandbox">A1.3/11 — Dify: модерация, лимиты, sandbox и сетевой прокси</h1>
+<p>Дата: 27.09.2026. Источник: <code>C:\Users\abUser\Downloads\dify-main.zip</code>, 37 352 659 байт, SHA-256 <code>B9BEDD060C74D6858F331D832C2FAE9A0FDE150CCB9DFB894EB6857A984092E0</code>, 17 000 элементов. Архив открылся штатно; выбранные элементы прочитаны и хешированы без распаковки и исполнения. Полная CRC-проверка всех элементов не проводилась. Корневой <code>LICENSE</code> — <strong>модифицированная Apache 2.0 с дополнительными условиями</strong>, в частности для multi-tenant-сервиса и сохранения атрибуции frontend. Это не обычная Apache-2.0 лицензия; возможность заимствования кода требует отдельной лицензионной проверки. Точный commit ZIP не установлен.</p>
+<span id="соответствие-нашей-многоуровневой-модели"></span><h2 id="section">Соответствие нашей многоуровневой модели</h2>
+<table>
+<thead>
+<tr>
+<th>Блок</th>
+<th>Оригинальный механизм</th>
+<th>Граница и существенные условия</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1 / входная проверка</td>
+<td><code>InputModeration.check</code> вызывает настроенный <code>ModerationFactory</code> для <code>inputs</code> и <code>query</code>; при <code>DIRECT_OUTPUT</code> поднимает <code>ModerationError</code> с ответом-заглушкой, при <code>OVERRIDDEN</code> заменяет входы. Есть keyword-, API-extension- и модельный OpenAI-варианты.</td>
+<td>Если <code>sensitive_word_avoidance</code> не задан, вход проходит без этой проверки. Keyword-правило — поиск подстроки, не детектор prompt injection. OpenAI moderation использует внешний model provider, не метод без LLM. Ошибка вызова модератора в этом методе не перехватывается, но end-to-end ответ и эффект инструмента не проверялись.</td>
+</tr>
+<tr>
+<td>L1 / изоляция пользовательского ввода</td>
+<td>В просмотренных путях модерации нет реализации Spotlighting (delimiting, datamarking, encoding) или prompt sandwiching.</td>
+<td>Отсутствие в выбранных путях не доказывает отсутствие во всём архиве; найденный keyword-фильтр не следует называть изоляцией инструкции.</td>
+</tr>
+<tr>
+<td>L1 / проверка вывода</td>
+<td><code>OutputModeration</code> проверяет целое завершение или буфер потока, публикует <code>QueueMessageReplaceEvent</code> при находке.</td>
+<td>Это контроль ответа, а не защита <em>до</em> вызова инструмента. При исключении модератора метод логирует ошибку и возвращает <code>None</code>; путь трактует <code>None</code> как отсутствие находки — fail-open для проверки вывода. Замена уже опубликованного потока может не отменить ранее показанные токены/побочные эффекты; это требует отдельного испытания.</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>В выбранных исходниках не подтверждены ролевые эмбеддинги, безопасное fine-tuning или строгая модельная иерархия инструкций.</td>
+<td>Не заявляется отсутствие в 17 000 элементах или внешнем model provider.</td>
+</tr>
+<tr>
+<td>L3 / число запросов</td>
+<td><code>RateLimit</code> хранит активные request id в Redis и при достижении <code>max_active_requests</code> поднимает <code>AppInvokeQuotaExceededError</code>; OpenAPI преобразует ошибку в HTTP 429.</td>
+<td>Это лимит <strong>одновременных обращений</strong>, не универсальный лимит tool calls или сетевого egress. Значение <code>&lt;=0</code> отключает ограничение. Отдельные <code>hlen</code> и <code>hset</code> не образуют атомарной операции — при конкурентном входе точность жёсткого предела по коду не доказана.</td>
+</tr>
+<tr>
+<td>L3 / исполнение кода и ОС</td>
+<td><code>CodeExecutor</code> отправляет Python/JS/Jinja-код в отдельный <code>/v1/sandbox/run</code> с API key. В Compose используется внешний образ <code>langgenius/dify-sandbox:0.2.15</code>, отдельная внутренняя Docker-сеть и SSRF-прокси; отдельно описан <code>local_sandbox</code> для agent shell.</td>
+<td>Исходников обоих sandbox runtime в выбранном ZIP нет; нельзя подтверждать seccomp/изоляцию процессов по одному клиенту и Compose. Клиент явно ставит <code>enable_network: true</code>; Compose по умолчанию <code>SANDBOX_ENABLE_NETWORK=true</code>. В <code>config.yaml</code> также <code>enable_network: True</code>, <code>allowed_syscalls</code> пуст и присутствует демонстрационный ключ <code>dify-sandbox</code>; Compose прямо требует заменить ключ для развёртывания. Без испытания нельзя утверждать запрет произвольного выхода в сеть или безопасность дефолтного профиля.</td>
+</tr>
+<tr>
+<td>Коннекторы / сетевой шлюз</td>
+<td><code>ssrf_proxy.py</code> направляет HTTP(S) через настроенные proxy transports, когда заданы URL прокси; иначе создаёт прямой <code>httpx.Client</code>. Squid-конфигурации запрещают private destination после специальных allow-правил и допускают публичные адреса. Agent-версия разрешает конкретные внутренние пути <code>/agent-stub/*</code>, <code>/files/*</code>.</td>
+<td>Это механизм для использующих его HTTP-клиентов и конкретного Compose, не универсальная защита всех сетевых вызовов и произвольного кода. В Compose сети <code>internal: true</code>, но комментарий к <code>agent_sandbox_network</code> признаёт доступ sandbox к agent backend; поведение внешнего Docker-образа не проверено. Private allowlist настраивается переменными и расширяет доступ.</td>
+</tr>
+<tr>
+<td>Администрирование / политика</td>
+<td>Модерация и proxy имеют переключатели и конфигурацию, sandbox отделён как сервис; ключ к sandbox передаётся через <code>X-Api-Key</code>.</td>
+<td>Не найден единый обязательный предисполнительный policy middleware для всех инструментов; наличие отдельных конфигураций не эквивалентно общему L3 allow/blocklist/HITL. Эти части нельзя скопировать «целиком» в DSH или LangGraph без адаптации и проверки лицензии.</td>
+</tr>
+</tbody>
+</table>
+<span id="значение-для-последующей-лабораторной"></span><h2 id="section-1">Значение для последующей лабораторной</h2>
+<ol>
+<li>Для опыта без LLM наиболее самостоятельны keyword-модерация, ограничение обращений и правило Squid. Их следует испытывать раздельно, не называя keyword-фильтр детектором инъекции.</li>
+<li>Для sandbox нужно отдельно фиксировать профиль, образ/версию, монтирования, сеть, ключ, активную конфигурацию и факт блокировки, а не опираться на слово <code>sandbox</code>. Два sandbox-сервиса в Compose не смешивать.</li>
+<li>Для SSRF нужны отрицательные пробы прямого доступа в private network и обхода прокси конкретным исполнителем; статическая конфигурация сама по себе гарантией не является.</li>
+<li>Сравнение с нашим агентом должно идти через контракт «до эффекта инструмента → решение → фактический эффект». Модерация вывода и UI-конфигурация не подменяют этот контракт. Копирование кода не выполнялось.</li>
+</ol>
+<span id="опорные-места-в-zip"></span><h2 id="zip">Опорные места в ZIP</h2>
+<p>Пути относительно <code>dify-main/</code>; номера строк — в оригинальных элементах:</p>
+<ul>
+<li><code>LICENSE:1–18</code> — лицензия и дополнительные условия.</li>
+<li><code>api/core/moderation/input_moderation.py:17–74</code>; <code>keywords/keywords.py:20–30, 32–83</code>; <code>api/api.py:48–80</code>; <code>openai_moderation/openai_moderation.py:25–68</code> — L1 и варианты модерации.</li>
+<li><code>api/core/moderation/output_moderation.py:43–71, 91–141</code> — потоковая замена и обработка ошибки.</li>
+<li><code>api/core/app/features/rate_limiting/rate_limit.py:15–20, 73–96</code>; <code>api/tests/unit_tests/controllers/openapi/test_app_run_rate_limit.py:20–33</code> — Redis concurrency limit и HTTP 429.</li>
+<li><code>api/core/helper/code_executor/code_executor.py:68–137</code>; <code>docker/volumes/sandbox/conf/config.yaml:1–13</code>; <code>docker/docker-compose.yaml:510–570, 1300–1317</code> — клиент sandbox, настройки и границы Compose.</li>
+<li><code>api/core/helper/ssrf_proxy.py:72–101</code>; <code>docker/ssrf_proxy/squid.conf.template:1–17</code>; <code>squid-agent.conf.template:1–22</code>; <code>squid-common.conf.template:13–39</code> — маршрутизация HTTP и proxy ACL.</li>
+<li><code>api/tests/unit_tests/core/moderation/test_input_moderation.py:25–69, 112–143</code>; <code>test_output_moderation.py:58–86, 128–133</code>; <code>api/tests/unit_tests/core/app/features/rate_limiting/test_rate_limit.py:64–69, 117–123</code>; <code>api/tests/unit_tests/core/helper/code_executor/test_code_executor.py:35–109</code>; <code>api/tests/unit_tests/core/helper/test_ssrf_proxy.py:42–84</code>; <code>docker/ssrf_proxy/test_ssrf_proxy_config.sh:77–99</code> — просмотренные проверки; <strong>не запускались</strong>.</li>
+</ul>
+<span id="контрольные-суммы-выбранных-элементов"></span><h2 id="section-2">Контрольные суммы выбранных элементов</h2>
+<table>
+<thead>
+<tr>
+<th>Элемент ZIP</th>
+<th>SHA-256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LICENSE</code></td>
+<td><code>232CF91474932D5110ED304E53B6B742A58463857C571FAE803FDF2AC36D7BB3</code></td>
+</tr>
+<tr>
+<td><code>api/core/moderation/input_moderation.py</code></td>
+<td><code>D5E27D66169B673DC906B146F70966556DE37AB8175F76CC1AC40AED77B04ACC</code></td>
+</tr>
+<tr>
+<td><code>api/core/moderation/output_moderation.py</code></td>
+<td><code>172F5474359F4C08889BB1EF4CE387762C9D5F6C16E1E2780341355DE31ED549</code></td>
+</tr>
+<tr>
+<td><code>api/core/moderation/keywords/keywords.py</code></td>
+<td><code>E946B4BE7EF28661FBE3F82CDFF48FC1AABAE9A5610E8B9D8E1240C338C0C7DA</code></td>
+</tr>
+<tr>
+<td><code>api/core/moderation/api/api.py</code></td>
+<td><code>99593961D456ADC84DB797894E647EB5614545736F3635C29C7C47A511A0105A</code></td>
+</tr>
+<tr>
+<td><code>api/core/app/features/rate_limiting/rate_limit.py</code></td>
+<td><code>BADD76CCDE2B280AA84F5BFD14FCE5E71FF7E383EF02DDF46961A565EDBCA40E</code></td>
+</tr>
+<tr>
+<td><code>api/core/helper/code_executor/code_executor.py</code></td>
+<td><code>052FBF0771E4E077008D29A683F9C27A1E9C17AF059629F71FCBCC103C5FDA09</code></td>
+</tr>
+<tr>
+<td><code>api/core/helper/ssrf_proxy.py</code></td>
+<td><code>AF726F7B3C443F3D8C8C230DD125304ADCD061C36C7C7FAAB93680D10EA325C9</code></td>
+</tr>
+<tr>
+<td><code>docker/volumes/sandbox/conf/config.yaml</code></td>
+<td><code>53C3903D679D68A3C0E1BC0EB8344DAC12D49592059AA39D12773B6D2C8118F6</code></td>
+</tr>
+<tr>
+<td><code>docker/docker-compose.yaml</code></td>
+<td><code>DF7CBB6098261AFFC75CD8C90EBC9CD909155BAB7411C3370786582F5593DACD</code></td>
+</tr>
+<tr>
+<td><code>docker/ssrf_proxy/squid.conf.template</code></td>
+<td><code>D74EF4481BCB4FD2C16E8CF4D740C6C248BD72E172BDE2ACDF32EADAC28BD6EB</code></td>
+</tr>
+<tr>
+<td><code>docker/ssrf_proxy/squid-agent.conf.template</code></td>
+<td><code>20FC899C266CA45CAD640DF868328C37BF0B5B42A71AB58FB70B9D401194A674</code></td>
+</tr>
+<tr>
+<td><code>api/tests/unit_tests/core/moderation/test_input_moderation.py</code></td>
+<td><code>171D0FEBF34CAAB03A36574608EA91F326AFAFA9AE734326EFD41001F70C2DC4</code></td>
+</tr>
+<tr>
+<td><code>api/tests/unit_tests/core/moderation/test_output_moderation.py</code></td>
+<td><code>C933E4774C204F532CFD0E6A7FD3EBA67A6DA949DF5CC8D1FF5953219CA8BF0F</code></td>
+</tr>
+<tr>
+<td><code>api/tests/unit_tests/core/app/features/rate_limiting/test_rate_limit.py</code></td>
+<td><code>68E8B90AC653BB5135166750DD07F2D95E34CA445EFDF91ED8C2E380A3165FF2</code></td>
+</tr>
+<tr>
+<td><code>api/tests/unit_tests/core/helper/code_executor/test_code_executor.py</code></td>
+<td><code>0F7BB21C408B4C47B7E04C44F37DFF5F58EFE2107432A16A7EC094B3CBD30F5D</code></td>
+</tr>
+<tr>
+<td><code>api/tests/unit_tests/core/helper/test_ssrf_proxy.py</code></td>
+<td><code>658DBF158852FBCEF2375016810EE22A84CD48A21744B4E7D4D2EA32282B5E39</code></td>
+</tr>
+<tr>
+<td><code>docker/ssrf_proxy/test_ssrf_proxy_config.sh</code></td>
+<td><code>5AFF78F1C12EE9C3BE9B619E53CD5E2409AFDEAAB0B3485AEA00911FEE3328BC</code></td>
+</tr>
+</tbody>
+</table>
+<p>Это выборочный статический аудит относящихся к защите частей, не полный просмотр 17 000 элементов. Не выполнялись Docker/VM, тесты, модель, сетевые запросы, установка или перенос в наш <code>policy-gateway</code>. Следующий пакет — A1.3/12 GenAI Red Team Lab.</p>
+
+<footer>Локальная HTML-сборка из Markdown. Правки вносить в исходные .md, затем повторить сборку. Без сервера и внешних зависимостей.</footer></main></body></html>

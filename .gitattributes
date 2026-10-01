@@ -1,0 +1,12 @@
+# Normalize text files to LF for reproducible hashes across Windows/Linux reviewers.
+* text=auto eol=lf
+
+# Binary assets must never be line-ending normalized.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.iso binary
+*.zip binary

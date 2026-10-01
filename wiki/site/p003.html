@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Перенос политик безопасности между DeepSeek Harness и LangGraph — Security Lab Wiki</title><style>:root{color-scheme:light;--ink:#233247;--muted:#5d6a7c;--line:#dce3eb;--accent:#175d9c}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+a{color:var(--accent);text-underline-offset:3px}a:focus-visible{outline:3px solid #ecae44;outline-offset:3px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:320px;top:8px;background:white;z-index:9}
+aside{position:fixed;inset:0 auto 0 0;width:290px;overflow-y:auto;background:#f5f7fa;border-right:1px solid var(--line);padding:25px 18px}
+.brand{font-size:19px;font-weight:750;display:block;text-decoration:none}.caption{color:var(--muted);font-size:12px;margin:6px 0 22px}
+details{margin:12px 0}summary{font-size:13px;font-weight:750;cursor:pointer;padding:5px}
+nav a{display:block;padding:7px 10px;font-size:13px;line-height:1.45;text-decoration:none;border-radius:5px;margin:2px 0}
+nav a:hover{background:#e5edf6}nav a[aria-current=page]{background:#dceafa;color:#124d81;font-weight:650}
+main{margin-left:290px;padding:38px clamp(22px,5vw,85px);max-width:1350px}
+.meta{font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:24px;overflow-wrap:anywhere}
+h1{font-size:30px;line-height:1.25;margin-top:0}h2{font-size:22px;margin-top:32px}h3{font-size:18px}
+pre{background:#f3f6fa;border:1px solid var(--line);padding:16px;overflow:auto;border-radius:7px}
+code{font-size:.87em;background:#f3f6fa;overflow-wrap:anywhere}pre code{background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;margin:20px 0;max-width:100%}
+th,td{border:1px solid var(--line);padding:10px 12px;min-width:130px;vertical-align:top}th{background:#edf2f8;text-align:left}
+blockquote{border-left:3px solid #aac5df;margin-left:0;padding-left:18px;color:var(--muted)}
+.unavailable{color:#7c5261;text-decoration:underline dotted;cursor:help}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:15px;font-size:12px;color:var(--muted)}
+@media(max-width:780px){aside{position:static;width:auto;max-height:42vh;border-bottom:1px solid var(--line)}main{margin:0;padding:24px 18px}h1{font-size:25px}.skip:focus{left:10px}}
+@media print{aside,.skip,.meta{display:none}main{margin:0;padding:0}table{display:table}pre{white-space:pre-wrap}}</style></head>
+<body><a class="skip" href="#content">К содержимому</a><aside><a class="brand" href="index.html">Security Lab · Wiki</a>
+<p class="caption">Многоуровневая защита агента<br>Документация ≠ доказательство испытания</p><nav aria-label="Разделы Wiki"><details open><summary>Обзор</summary><a href="index.html">Вики проекта</a><a href="p060.html">Карта методов защиты</a><a href="p064.html">Реализованные политики: код, проверки и ограничения</a><a href="p004.html">Карта реализации многоуровневой защиты</a></details><details open><summary>L1 &#183; Вход и результаты</summary><a href="p051.html">L1: проверка входа</a><a href="p052.html">L1: происхождение данных</a><a href="p053.html">L1: повторная проверка результата инструмента</a></details><details open><summary>L3 &#183; Ограничения</summary><a href="p050.html">Оригинальный AGT: ограничение бюджета</a><a href="p054.html">L3: лимиты прототипа</a><a href="p055.html">L3: остановка сессии</a><a href="p056.html">L3: отказ при ошибке и запрет изменения политики</a><a href="p057.html">L3: подтверждение критического действия</a><a href="p058.html">L3: метки данных и сетевые адресаты</a><a href="p059.html">L3: инструменты и границы доступа</a></details><details open><summary>Источники</summary><a href="p063.html">Полезные ссылки и ресурсы</a><a href="p049.html">Источники и честные статусы проверки</a><a href="p061.html">Неудавшиеся проверки и открытые вопросы</a><a href="p062.html">Поиск источников при отладке</a><a href="p026.html">A1.3 — индекс последовательного аудита 14 ZIP</a></details><details><summary>Аудит и покрытие L2</summary><a href="p027.html">Контрольная точка A1.3: 14 ZIP рассмотрены, A1 ещё не закрыт</a><a href="p028.html">Контрольная QA-сверка A1 после 14 отчётов</a><a href="p029.html">A1.4 — покрытие многоуровневой модели безопасности</a><a href="p030.html">Как пользователь будет проверять методы в VM</a><a href="p031.html">A1.2 — статическая сверка заявленных заимствований</a><a href="p032.html">Единый формат методички и отчёта</a><a href="p033.html">A1.3/1 — Agent Governance Toolkit в архиве ACS</a><a href="p034.html">M-AGT-APPROVAL — оригинальные правила согласования AGT</a><a href="p035.html">A1.3/11 — Dify: модерация, лимиты, sandbox и сетевой прокси</a><a href="p036.html">A1.3/5 — DeepSeek Harness: политика инструментов, настройки и изоляция</a><a href="p037.html">A1.3/13 — GenAI Data Security Initiative: статический сканер и проверка трасс</a><a href="p038.html">A1.3/12 — GenAI Red Team Lab: испытательный корпус, не защитный middleware</a><a href="p039.html">A1.3/9 — Goose: инспекторы инструментов, разрешения и граница shell</a><a href="p040.html">A1.3/8 — Hermes Agent: approval, защищённые файлы и терминальная среда</a><a href="p041.html">A1.3/4 — LangGraph: ToolNode, interrupt и состояние</a><a href="p042.html">A1.3/7 — Microsoft Agent Framework: метки, политика инструментов и контейнерный shell</a><a href="p043.html">A1.3/2 — NeMo Guardrails: что действительно защищает L1</a><a href="p044.html">A1.3/3 — OpenAI Agents SDK: guardrails, approvals и граница sandbox</a><a href="p045.html">A1.3/10 — OpenHands: Agent Canvas и граница внешнего agent-server</a><a href="p046.html">A1.3/14 — OWASP CheatSheetSeries: рекомендации и иллюстративные примеры</a><a href="p047.html">A1.3/6 — Pydantic AI: toolsets, approval и лимиты</a><a href="p048.html">Wiki оригинальных методов защиты</a></details><details><summary>Лабораторные</summary><a href="p016.html">A3 — подготовка ЛР №0: среда для пилота AGT budgets</a><a href="p017.html">labs/00-environment/Протокол_локальной_A3_20260929.md</a><a href="p018.html">A3 — фактический протокол Azure-стенда для ЛР №0</a><a href="p019.html">Лабораторная работа №1 — пороги AGT budgets без LLM</a><a href="p020.html">AGT budgets — отчёт пилотного сеанса 29.09.2026</a></details><details open><summary>Проект и код</summary><a href="p001.html">Материалы проекта для проверки</a><a href="p002.html">Firecracker — заметка для этапа 5</a><a href="p003.html" aria-current="page">Перенос политик безопасности между DeepSeek Harness и LangGraph</a><a href="p005.html">Контракт событий и политик L1/L3 — черновик 0.4</a><a href="p006.html">Матрица настроек L3 и границ автономности</a><a href="p007.html">Аудит оригинальных механизмов и ручная лаборатория</a><a href="p008.html">План работ по политикам безопасности агента</a><a href="p009.html">Программа проверки политик в Azure VM — A3–A4</a><a href="p010.html">Ревью этапов 1–3</a><a href="p011.html">Этап 1. Модель угроз и каталог политик многоуровневой защиты</a><a href="p012.html">Этап 2. Реализация L1 и передача меток в L3</a><a href="p013.html">Этап 3 — декларативные политики L3 и контрольная плоскость</a><a href="p014.html">Этап 4 — критерии интеграции L1/L3 с ядром</a><a href="p015.html">Этап 5.2 — подготовка изолированной среды</a><a href="p021.html">Этап 5.1: адаптер контракта DSH</a><a href="p022.html">Симулятор политик L1/L3</a><a href="p023.html">Agent Governance Toolkit policy notice</a><a href="p024.html">NeMo Guardrails code provenance</a><a href="p025.html">AI Agent Security Lab</a></details></nav></aside>
+<main id="content"><div class="meta">Исследование_LangGraph_DSH_изоляция.md · <a href="../../%D0%98%D1%81%D1%81%D0%BB%D0%B5%D0%B4%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_LangGraph_DSH_%D0%B8%D0%B7%D0%BE%D0%BB%D1%8F%D1%86%D0%B8%D1%8F.md">Markdown-исходник</a></div>
+<span id="перенос-политик-безопасности-между-deepseek-harness-и-langgraph"></span><h1 id="deepseek-harness-langgraph">Перенос политик безопасности между DeepSeek Harness и LangGraph</h1>
+<p><strong>Статус:</strong> исследовательская записка 0.1<br />
+<strong>Дата:</strong> 24 сентября 2026<br />
+<strong>Основание:</strong> текущий прототип L1/L3, локальные ZIP-архивы, схема многоуровневой защиты и официальная документация.</p>
+<span id="1-решение-по-направлению-работы"></span><h2 id="section">1. Решение по направлению работы</h2>
+<p>Текущая работа не потеряется, если ядром агента станет LangGraph. Профиль YAML, Python-движок решений, правила <code>P01</code>–<code>P05</code>, тестовые сценарии и журнал решения не зависят от DSH. Специфичны для DSH только Node-адаптер к <code>tools/pre-execute</code>/<code>tools.guard()</code> и будущая страница настроек DSH.</p>
+<p>До решения команды о конечном ядре не следует углублять интеграцию с настоящим ToolRuntime DSH или делать его интерфейс настроек. Следующий технический результат должен быть нейтральным: стабильный контракт <code>PolicyGateway</code> и два тонких варианта подключения — DSH и LangGraph.</p>
+<p>Ориентировочная переносимость текущего результата:</p>
+<table>
+<thead>
+<tr>
+<th>Часть</th>
+<th style="text-align: right;">Переносимость в LangGraph</th>
+<th>Что меняется</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Модель угроз, L1/L3, правила <code>P01</code>–<code>P05</code></td>
+<td style="text-align: right;">высокая</td>
+<td>ничего принципиального</td>
+</tr>
+<tr>
+<td>YAML-профиль и строгая проверка</td>
+<td style="text-align: right;">высокая</td>
+<td>можно оставить общим форматом</td>
+</tr>
+<tr>
+<td>Python policy engine и тесты</td>
+<td style="text-align: right;">высокая</td>
+<td>при Python LangGraph вызывается прямо; при JS — через существующий локальный мост</td>
+</tr>
+<tr>
+<td>Контракт событий и audit record</td>
+<td style="text-align: right;">высокая</td>
+<td>сопоставить поля с состоянием и tool call LangGraph</td>
+</tr>
+<tr>
+<td>DSH Node-адаптер</td>
+<td style="text-align: right;">низкая</td>
+<td>нужен LangGraph-адаптер</td>
+</tr>
+<tr>
+<td>Настройки ConfigEditor DSH</td>
+<td style="text-align: right;">отсутствует</td>
+<td>заменить настройками приложения/сервиса LangGraph</td>
+</tr>
+<tr>
+<td>Встроенный sandbox DSH</td>
+<td style="text-align: right;">отсутствует</td>
+<td>заменить средствами ОС, контейнера или отдельного исполнителя</td>
+</tr>
+</tbody>
+</table>
+<p>Практически повторно используется около 70–80% исследовательской и policy-части. Доля кода будет ниже, потому что адаптер короткий, но критичен для интеграции.</p>
+<span id="2-целевая-архитектура-не-зависящая-от-фреймворка"></span><h2 id="section-1">2. Целевая архитектура, не зависящая от фреймворка</h2>
+<pre><code class="language-text">пользователь / файл / web / память
+                 │
+                 ▼
+        L1 Input Security Service
+  структура → нормализация → метки риска
+                 │
+                 ▼
+       Agent Runtime Adapter
+       DSH | LangGraph Python | LangGraph JS
+                 │
+          tool.requested
+                 ▼
+           Policy Gateway L3
+ allowlist → путь → лимиты → HITL → audit
+                 │
+             allow only
+                 ▼
+       Tool Executor с правами ОС
+ AppLocker/WDAC или AppArmor + container/VM
+</code></pre>
+<p>Защита состоит из двух разных видов контроля. Прикладная политика понимает задачу, инструмент, аргументы и подтверждение. ОС ограничивает последствия ошибки: какие процессы можно запускать, какие файлы читать, какие системные вызовы и ресурсы доступны.</p>
+<span id="3-как-подключать-к-langgraph"></span><h2 id="langgraph">3. Как подключать к LangGraph</h2>
+<p>LangGraph существует в Python и JavaScript/TypeScript. Пока язык командой не выбран, сохраняем общий JSON/YAML-контракт.</p>
+<p>Локальный <code>langgraph-main.zip</code> содержит основную Python-реализацию (<code>libs/langgraph</code>, <code>libs/prebuilt/ToolNode</code>) и несколько JS-примеров CLI, но не полное дерево отдельного проекта LangGraph.js. Если команда выберет JavaScript/TypeScript, потребуется отдельно зафиксировать upstream/commit архива LangGraph.js; текущий ZIP достаточен для изучения Python API и общей архитектуры, но не для переноса production-кода JS.</p>
+<p>LangGraph действительно сокращает объём собственной оркестрации: уже есть граф состояний, ToolNode, interrupt и persistence. Это удобная основа ядра агента. Он не является готовой многоуровневой защитой: права инструментов, проверка происхождения данных, ограничения ОС, защита конфигурации и тесты атак остаются нашей работой.</p>
+<span id="если-выбран-python"></span><h3 id="python">Если выбран Python</h3>
+<ul>
+<li><code>engine.py</code> можно подключить напрямую без межпроцессного моста.</li>
+<li>Перед <code>ToolNode</code> нужен узел проверки окончательного tool call либо собственная обёртка инструмента.</li>
+<li>Ветка графа маршрутизирует <code>allow</code> к исполнителю, <code>deny</code> к безопасному ответу, <code>require_review</code> к <code>interrupt()</code>.</li>
+<li>Checkpointer хранит состояние графа, но разрешения и фактические внешние эффекты требуют отдельного защищённого журнала.</li>
+<li>Можно оценить готовые middleware LangChain для Human-in-the-Loop, лимитов model/tool calls и PII; их конфигурация не заменяет наши отрицательные тесты и fail-closed gateway.</li>
+</ul>
+<span id="если-выбран-javascripttypescript"></span><h3 id="javascripttypescript">Если выбран JavaScript/TypeScript</h3>
+<ul>
+<li>сохраняется существующая схема Node → постоянный Python worker;</li>
+<li>вместо событий DSH адаптер перехватывает tool call перед узлом исполнения;</li>
+<li>позже движок можно переписать на TypeScript, только если измерения покажут, что локальный процесс создаёт неприемлемую задержку.</li>
+</ul>
+<span id="особенность-human-in-the-loop"></span><h3 id="human-in-the-loop">Особенность Human-in-the-Loop</h3>
+<p>LangGraph умеет останавливать граф через <code>interrupt()</code> и возобновлять его из checkpoint. Это готовый механизм паузы, а не готовая политика безопасности. Одобрение должно быть связано с <code>call_id</code>, хешем окончательных аргументов и версией политики. Возобновление или повтор узла не должно второй раз выполнять уже завершённый внешний эффект. Поэтому нужны идемпотентность и отдельный ledger выполненных действий.</p>
+<p>Источники: <a href="https://docs.langchain.com/oss/python/langgraph/overview" rel="noreferrer">LangGraph overview</a>, <a href="https://docs.langchain.com/oss/python/langgraph/interrupts" rel="noreferrer">interrupts</a>, <a href="https://docs.langchain.com/oss/python/langgraph/persistence" rel="noreferrer">persistence</a>, <a href="https://docs.langchain.com/oss/javascript/langgraph/overview" rel="noreferrer">JavaScript overview</a>.
+Дополнительный источник: <a href="https://docs.langchain.com/oss/python/langchain/middleware/built-in" rel="noreferrer">готовые middleware LangChain</a>.</p>
+<span id="4-applocker-apparmor-docker-и-vm"></span><h2 id="applocker-apparmor-docker-vm">4. AppLocker, AppArmor, Docker и VM</h2>
+<span id="applocker-на-windows"></span><h3 id="applocker-windows">AppLocker на Windows</h3>
+<p>AppLocker управляет запуском <code>.exe</code>, скриптов, MSI, packaged apps и, при отдельном включении, DLL. Правила строятся по издателю, пути или хешу и поддерживают режим аудита. Это полезно для запрета запуска произвольных программ агентом.</p>
+<p>AppLocker не определяет, имеет ли агент право выполнить <code>send_email</code>, удалить конкретный проектный файл или отправить конфиденциальный текст. Запущенный и разрешённый <code>python.exe</code> или <code>node.exe</code> остаётся мощным интерпретатором. Поэтому AppLocker дополняет policy gateway, а не заменяет его. Правила по пути нельзя привязывать к каталогам, куда обычный пользователь может записать подменённый файл.</p>
+<p>Источник: <a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/applocker/working-with-applocker-rules" rel="noreferrer">Microsoft — Working with AppLocker rules</a>.</p>
+<p>Для более строгого Windows-профиля следует сравнить AppLocker с <strong>App Control for Business (бывший WDAC)</strong>. Microsoft описывает App Control как более современный контроль выполняемого кода, включая user-mode приложения и kernel-mode drivers; доступны audit/enforcement и подписанные политики. Для нашего проекта это кандидат на усиленный профиль после эксперимента AppLocker, потому что динамический Node/Python-стек сначала придётся тщательно испытать в audit mode.</p>
+<p>Источники: <a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/" rel="noreferrer">Application Control for Windows</a>, <a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/feature-availability" rel="noreferrer">App Control and AppLocker feature availability</a>.</p>
+<span id="apparmor-на-linux"></span><h3 id="apparmor-linux">AppArmor на Linux</h3>
+<p>AppArmor — механизм Mandatory Access Control в ядре Linux. Профиль процесса задаёт разрешённые операции с файлами и другими ресурсами. Он подходит для ограничения процесса агента или отдельного tool executor, но не понимает смысл tool call и prompt injection.</p>
+<p>Источник: <a href="https://documentation.ubuntu.com/security/security-features/privilege-restriction/apparmor/" rel="noreferrer">Ubuntu — AppArmor</a>.</p>
+<span id="dockerконтейнер"></span><h3 id="docker">Docker/контейнер</h3>
+<p>Контейнер даёт namespaces, cgroups, ограничения capabilities, seccomp и профиль AppArmor. Для опасного инструмента это хороший повторяемый исполнитель. Профиль эксперимента должен включать непривилегированного пользователя, read-only root filesystem, явные mounts, <code>cap-drop</code>, лимиты CPU/RAM/PID, seccomp/AppArmor и закрытую сеть по умолчанию. Доступ к Docker daemon равнозначен сильным полномочиям на хосте, поэтому агенту нельзя выдавать Docker socket.</p>
+<p>Источники: <a href="https://docs.docker.com/engine/security/" rel="noreferrer">Docker Engine security</a>, <a href="https://docs.docker.com/engine/security/seccomp/" rel="noreferrer">seccomp</a>, <a href="https://docs.docker.com/engine/security/rootless/" rel="noreferrer">rootless mode</a>, <a href="https://docs.docker.com/engine/security/apparmor/" rel="noreferrer">Docker + AppArmor</a>.</p>
+<span id="виртуальная-машина"></span><h3 id="section-2">Виртуальная машина</h3>
+<p>VM использует отдельное ядро и удобна для первого запуска целого непроверенного стека, установки зависимостей и воспроизводимого снимка. Она тяжелее контейнера, но даёт более понятную границу с Windows-хостом. Для лаборатории нужны отключённые shared folders/clipboard/USB, отсутствие личных секретов, контролируемая сеть и snapshot перед запуском.</p>
+<p>Windows Sandbox можно использовать для короткой одноразовой проверки Windows-сборки: она основана на виртуализации и создаёт чистое окружение. Настройки по умолчанию включают сеть и некоторые перенаправления, поэтому для security-теста нужен отдельный <code>.wsb</code> профиль. Для долгой воспроизводимой разработки обычная VM удобнее, поскольку Windows Sandbox эфемерна.</p>
+<p>Источники: <a href="https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-sandbox/windows-sandbox-architecture" rel="noreferrer">Windows Sandbox architecture</a>, <a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-configure-using-wsb-file" rel="noreferrer">настройка Windows Sandbox</a>, <a href="https://learn.microsoft.com/en-us/windows-server/virtualization/hyper-v/architecture" rel="noreferrer">Hyper-V architecture</a>.</p>
+<p>Рекомендация для эксперимента:</p>
+<ol>
+<li>Правила и симулятор продолжать тестировать на хосте без опасных эффектов.</li>
+<li>Целый агент и сторонние зависимости впервые запускать в отдельной VM.</li>
+<li>Внутри Linux VM опасный tool executor дополнительно запускать в контейнере с AppArmor/seccomp/cgroups.</li>
+<li>AppLocker исследовать как отдельный профиль нативного Windows-развёртывания, если Windows входит в ожидаемый результат ЧТЗ.</li>
+</ol>
+<span id="5-какие-готовые-решения-исследовать-из-архивов"></span><h2 id="section-3">5. Какие готовые решения исследовать из архивов</h2>
+<p>Автоматический каталог <code>research/archive-inventory.json</code> построен без распаковки и запуска. Это поиск кандидатов, а не аудит безопасности кода.</p>
+<table>
+<thead>
+<tr>
+<th>Источник</th>
+<th>Что брать</th>
+<th>Способ использования</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>langgraph-main.zip</code></td>
+<td>ToolNode, interrupt, checkpoint/state patterns</td>
+<td>изучить API и написать собственный тонкий адаптер; лицензия MIT найдена в архиве</td>
+</tr>
+<tr>
+<td><code>Guardrails-develop.zip</code></td>
+<td>input/output rails, injection/jailbreak examples, конфигурации</td>
+<td>сначала как референс и отдельный L1 эксперимент; лицензии Apache-2.0 и сопутствующий файл найдены</td>
+</tr>
+<tr>
+<td><code>pydantic-ai-main.zip</code></td>
+<td>typed dependencies, tool validation, approval patterns</td>
+<td>переносить идеи/малые фрагменты только после проверки конкретного файла и лицензии</td>
+</tr>
+<tr>
+<td><code>openai-agents-python-main.zip</code></td>
+<td>guardrails и lifecycle hooks</td>
+<td>сравнительный вариант адаптера</td>
+</tr>
+<tr>
+<td><code>agent-framework-main.zip</code></td>
+<td>middleware, workflow, approvals</td>
+<td>сравнительный архитектурный источник</td>
+</tr>
+<tr>
+<td><code>agent-control-standard-integration.zip</code></td>
+<td>события и контрольные контракты</td>
+<td>сопоставить с нашим envelope событий</td>
+</tr>
+<tr>
+<td><code>OpenHands</code>, <code>Goose</code>, <code>Hermes</code>, <code>Dify</code></td>
+<td>sandbox/runtime/permissions patterns</td>
+<td>брать отдельные идеи, не смешивать исходные деревья</td>
+</tr>
+<tr>
+<td><code>GenAI-Red-Team-Lab</code>, <code>CheatSheetSeries</code></td>
+<td>атаки и негативные тесты</td>
+<td>превращать в тест-кейсы, не в production-зависимости</td>
+</tr>
+</tbody>
+</table>
+<p>Правило заимствования: источник + commit/tag + лицензия + исходный путь + локальный путь + изменения + тест. До установления commit ZIP используется только как reference-копия.</p>
+<span id="6-более-сильные-меры-для-следующих-итераций"></span><h2 id="section-4">6. Более сильные меры для следующих итераций</h2>
+<span id="уровень-1"></span><h3 id="section-5">Уровень 1</h3>
+<ul>
+<li>нормализация Unicode и удаление/маркировка скрытых символов;</li>
+<li>проверка структуры и допустимых форматов до LLM;</li>
+<li>provenance labels для web/file/tool/memory;</li>
+<li>Spotlighting/datamarking и централизованный prompt builder;</li>
+<li>отдельная малая модель-классификатор как дополнительный сигнал;</li>
+<li>проверка данных при записи в долговременную память, чтобы снизить риск отравления памяти.</li>
+</ul>
+<p>Источники: <a href="https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html" rel="noreferrer">OWASP Prompt Injection Prevention</a>, <a href="https://www.microsoft.com/en-us/research/publication/defending-against-indirect-prompt-injection-attacks-with-spotlighting/" rel="noreferrer">Microsoft Spotlighting</a>, <a href="https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-86M" rel="noreferrer">Llama Prompt Guard 2</a>, локальный <code>Guardrails-develop.zip</code>.</p>
+<span id="уровень-3"></span><h3 id="section-6">Уровень 3</h3>
+<ul>
+<li>capability tokens с малой областью действия и сроком жизни;</li>
+<li>политика потока данных «источник → назначение», отдельно от allowlist инструмента;</li>
+<li>сетевой egress allowlist и прокси с журналом;</li>
+<li>защита секретов: не передавать их модели и tool output без необходимости;</li>
+<li>OPA/Rego как кандидат при росте числа правил и нескольких приложениях;</li>
+<li>App Control for Business/WDAC как усиленный Windows-профиль после audit-mode проверки совместимости;</li>
+<li>Windows Sandbox для коротких одноразовых проверок Windows-сборки и отдельная VM для длительного стенда;</li>
+<li>подписанные и версионированные профили политик;</li>
+<li>защищённый неизменяемый audit log;</li>
+<li>kill switch вне процесса агента;</li>
+<li>supply-chain проверки: lockfile, SBOM, подписи/хеши, скан зависимостей.</li>
+</ul>
+<p>Источники: <a href="https://www.openpolicyagent.org/docs" rel="noreferrer">OPA</a>, <a href="https://genai.owasp.org/llmrisk/llm062025-excessive-agency/" rel="noreferrer">OWASP Excessive Agency</a>, <a href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf" rel="noreferrer">NIST AI 600-1</a>.</p>
+<span id="7-план-тестирования-модели-и-защиты"></span><h2 id="section-7">7. План тестирования модели и защиты</h2>
+<p>Проверки делятся, чтобы ошибка модели не смешивалась с ошибкой детерминированной политики.</p>
+<ol>
+<li><strong>Без LLM:</strong> синтетические события и заглушки инструментов. Проверяются allow/deny/HITL, пути, лимиты, сбои и replay.</li>
+<li><strong>С локальной моделью:</strong> одна и та же коллекция безопасных и атакующих запросов; инструменты пока безвредные. Подключение возможно через Ollama или совместимый локальный endpoint.</li>
+<li><strong>Через API:</strong> тот же набор тестов, если локальная модель не поддерживает tool calling или не помещается в ресурсы. В API-тесты не передаются реальные секреты и пользовательские документы.</li>
+<li><strong>В контейнере:</strong> проверяются filesystem, сеть, PID/CPU/RAM, seccomp/AppArmor и отсутствие Docker socket.</li>
+<li><strong>В VM:</strong> проверяется полный агент, установка зависимостей, snapshot/restore и отсутствие доступа к данным хоста.</li>
+<li><strong>Адаптивные атаки:</strong> AgentDojo/AutoDojo/собственные кейсы prompt injection, подмена tool args, отравление памяти и цепочки из нескольких действий.</li>
+</ol>
+<p>Минимальные метрики: доля заблокированных атак, ложные блокировки безопасных задач, число опасных вызовов, дошедших до тела инструмента, обход workspace/сети, повтор внешнего эффекта после resume, задержка L1/L3 и потребление ресурсов.</p>
+<span id="8-ближайшие-этапы"></span><h2 id="section-8">8. Ближайшие этапы</h2>
+<ol>
+<li>Зафиксировать решение команды: LangGraph Python, LangGraph JS или DSH как демонстратор. Пока решение неизвестно.</li>
+<li>Оформить нейтральный интерфейс адаптера к текущему policy engine.</li>
+<li><strong>Выполнено 24.09.2026:</strong> contract spike подключён к настоящим <code>StateGraph</code>, <code>ToolNode</code>, <code>interrupt()</code> и <code>InMemorySaver</code> из LangGraph 1.2.12. Проверены <code>allow</code>, <code>deny</code>, review/resume, отказ человека, неверный ответ, пакет вызовов и replay-защита без реальных файловых/сетевых эффектов. Следующее расширение — долговечный checkpointer и параллельные/аварийные сценарии.</li>
+<li>После выбора среды собрать первый профиль изоляции. Решение VM/Docker пока остаётся исследовательским и не применяется автоматически.</li>
+<li>Подключить локальную модель; API использовать как запасной тестовый backend.</li>
+<li>Расширять L1 и L3 по измеримым тестам, затем решать, нужен ли уровень 2 с дообучением.</li>
+</ol>
+<span id="9-критерий-что-направление-не-ведёт-в-тупик"></span><h2 id="section-9">9. Критерий, что направление не ведёт в тупик</h2>
+<p>За одну и ту же неделю общий набор политик должен проходить через два тестовых адаптера: DSH contract double и LangGraph spike. Если для новой среды переписывается только преобразование tool call в общий event envelope, архитектура переносима. Если политика начинает зависеть от внутреннего состояния конкретного фреймворка, границу следует исправить до дальнейшей разработки.</p>
+
+<footer>Локальная HTML-сборка из Markdown. Правки вносить в исходные .md, затем повторить сборку. Без сервера и внешних зависимостей.</footer></main></body></html>

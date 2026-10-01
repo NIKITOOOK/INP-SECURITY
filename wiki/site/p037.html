@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'">
+<title>A1.3/13 — GenAI Data Security Initiative: статический сканер и проверка трасс — Security Lab Wiki</title><style>:root{color-scheme:light;--ink:#233247;--muted:#5d6a7c;--line:#dce3eb;--accent:#175d9c}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+a{color:var(--accent);text-underline-offset:3px}a:focus-visible{outline:3px solid #ecae44;outline-offset:3px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:320px;top:8px;background:white;z-index:9}
+aside{position:fixed;inset:0 auto 0 0;width:290px;overflow-y:auto;background:#f5f7fa;border-right:1px solid var(--line);padding:25px 18px}
+.brand{font-size:19px;font-weight:750;display:block;text-decoration:none}.caption{color:var(--muted);font-size:12px;margin:6px 0 22px}
+details{margin:12px 0}summary{font-size:13px;font-weight:750;cursor:pointer;padding:5px}
+nav a{display:block;padding:7px 10px;font-size:13px;line-height:1.45;text-decoration:none;border-radius:5px;margin:2px 0}
+nav a:hover{background:#e5edf6}nav a[aria-current=page]{background:#dceafa;color:#124d81;font-weight:650}
+main{margin-left:290px;padding:38px clamp(22px,5vw,85px);max-width:1350px}
+.meta{font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:24px;overflow-wrap:anywhere}
+h1{font-size:30px;line-height:1.25;margin-top:0}h2{font-size:22px;margin-top:32px}h3{font-size:18px}
+pre{background:#f3f6fa;border:1px solid var(--line);padding:16px;overflow:auto;border-radius:7px}
+code{font-size:.87em;background:#f3f6fa;overflow-wrap:anywhere}pre code{background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;margin:20px 0;max-width:100%}
+th,td{border:1px solid var(--line);padding:10px 12px;min-width:130px;vertical-align:top}th{background:#edf2f8;text-align:left}
+blockquote{border-left:3px solid #aac5df;margin-left:0;padding-left:18px;color:var(--muted)}
+.unavailable{color:#7c5261;text-decoration:underline dotted;cursor:help}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:15px;font-size:12px;color:var(--muted)}
+@media(max-width:780px){aside{position:static;width:auto;max-height:42vh;border-bottom:1px solid var(--line)}main{margin:0;padding:24px 18px}h1{font-size:25px}.skip:focus{left:10px}}
+@media print{aside,.skip,.meta{display:none}main{margin:0;padding:0}table{display:table}pre{white-space:pre-wrap}}</style></head>
+<body><a class="skip" href="#content">К содержимому</a><aside><a class="brand" href="index.html">Security Lab · Wiki</a>
+<p class="caption">Многоуровневая защита агента<br>Документация ≠ доказательство испытания</p><nav aria-label="Разделы Wiki"><details open><summary>Обзор</summary><a href="index.html">Вики проекта</a><a href="p060.html">Карта методов защиты</a><a href="p064.html">Реализованные политики: код, проверки и ограничения</a><a href="p004.html">Карта реализации многоуровневой защиты</a></details><details open><summary>L1 &#183; Вход и результаты</summary><a href="p051.html">L1: проверка входа</a><a href="p052.html">L1: происхождение данных</a><a href="p053.html">L1: повторная проверка результата инструмента</a></details><details open><summary>L3 &#183; Ограничения</summary><a href="p050.html">Оригинальный AGT: ограничение бюджета</a><a href="p054.html">L3: лимиты прототипа</a><a href="p055.html">L3: остановка сессии</a><a href="p056.html">L3: отказ при ошибке и запрет изменения политики</a><a href="p057.html">L3: подтверждение критического действия</a><a href="p058.html">L3: метки данных и сетевые адресаты</a><a href="p059.html">L3: инструменты и границы доступа</a></details><details open><summary>Источники</summary><a href="p063.html">Полезные ссылки и ресурсы</a><a href="p049.html">Источники и честные статусы проверки</a><a href="p061.html">Неудавшиеся проверки и открытые вопросы</a><a href="p062.html">Поиск источников при отладке</a><a href="p026.html">A1.3 — индекс последовательного аудита 14 ZIP</a></details><details open><summary>Аудит и покрытие L2</summary><a href="p027.html">Контрольная точка A1.3: 14 ZIP рассмотрены, A1 ещё не закрыт</a><a href="p028.html">Контрольная QA-сверка A1 после 14 отчётов</a><a href="p029.html">A1.4 — покрытие многоуровневой модели безопасности</a><a href="p030.html">Как пользователь будет проверять методы в VM</a><a href="p031.html">A1.2 — статическая сверка заявленных заимствований</a><a href="p032.html">Единый формат методички и отчёта</a><a href="p033.html">A1.3/1 — Agent Governance Toolkit в архиве ACS</a><a href="p034.html">M-AGT-APPROVAL — оригинальные правила согласования AGT</a><a href="p035.html">A1.3/11 — Dify: модерация, лимиты, sandbox и сетевой прокси</a><a href="p036.html">A1.3/5 — DeepSeek Harness: политика инструментов, настройки и изоляция</a><a href="p037.html" aria-current="page">A1.3/13 — GenAI Data Security Initiative: статический сканер и проверка трасс</a><a href="p038.html">A1.3/12 — GenAI Red Team Lab: испытательный корпус, не защитный middleware</a><a href="p039.html">A1.3/9 — Goose: инспекторы инструментов, разрешения и граница shell</a><a href="p040.html">A1.3/8 — Hermes Agent: approval, защищённые файлы и терминальная среда</a><a href="p041.html">A1.3/4 — LangGraph: ToolNode, interrupt и состояние</a><a href="p042.html">A1.3/7 — Microsoft Agent Framework: метки, политика инструментов и контейнерный shell</a><a href="p043.html">A1.3/2 — NeMo Guardrails: что действительно защищает L1</a><a href="p044.html">A1.3/3 — OpenAI Agents SDK: guardrails, approvals и граница sandbox</a><a href="p045.html">A1.3/10 — OpenHands: Agent Canvas и граница внешнего agent-server</a><a href="p046.html">A1.3/14 — OWASP CheatSheetSeries: рекомендации и иллюстративные примеры</a><a href="p047.html">A1.3/6 — Pydantic AI: toolsets, approval и лимиты</a><a href="p048.html">Wiki оригинальных методов защиты</a></details><details><summary>Лабораторные</summary><a href="p016.html">A3 — подготовка ЛР №0: среда для пилота AGT budgets</a><a href="p017.html">labs/00-environment/Протокол_локальной_A3_20260929.md</a><a href="p018.html">A3 — фактический протокол Azure-стенда для ЛР №0</a><a href="p019.html">Лабораторная работа №1 — пороги AGT budgets без LLM</a><a href="p020.html">AGT budgets — отчёт пилотного сеанса 29.09.2026</a></details><details><summary>Проект и код</summary><a href="p001.html">Материалы проекта для проверки</a><a href="p002.html">Firecracker — заметка для этапа 5</a><a href="p003.html">Перенос политик безопасности между DeepSeek Harness и LangGraph</a><a href="p005.html">Контракт событий и политик L1/L3 — черновик 0.4</a><a href="p006.html">Матрица настроек L3 и границ автономности</a><a href="p007.html">Аудит оригинальных механизмов и ручная лаборатория</a><a href="p008.html">План работ по политикам безопасности агента</a><a href="p009.html">Программа проверки политик в Azure VM — A3–A4</a><a href="p010.html">Ревью этапов 1–3</a><a href="p011.html">Этап 1. Модель угроз и каталог политик многоуровневой защиты</a><a href="p012.html">Этап 2. Реализация L1 и передача меток в L3</a><a href="p013.html">Этап 3 — декларативные политики L3 и контрольная плоскость</a><a href="p014.html">Этап 4 — критерии интеграции L1/L3 с ядром</a><a href="p015.html">Этап 5.2 — подготовка изолированной среды</a><a href="p021.html">Этап 5.1: адаптер контракта DSH</a><a href="p022.html">Симулятор политик L1/L3</a><a href="p023.html">Agent Governance Toolkit policy notice</a><a href="p024.html">NeMo Guardrails code provenance</a><a href="p025.html">AI Agent Security Lab</a></details></nav></aside>
+<main id="content"><div class="meta">wiki/аудит/GenAI_Data_Security_Initiative_A1.3.md · <a href="../../wiki/%D0%B0%D1%83%D0%B4%D0%B8%D1%82/GenAI_Data_Security_Initiative_A1.3.md">Markdown-исходник</a></div>
+<span id="a1313--genai-data-security-initiative-статический-сканер-и-проверка-трасс"></span><h1 id="a1.313-genai-data-security-initiative">A1.3/13 — GenAI Data Security Initiative: статический сканер и проверка трасс</h1>
+<p>Дата: 27.09.2026. Источник: <code>C:\Users\abUser\Downloads\GenAI-Data-Security-Initiative-main.zip</code>, 1 712 370 байт, SHA-256 <code>1C2FB9907F2B25330655CA52A3B28F3D72DE51FF788F2C4735EE52F5ED06EF85</code>, 832 элемента. ZIP открылся штатно; выборочные файлы прочитаны и хешированы без распаковки/исполнения. Полная CRC-проверка всех элементов не проводилась. Корневой <code>LICENSE</code> обозначает CC BY-SA 4.0; условия повторного использования содержимого и кода нужно учитывать отдельно до переноса в общий Git. Точный commit ZIP не установлен.</p>
+<span id="вывод-по-назначению"></span><h2 id="section">Вывод по назначению</h2>
+<p>Архив сочетает таксономию рисков, датасеты и <strong>DSGAI Scanner v0.3.0</strong>. Сканер действительно содержит исполняемый статический анализ исходников: скомпилированный JSON-набор имеет <strong>107 PCRE-правил</strong> (85 <code>structural</code>, 22 <code>value_bearing</code>) для 21 DSGAI-контроля. Это инструмент <strong>аудита кода</strong>, а не middleware на маршруте вызова инструмента агента. Он может подсказать, что проверить вручную, но не способен сам остановить опасное действие агента во время выполнения.</p>
+<span id="соответствие-нашей-схеме"></span><h2 id="section-1">Соответствие нашей схеме</h2>
+<table>
+<thead>
+<tr>
+<th>Блок</th>
+<th>Найденный механизм</th>
+<th>Граница доказательства</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1 / вход и контекст</td>
+<td>Правила сканера ищут в исходниках признаки работы с документами, RAG, промптами и избыточным контекстом. Трассы описывают источник данных и движение между агентом и инструментом.</td>
+<td>Это <strong>статические признаки</strong>, не детекция prompt injection в текущем пользовательском вводе, не Spotlighting и не sandwiching.</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Таксономия помогает описать повышение недоверенного содержимого и утечки контекста.</td>
+<td>В исследованных частях нет реализации ролевых эмбеддингов, fine-tuning или модельной иерархии; таксономия не заменяет механизм.</td>
+</tr>
+<tr>
+<td>L3 / конфигурации, секреты, лимиты</td>
+<td>Набор правил включает шаблоны hardcoded API keys, wildcard tool permissions, MCP auth/schema, timeout/rate-limit и т. п. CLI классифицирует контроль как <code>FAIL</code>, <code>WARN</code>, <code>PASS</code>, <code>NOT VALIDATED</code> или <code>NOT APPLICABLE</code>; результат может уйти в JSON/SARIF.</td>
+<td><code>PASS</code> возникает от найденного <code>pass_signal</code> в коде — это <strong>не</strong> проверка фактического запрета или корректности настройки. Если шаблон не найден, обычный итог <code>NOT VALIDATED</code>, а не доказанная безопасность. Inline suppressions и baseline меняют CI-gate, не поведение агента.</td>
+</tr>
+<tr>
+<td>Секреты / публикация результатов</td>
+<td>Для <code>value_bearing</code>-правил CLI вызывает <code>rg --only-matching --replace ''</code>, сохраняет путь/строку без совпавшего значения; checkpoint запрещает поля <code>match_text</code>, <code>content</code>, <code>value</code>, <code>raw_grep_output</code>. Тесты проверяют отсутствие тестового секретного фрагмента в выходах.</td>
+<td>Гарантия узкая: касается значения, <strong>распознанного соответствующим правилом</strong>. Структурные правила читают строку в процесс сканера; пути/номера строк могут быть чувствительными. Перед публикацией нужен ручной просмотр JSON/SARIF/HTML. Документ о benchmark прямо говорит, что precision ещё не размечена и чисел нет.</td>
+</tr>
+<tr>
+<td>Сеть и воспроизводимость</td>
+<td>CLI требует локальный <code>rg</code> с PCRE2. По умолчанию CVE-enrichment может запросить OSV/NVD; <code>--no-cve</code> или <code>--offline</code> меняют этот контур. При ошибке enrichment скан продолжается с заметкой.</td>
+<td>«Детерминированный» относится прежде всего к pattern matching на фиксированных файлах/правилах. Время, Git-состояние и внешнее CVE-обогащение не тождественны при каждом запуске. В рамках A1 код/сеть не запускались.</td>
+</tr>
+<tr>
+<td>Шина событий, коннекторы, память</td>
+<td><code>agentdataflow_toolexchange_traces</code> задаёт JSON Schema для событий/спанов: actor, операция, чувствительность, происхождение, finding и связь с DSGAI. Валидатор проверяет схему, порядок parent/child, сопоставление finding, provenance и типовые секреты/адреса во <strong>всех</strong> строковых полях. В ZIP уже есть три entry, хотя README этого поднабора ещё говорит, что каталог пуст.</td>
+<td>Это формат и проверка <strong>сохраняемых исследовательских трасс</strong>, не реальная внутренняя шина Core-Agent и не DLP в рантайме. Валидатор сам признаёт: он не проверяет правдивость цитаты и может пропустить секрет, не похожий на его шаблоны. <code>sanitization.attestation</code> остаётся заявлением автора.</td>
+</tr>
+<tr>
+<td>Заглушки</td>
+<td><code>data_validation/validators/anonymization_scanner.py</code> перечисляет regex, но <code>scan_file()</code> — <code>pass</code>, а CLI печатает, что это stub.</td>
+<td>Нельзя учитывать этот файл как работающий DLP/анонимизатор. Реальные проверки трасс находятся в другом модуле — <code>datasets/.../validate.py</code>.</td>
+</tr>
+</tbody>
+</table>
+<span id="что-применять-на-следующих-этапах"></span><h2 id="section-2">Что применять на следующих этапах</h2>
+<ol>
+<li>Из этого ZIP разумно брать <strong>методику статического аудита и схему доказательств</strong>, не вставлять 107 regex в L1/L3 runtime как «политику». Если выбирать оригинал для A2/A4, сначала подтвердить лицензионный режим, зависимости <code>rg</code>/PCRE2, разрешённый offline-профиль и заранее определить контрольный тест на ложные результаты.</li>
+<li>Схема трасс пригодна как пример для будущих лабораторных: <code>tool_call</code> → решение политики → факт исполнения → наблюдаемый эффект, с отдельными provenance и synthetic payload. Но нельзя подменить ею уже существующую шину агента или записать гипотетическую трассу как фактическое наблюдение.</li>
+<li>При оценке собственного проекта <code>PASS</code> сканера записывать лишь как «признак механизма найден в коде». Прямой запрещённый вызов и отсутствие эффекта проверяются на A4 отдельно. Метрики precision без ручной разметки не заявлять.</li>
+<li>Пользовательские документы и правила сканера являются исследуемыми данными, не командами к установке. В этом пакете не запускались Python, ripgrep, CVE API или внешняя модель.</li>
+</ol>
+<span id="опорные-места-в-zip"></span><h2 id="zip">Опорные места в ZIP</h2>
+<p>Пути относительно <code>GenAI-Data-Security-Initiative-main/</code>; номера строк относятся к оригинальным элементам:</p>
+<ul>
+<li><code>LICENSE:1–28</code>; <code>README.md:25–40, 125–137</code> — назначение и лицензия.</li>
+<li><code>dsgai_scanner_tool/README.md:20–22, 70–120</code>; <code>rules/README.md:1–10, 29–57</code>; <code>rules/dsgai-rules.json</code> — маршрут CLI и источник правил (JSON сгенерирован из YAML, 107 правил подсчитаны чтением JSON).</li>
+<li><code>dsgai_scanner_tool/cli/dsgai_scan.py:114–143, 222–270, 349–370, 395–426, 578–686, 778–802</code> — выбор файлов, redaction, статусы, checkpoint, CVE и CI-gate.</li>
+<li><code>dsgai_scanner_tool/tests/test_runner.py:65–75, 100–169, 172–216, 351–374</code> — просмотрены тесты компиляции regex, фикстур, redaction, JSON schema и gitignored <code>.env</code>; тесты не запускались.</li>
+<li><code>dsgai_scanner_tool/docs/BENCHMARK.md:1–8, 82–88</code>; <code>benchmark/METHODOLOGY.md:1–6, 57–59</code> — precision ещё без ручной разметки.</li>
+<li><code>datasets/agentdataflow_toolexchange_traces/README.md:7–18, 31–46, 72–110</code>; <code>schema.json</code>; <code>validate.py:1–36, 157–189, 299–368</code>; <code>tests/test_validate.py:89–123</code> — формат трасс, ограничения происхождения и проверки.</li>
+<li><code>data_validation/validators/anonymization_scanner.py:1–30</code> — незавершённая заглушка.</li>
+</ul>
+<span id="sha-256-выбранных-элементов"></span><h2 id="sha-256">SHA-256 выбранных элементов</h2>
+<table>
+<thead>
+<tr>
+<th>Элемент ZIP</th>
+<th>SHA-256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LICENSE</code></td>
+<td><code>AF38BB5ADC540131B5E4CA1E03386F27123B44D44AC3012971E92424633B63C6</code></td>
+</tr>
+<tr>
+<td><code>README.md</code></td>
+<td><code>43DDD8FAF07786C495DA265D6A5145192D662CEB758BDE884E74A3649FCE2B9F</code></td>
+</tr>
+<tr>
+<td><code>dsgai_scanner_tool/README.md</code></td>
+<td><code>21FC0A2BD80C0F3F4474FC0A99067031853898650C5884AA157D1223A6E585EE</code></td>
+</tr>
+<tr>
+<td><code>dsgai_scanner_tool/rules/README.md</code></td>
+<td><code>FE6BEDA8961451E1C6207AD7093993B203E251C3B22D2B848CF02294D7F64D1B</code></td>
+</tr>
+<tr>
+<td><code>dsgai_scanner_tool/rules/dsgai-rules.json</code></td>
+<td><code>4EC578A3E21EBC9A2C974EFF39E54FAE7D382F0ED70C430F5D25D81C339D3870</code></td>
+</tr>
+<tr>
+<td><code>dsgai_scanner_tool/rules/dsgai-rules.yaml</code></td>
+<td><code>5DE83D06B433922761939A83FF6C9CD8E0B6E0F8607B855BD6F2E3326AE9FE63</code></td>
+</tr>
+<tr>
+<td><code>dsgai_scanner_tool/cli/dsgai_scan.py</code></td>
+<td><code>86D2C36F68C81A4620D3CEBDB94509E27258C6F87045D7B4FF6BCEF9D814A864</code></td>
+</tr>
+<tr>
+<td><code>dsgai_scanner_tool/tests/test_runner.py</code></td>
+<td><code>A67CA70AE7FACA48EDC9AAE4DC680A54CC986062DE0EE07D418F6ABA08C43977</code></td>
+</tr>
+<tr>
+<td><code>dsgai_scanner_tool/benchmark/METHODOLOGY.md</code></td>
+<td><code>83DD1E75AE7C9383F42A3BFFFF228BE545D9807E548623C4B60542B72600904C</code></td>
+</tr>
+<tr>
+<td><code>datasets/agentdataflow_toolexchange_traces/README.md</code></td>
+<td><code>1358323E949F9E15A311725A919682A9533901EB5D7983F0D4390AC3A25CC449</code></td>
+</tr>
+<tr>
+<td><code>datasets/agentdataflow_toolexchange_traces/schema.json</code></td>
+<td><code>C03CC836CF3689A562BE4568FE80DE245787EB9BC4B38BB84AA5D341F1EBDC3E</code></td>
+</tr>
+<tr>
+<td><code>datasets/agentdataflow_toolexchange_traces/validate.py</code></td>
+<td><code>0A2B5A03614AD7A85D45E9F5FAF3D53110851557933DC7F8B50213A7540F38E1</code></td>
+</tr>
+<tr>
+<td><code>datasets/agentdataflow_toolexchange_traces/tests/test_validate.py</code></td>
+<td><code>006E4A85FE4FBD86ADD6028C19A1B34B468C50CD601404F8C91E7331D8AA642A</code></td>
+</tr>
+<tr>
+<td><code>data_validation/validators/anonymization_scanner.py</code></td>
+<td><code>B95512465D3E2C92DF5E62152F15D39618190839FFF685D26F5B28BF4656C2D8</code></td>
+</tr>
+</tbody>
+</table>
+<p>Аудит выборочный: не прочитаны все 832 элемента, не запускались сканер, тесты, сеть, модели или VM; не проверялась точность regex на нашем проекте и не переносился код. Следующий пакет — A1.3/14 OWASP CheatSheetSeries.</p>
+
+<footer>Локальная HTML-сборка из Markdown. Правки вносить в исходные .md, затем повторить сборку. Без сервера и внешних зависимостей.</footer></main></body></html>

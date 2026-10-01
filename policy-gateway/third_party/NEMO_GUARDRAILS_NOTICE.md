@@ -12,4 +12,6 @@ the Python standard library, restricts the endpoint to loopback addresses, and
 supports an injected transport for tests. It does not include or download the
 upstream GPT-2 Large, Torch, Transformers, NIM service, or NeMo runtime.
 
-The Apache License 2.0 text remains available in the supplied source archive.
+The unmodified [Apache License 2.0 text](licenses/NEMO-Apache-2.0.txt)
+and [upstream license notice](licenses/NEMO-LICENSE.md) are included.
+Their bytes were compared with the supplied archive, not reconstructed.

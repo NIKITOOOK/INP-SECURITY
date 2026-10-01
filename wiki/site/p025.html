@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'">
+<title>AI Agent Security Lab — Security Lab Wiki</title><style>:root{color-scheme:light;--ink:#233247;--muted:#5d6a7c;--line:#dce3eb;--accent:#175d9c}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+a{color:var(--accent);text-underline-offset:3px}a:focus-visible{outline:3px solid #ecae44;outline-offset:3px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:320px;top:8px;background:white;z-index:9}
+aside{position:fixed;inset:0 auto 0 0;width:290px;overflow-y:auto;background:#f5f7fa;border-right:1px solid var(--line);padding:25px 18px}
+.brand{font-size:19px;font-weight:750;display:block;text-decoration:none}.caption{color:var(--muted);font-size:12px;margin:6px 0 22px}
+details{margin:12px 0}summary{font-size:13px;font-weight:750;cursor:pointer;padding:5px}
+nav a{display:block;padding:7px 10px;font-size:13px;line-height:1.45;text-decoration:none;border-radius:5px;margin:2px 0}
+nav a:hover{background:#e5edf6}nav a[aria-current=page]{background:#dceafa;color:#124d81;font-weight:650}
+main{margin-left:290px;padding:38px clamp(22px,5vw,85px);max-width:1350px}
+.meta{font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:24px;overflow-wrap:anywhere}
+h1{font-size:30px;line-height:1.25;margin-top:0}h2{font-size:22px;margin-top:32px}h3{font-size:18px}
+pre{background:#f3f6fa;border:1px solid var(--line);padding:16px;overflow:auto;border-radius:7px}
+code{font-size:.87em;background:#f3f6fa;overflow-wrap:anywhere}pre code{background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;margin:20px 0;max-width:100%}
+th,td{border:1px solid var(--line);padding:10px 12px;min-width:130px;vertical-align:top}th{background:#edf2f8;text-align:left}
+blockquote{border-left:3px solid #aac5df;margin-left:0;padding-left:18px;color:var(--muted)}
+.unavailable{color:#7c5261;text-decoration:underline dotted;cursor:help}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:15px;font-size:12px;color:var(--muted)}
+@media(max-width:780px){aside{position:static;width:auto;max-height:42vh;border-bottom:1px solid var(--line)}main{margin:0;padding:24px 18px}h1{font-size:25px}.skip:focus{left:10px}}
+@media print{aside,.skip,.meta{display:none}main{margin:0;padding:0}table{display:table}pre{white-space:pre-wrap}}</style></head>
+<body><a class="skip" href="#content">К содержимому</a><aside><a class="brand" href="index.html">Security Lab · Wiki</a>
+<p class="caption">Многоуровневая защита агента<br>Документация ≠ доказательство испытания</p><nav aria-label="Разделы Wiki"><details open><summary>Обзор</summary><a href="index.html">Вики проекта</a><a href="p060.html">Карта методов защиты</a><a href="p064.html">Реализованные политики: код, проверки и ограничения</a><a href="p004.html">Карта реализации многоуровневой защиты</a></details><details open><summary>L1 &#183; Вход и результаты</summary><a href="p051.html">L1: проверка входа</a><a href="p052.html">L1: происхождение данных</a><a href="p053.html">L1: повторная проверка результата инструмента</a></details><details open><summary>L3 &#183; Ограничения</summary><a href="p050.html">Оригинальный AGT: ограничение бюджета</a><a href="p054.html">L3: лимиты прототипа</a><a href="p055.html">L3: остановка сессии</a><a href="p056.html">L3: отказ при ошибке и запрет изменения политики</a><a href="p057.html">L3: подтверждение критического действия</a><a href="p058.html">L3: метки данных и сетевые адресаты</a><a href="p059.html">L3: инструменты и границы доступа</a></details><details open><summary>Источники</summary><a href="p063.html">Полезные ссылки и ресурсы</a><a href="p049.html">Источники и честные статусы проверки</a><a href="p061.html">Неудавшиеся проверки и открытые вопросы</a><a href="p062.html">Поиск источников при отладке</a><a href="p026.html">A1.3 — индекс последовательного аудита 14 ZIP</a></details><details><summary>Аудит и покрытие L2</summary><a href="p027.html">Контрольная точка A1.3: 14 ZIP рассмотрены, A1 ещё не закрыт</a><a href="p028.html">Контрольная QA-сверка A1 после 14 отчётов</a><a href="p029.html">A1.4 — покрытие многоуровневой модели безопасности</a><a href="p030.html">Как пользователь будет проверять методы в VM</a><a href="p031.html">A1.2 — статическая сверка заявленных заимствований</a><a href="p032.html">Единый формат методички и отчёта</a><a href="p033.html">A1.3/1 — Agent Governance Toolkit в архиве ACS</a><a href="p034.html">M-AGT-APPROVAL — оригинальные правила согласования AGT</a><a href="p035.html">A1.3/11 — Dify: модерация, лимиты, sandbox и сетевой прокси</a><a href="p036.html">A1.3/5 — DeepSeek Harness: политика инструментов, настройки и изоляция</a><a href="p037.html">A1.3/13 — GenAI Data Security Initiative: статический сканер и проверка трасс</a><a href="p038.html">A1.3/12 — GenAI Red Team Lab: испытательный корпус, не защитный middleware</a><a href="p039.html">A1.3/9 — Goose: инспекторы инструментов, разрешения и граница shell</a><a href="p040.html">A1.3/8 — Hermes Agent: approval, защищённые файлы и терминальная среда</a><a href="p041.html">A1.3/4 — LangGraph: ToolNode, interrupt и состояние</a><a href="p042.html">A1.3/7 — Microsoft Agent Framework: метки, политика инструментов и контейнерный shell</a><a href="p043.html">A1.3/2 — NeMo Guardrails: что действительно защищает L1</a><a href="p044.html">A1.3/3 — OpenAI Agents SDK: guardrails, approvals и граница sandbox</a><a href="p045.html">A1.3/10 — OpenHands: Agent Canvas и граница внешнего agent-server</a><a href="p046.html">A1.3/14 — OWASP CheatSheetSeries: рекомендации и иллюстративные примеры</a><a href="p047.html">A1.3/6 — Pydantic AI: toolsets, approval и лимиты</a><a href="p048.html">Wiki оригинальных методов защиты</a></details><details><summary>Лабораторные</summary><a href="p016.html">A3 — подготовка ЛР №0: среда для пилота AGT budgets</a><a href="p017.html">labs/00-environment/Протокол_локальной_A3_20260929.md</a><a href="p018.html">A3 — фактический протокол Azure-стенда для ЛР №0</a><a href="p019.html">Лабораторная работа №1 — пороги AGT budgets без LLM</a><a href="p020.html">AGT budgets — отчёт пилотного сеанса 29.09.2026</a></details><details open><summary>Проект и код</summary><a href="p001.html">Материалы проекта для проверки</a><a href="p002.html">Firecracker — заметка для этапа 5</a><a href="p003.html">Перенос политик безопасности между DeepSeek Harness и LangGraph</a><a href="p005.html">Контракт событий и политик L1/L3 — черновик 0.4</a><a href="p006.html">Матрица настроек L3 и границ автономности</a><a href="p007.html">Аудит оригинальных механизмов и ручная лаборатория</a><a href="p008.html">План работ по политикам безопасности агента</a><a href="p009.html">Программа проверки политик в Azure VM — A3–A4</a><a href="p010.html">Ревью этапов 1–3</a><a href="p011.html">Этап 1. Модель угроз и каталог политик многоуровневой защиты</a><a href="p012.html">Этап 2. Реализация L1 и передача меток в L3</a><a href="p013.html">Этап 3 — декларативные политики L3 и контрольная плоскость</a><a href="p014.html">Этап 4 — критерии интеграции L1/L3 с ядром</a><a href="p015.html">Этап 5.2 — подготовка изолированной среды</a><a href="p021.html">Этап 5.1: адаптер контракта DSH</a><a href="p022.html">Симулятор политик L1/L3</a><a href="p023.html">Agent Governance Toolkit policy notice</a><a href="p024.html">NeMo Guardrails code provenance</a><a href="p025.html" aria-current="page">AI Agent Security Lab</a></details></nav></aside>
+<main id="content"><div class="meta">README.md · <a href="../../README.md">Markdown-исходник</a></div>
+<h1 id="ai-agent-security-lab">AI Agent Security Lab</h1>
+<p>Рабочая стартовая страница проекта по многоуровневой безопасности локального
+ИИ-агента. Текущий согласованный объём — исследование оригинальных методов
+L1/L2/L3, политики, декларативные инструкции, конфигурации и воспроизводимые
+проверки. Существующий <code>policy-gateway</code> и адаптеры ниже — предыдущий прототип
+для сравнения, не внедрение оригиналов и не доказательство защищённости
+конечного агента. L2, ОС-песочница, оболочка агента и выбор конечной LLM не
+считаются выполненными.</p>
+<span id="с-чего-начать"></span><h2 id="section">С чего начать</h2>
+<ul>
+<li><a href="index.html">Wiki с боковым меню</a> и <a href="index.html">Markdown Wiki</a>.</li>
+<li><span class="unavailable" title="Файл не включён в Git-комплект; см. Markdown-исходник">Карта источников</span> — локальная HTML-сборка, не доказательство чтения всех источников.</li>
+<li><a href="p064.html">Методы, код и результаты</a>.</li>
+</ul>
+<p>Основная рабочая папка: <code>D:\AI-Agent-Security-Lab\workspace-current</code>.
+Документы текущего исследования перенесены сюда 26.09.2026 из копии на C:.</p>
+<ul>
+<li><span class="unavailable" title="Файл не включён в Git-комплект; см. Markdown-исходник">Передача следующей модели</span> — актуальная задача, ограничения и точка продолжения.</li>
+<li><a href="p007.html">План аудита оригиналов</a> — база 0.2 утверждена; редакция 0.3 с Azure и контрольной точкой локального применения уточнена и вынесена на согласование.</li>
+<li><a href="p009.html">Программа испытаний в Azure</a> — применимость по уровням, удалённый запуск агентом, A3.1–A3.4, открытые вопросы Q1–Q8 и порядок проверки оригиналов/адаптаций.</li>
+<li><a href="p048.html">Wiki по архитектуре</a> и <a href="p032.html">формат лабораторной</a>.</li>
+<li><span class="unavailable" title="Файл не включён в Git-комплект; см. Markdown-исходник">A2.1: оригинал AGT budgets</span> и <a href="p019.html">проект ЛР №1</a> — подготовлены; частично испытаны в локальном пилоте 29.09, см. <a href="p020.html">отчёт</a>.</li>
+<li><a href="p018.html">A3: текущий протокол Azure VM</a> — стенд создан по прежнему сеансу, приёмка A3 не выполнена; <a href="p016.html">локальная методичка VirtualBox</a> используется для возобновлённого локального пилота; Azure повторно не проверялась.</li>
+<li><span class="unavailable" title="Файл не включён в Git-комплект; см. Markdown-исходник">Ревью соответствия запросу, ЧТЗ и плану после A2.1</span> — исправления, фактический статус и незакрытые доказательства.</li>
+<li><span class="unavailable" title="Файл не включён в Git-комплект; см. Markdown-исходник">Правила работы следующей модели</span> — границы согласованного плана.</li>
+<li><span class="unavailable" title="Файл не включён в Git-комплект; см. Markdown-исходник">Журнал работ</span> и <span class="unavailable" title="Файл не включён в Git-комплект; см. Markdown-исходник">решения</span>.</li>
+</ul>
+<p>Материалы существующего стенда ниже сохранены как предыдущий этап.
+Локальными VM управляет пользователь; удалённая помощь агенту для Azure
+разрешена в D-009. Формальная приёмка всей A3 и плана 0.3 не заявляется.
+Пилот 29.09: 16/16 Rego-тестов, четыре входа и 77/77 выбранных тестов ACS
+с mock Guardian. Реальное блокирование инструмента не доказано; полные логи
+ещё в VM. Это не завершение полной программы A4.</p>
+<ol>
+<li><a href="p008.html">План проекта</a> — порядок этапов, границы работ и текущий статус.</li>
+<li><a href="p004.html">Карта реализации многоуровневой защиты</a> — ссылка от каждого блока схемы к коду, политике или тесту.</li>
+<li><a href="p014.html">Критерии интеграции L1/L3 с ядром</a> — C01–C15 и фактически пройденные проверки.</li>
+<li><a href="../../policy-gateway/test-results.json" title="Исходный файл; переход к строке зависит от просмотрщика">Последний отчёт тестов</a> — машинно-читаемый результат; <a href="../../policy-gateway/test-results.txt" title="Исходный файл; переход к строке зависит от просмотрщика">текстовый отчёт</a>.</li>
+</ol>
+<p>Сохранённый лабораторный результат от 25.09.2026: LangGraph Python 1.2.12, 84 Python-теста и
+16 Node-тестов DSH-адаптера; всего 100 успешных проверок. Это не испытание
+реальной LLM, реальных файловых/сетевых эффектов или изоляции ОС.</p>
+<span id="первичные-требования-и-архитектура"></span><h2 id="section-1">Первичные требования и архитектура</h2>
+<p>Эти документы не дублируются здесь — README лишь даёт точки входа:</p>
+<ul>
+<li><span class="unavailable" title="Внешний или локальный путь не включён в сборку">ЧТЗ — А_02а_ЧТЗ_Никитин К.В.pdf</span></li>
+<li><span class="unavailable" title="Внешний или локальный путь не включён в сборку">Схема ядра агента — deepseek_html_20260924_ad46b9.html</span></li>
+<li><span class="unavailable" title="Внешний или локальный путь не включён в сборку">Раскрывающаяся схема многоуровневой модели</span></li>
+<li><span class="unavailable" title="Внешний или локальный путь не включён в сборку">Архитектурная схема проекта — ИНП <em>ААМ</em> - Структура проекта.pdf</span></li>
+</ul>
+<span id="документы-проекта"></span><h2 id="section-2">Документы проекта</h2>
+<table>
+<thead>
+<tr>
+<th>Документ</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="p008.html">План проекта</a></td>
+<td>Главный порядок работ и незакрытые решения</td>
+</tr>
+<tr>
+<td><span class="unavailable" title="Файл не включён в Git-комплект; см. Markdown-исходник">Архив первоначального плана</span></td>
+<td>Историческая версия плана</td>
+</tr>
+<tr>
+<td><a href="p011.html">Этап 1 — модель угроз и каталог политик</a></td>
+<td>Основание L1/L3-политик</td>
+</tr>
+<tr>
+<td><a href="p012.html">Этап 2 — реализация L1</a></td>
+<td>Реализация входной защиты</td>
+</tr>
+<tr>
+<td><a href="p013.html">Этап 3 — реализация L3</a></td>
+<td>Реализация детерминированной защиты</td>
+</tr>
+<tr>
+<td><a href="p014.html">Этап 4 — критерии интеграции</a></td>
+<td>Контракт ядра и C01–C15</td>
+</tr>
+<tr>
+<td><a href="p004.html">Карта реализации</a></td>
+<td>Кодовая навигация по уровням модели</td>
+</tr>
+<tr>
+<td><a href="p010.html">Ревью этапов 1–3</a></td>
+<td>Найденные риски и ограничения</td>
+</tr>
+<tr>
+<td><a href="p005.html">Контракт шины и политики</a></td>
+<td>Формат доверенных событий</td>
+</tr>
+<tr>
+<td><a href="p006.html">Матрица настроек L3</a></td>
+<td>Тумблеры и их безопасный смысл</td>
+</tr>
+<tr>
+<td><a href="p003.html">Исследование LangGraph, DSH и изоляции</a></td>
+<td>Сравнение механизмов ядер и ОС</td>
+</tr>
+<tr>
+<td><a href="p002.html">Заметка Firecracker, этап 5</a></td>
+<td>Отложенный вариант Linux/KVM-песочницы</td>
+</tr>
+<tr>
+<td><a href="../../%D0%A0%D0%B5%D0%B5%D1%81%D1%82%D1%80_%D0%B8%D1%81%D1%82%D0%BE%D1%87%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2.yaml" title="Исходный файл; переход к строке зависит от просмотрщика">Реестр источников</a></td>
+<td>Происхождение, лицензии и адаптации</td>
+</tr>
+</tbody>
+</table>
+<span id="политика-и-движок"></span><h2 id="section-3">Политика и движок</h2>
+<table>
+<thead>
+<tr>
+<th>Файл</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../%D0%9F%D0%BE%D0%BB%D0%B8%D1%82%D0%B8%D0%BA%D0%B8_L1_L3_v0.1.yaml" title="Исходный файл; переход к строке зависит от просмотрщика">Политики L1/L3 YAML</a></td>
+<td>Исполняемый профиль: тумблеры, права, лимиты, HITL, IFC и egress</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/engine.py" title="Исходный файл; переход к строке зависит от просмотрщика">Policy Engine</a></td>
+<td>Валидация профиля, решения L1/L3, stop, approval и аудит</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/l1/pipeline.py" title="Исходный файл; переход к строке зависит от просмотрщика">L1 Pipeline</a></td>
+<td>Привязка input provenance и меток к L3</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/l1/nemo_jailbreak.py" title="Исходный файл; переход к строке зависит от просмотрщика">NeMo detector adapter</a></td>
+<td>Локальный loopback-клиент детектора jailbreak</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/l3/agt_controls.py" title="Исходный файл; переход к строке зависит от просмотрщика">AGT-derived L3 helpers</a></td>
+<td>Budget, approval, IFC и egress-семантика</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/langgraph_adapter/adapter.py" title="Исходный файл; переход к строке зависит от просмотрщика">LangGraph policy adapter</a></td>
+<td>Преобразование tool call в доверенное событие политики</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/langgraph_adapter/runtime.py" title="Исходный файл; переход к строке зависит от просмотрщика">LangGraph runtime</a></td>
+<td>Граф <code>L1 → planner → L3 → ToolNode → L1</code></td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/langgraph_adapter/cancellation.py" title="Исходный файл; переход к строке зависит от просмотрщика">Cancellation controller</a></td>
+<td>Кооперативная отмена активного инструмента</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/langgraph_adapter/__init__.py" title="Исходный файл; переход к строке зависит от просмотрщика">LangGraph adapter exports</a></td>
+<td>Публичные импорты адаптера</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/l1/__init__.py" title="Исходный файл; переход к строке зависит от просмотрщика">L1 package exports</a></td>
+<td>Публичные импорты L1</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/l3/__init__.py" title="Исходный файл; переход к строке зависит от просмотрщика">L3 package exports</a></td>
+<td>Публичные импорты L3</td>
+</tr>
+</tbody>
+</table>
+<span id="тесты-и-запуск"></span><h2 id="section-4">Тесты и запуск</h2>
+<table>
+<thead>
+<tr>
+<th>Файл</th>
+<th>Проверяет</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../policy-gateway/verify.py" title="Исходный файл; переход к строке зависит от просмотрщика">Полные проверки</a></td>
+<td>Запускает Python- и DSH Node-тесты, формирует отчёты</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/test_langgraph_end_to_end.py" title="Исходный файл; переход к строке зависит от просмотрщика">Сквозные LangGraph-тесты</a></td>
+<td>L1→L3→ToolNode, IFC, egress, HITL, stop, budget, output gate</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/test_langgraph_runtime.py" title="Исходный файл; переход к строке зависит от просмотрщика">LangGraph runtime-тесты</a></td>
+<td>ToolNode, interrupt/resume и запреты</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/test_langgraph_adapter.py" title="Исходный файл; переход к строке зависит от просмотрщика">Контракт LangGraph-адаптера</a></td>
+<td>Формат вызова и полномочия хоста</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/test_l1_pipeline.py" title="Исходный файл; переход к строке зависит от просмотрщика">Тесты L1</a></td>
+<td>Метки, provenance и NeMo-контракт</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/test_l3_controls.py" title="Исходный файл; переход к строке зависит от просмотрщика">Тесты L3/AGT</a></td>
+<td>Budget, approval, IFC и egress</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/test_engine.py" title="Исходный файл; переход к строке зависит от просмотрщика">Тесты Policy Engine</a></td>
+<td>Правила, пути, лимиты, HITL, stop, YAML</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/demo.py" title="Исходный файл; переход к строке зависит от просмотрщика">Демонстрация решений</a></td>
+<td>Безвредный вывод решений Policy Engine</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/requirements.txt" title="Исходный файл; переход к строке зависит от просмотрщика">Требования Python</a></td>
+<td>Базовые зависимости</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/requirements-langgraph.txt" title="Исходный файл; переход к строке зависит от просмотрщика">Требования LangGraph</a></td>
+<td>Зависимости runtime-стенда</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/test-results.json" title="Исходный файл; переход к строке зависит от просмотрщика">Последний JSON-отчёт</a></td>
+<td>Результат последнего прогона</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/test-results.txt" title="Исходный файл; переход к строке зависит от просмотрщика">Последний текстовый отчёт</a></td>
+<td>Подробный unittest-вывод</td>
+</tr>
+<tr>
+<td><a href="../../policy-gateway/adapter-test-results.tap" title="Исходный файл; переход к строке зависит от просмотрщика">Последний DSH TAP-отчёт</a></td>
+<td>Результат Node-адаптера</td>
+</tr>
+</tbody>
+</table>
+<p>Повторный запуск — только в подготовленной согласованной VM после проверки зависимостей и изоляции. Команды Windows-хоста удалены: исследуемый код на ноутбуке не исполнять. См. <a href="p022.html">условия запуска прототипа</a>.</p>
+<span id="deepseek-harness-адаптер"></span><h2 id="deepseek-harness">DeepSeek Harness-адаптер</h2>
+<p>DSH не запускается целиком; проверен его контрактный адаптер:</p>
+<ul>
+<li><a href="p021.html">README DSH-адаптера</a></li>
+<li><a href="../../policy-gateway/dsh-adapter/adapter.mjs" title="Исходный файл; переход к строке зависит от просмотрщика">Adapter</a></li>
+<li><a href="../../policy-gateway/dsh-adapter/bridge.mjs" title="Исходный файл; переход к строке зависит от просмотрщика">Bridge к Python worker</a></li>
+<li><a href="../../policy-gateway/dsh-adapter/adapter.test.mjs" title="Исходный файл; переход к строке зависит от просмотрщика">DSH contract tests</a></li>
+<li><a href="../../policy-gateway/worker.py" title="Исходный файл; переход к строке зависит от просмотрщика">Python policy worker</a></li>
+</ul>
+<span id="использованные-внешние-материалы"></span><h2 id="section-5">Использованные внешние материалы</h2>
+<ul>
+<li><span class="unavailable" title="Файл не включён в Git-комплект; см. Markdown-исходник">Инвентарь предоставленных ZIP-архивов</span></li>
+<li><a href="../../research/archive_catalog.py" title="Исходный файл; переход к строке зависит от просмотрщика">Скрипт формирования каталога архивов</a></li>
+<li><a href="p024.html">Уведомление об адаптации NeMo Guardrails</a></li>
+<li><a href="p023.html">Уведомление об адаптации Microsoft AGT</a></li>
+<li><span class="unavailable" title="Файл не включён в Git-комплект; см. Markdown-исходник">Лицензия AGT</span></li>
+<li><span class="unavailable" title="Файл не включён в Git-комплект; см. Markdown-исходник">AGT approval.rego</span></li>
+<li><span class="unavailable" title="Файл не включён в Git-комплект; см. Markdown-исходник">AGT budgets.rego</span></li>
+</ul>
+<span id="изоляция-ос--границы-подтверждённого"></span><h2 id="section-6">Изоляция ОС — границы подтверждённого</h2>
+<ul>
+<li><a href="p015.html">Описание лабораторной среды</a></li>
+<li><a href="../../environment/New-LabVM.ps1" title="Исходный файл; переход к строке зависит от просмотрщика">Черновой скрипт создания Lab VM</a></li>
+</ul>
+<p>Локальная VirtualBox VM использована в пилоте, но это не доказывает изоляцию
+конечного агента. Docker, Firecracker, AppLocker/AppArmor, firewall и ACL хоста
+не объявлены внедрёнными защитами. Перед следующим опытом повторно проверить
+состояние VM и изоляцию; настройки гипервизора выполняет пользователь.</p>
+
+<footer>Локальная HTML-сборка из Markdown. Правки вносить в исходные .md, затем повторить сборку. Без сервера и внешних зависимостей.</footer></main></body></html>

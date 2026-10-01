@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Полезные ссылки и ресурсы — Security Lab Wiki</title><style>:root{color-scheme:light;--ink:#233247;--muted:#5d6a7c;--line:#dce3eb;--accent:#175d9c}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+a{color:var(--accent);text-underline-offset:3px}a:focus-visible{outline:3px solid #ecae44;outline-offset:3px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:320px;top:8px;background:white;z-index:9}
+aside{position:fixed;inset:0 auto 0 0;width:290px;overflow-y:auto;background:#f5f7fa;border-right:1px solid var(--line);padding:25px 18px}
+.brand{font-size:19px;font-weight:750;display:block;text-decoration:none}.caption{color:var(--muted);font-size:12px;margin:6px 0 22px}
+details{margin:12px 0}summary{font-size:13px;font-weight:750;cursor:pointer;padding:5px}
+nav a{display:block;padding:7px 10px;font-size:13px;line-height:1.45;text-decoration:none;border-radius:5px;margin:2px 0}
+nav a:hover{background:#e5edf6}nav a[aria-current=page]{background:#dceafa;color:#124d81;font-weight:650}
+main{margin-left:290px;padding:38px clamp(22px,5vw,85px);max-width:1350px}
+.meta{font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:24px;overflow-wrap:anywhere}
+h1{font-size:30px;line-height:1.25;margin-top:0}h2{font-size:22px;margin-top:32px}h3{font-size:18px}
+pre{background:#f3f6fa;border:1px solid var(--line);padding:16px;overflow:auto;border-radius:7px}
+code{font-size:.87em;background:#f3f6fa;overflow-wrap:anywhere}pre code{background:none}
+table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;margin:20px 0;max-width:100%}
+th,td{border:1px solid var(--line);padding:10px 12px;min-width:130px;vertical-align:top}th{background:#edf2f8;text-align:left}
+blockquote{border-left:3px solid #aac5df;margin-left:0;padding-left:18px;color:var(--muted)}
+.unavailable{color:#7c5261;text-decoration:underline dotted;cursor:help}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:15px;font-size:12px;color:var(--muted)}
+@media(max-width:780px){aside{position:static;width:auto;max-height:42vh;border-bottom:1px solid var(--line)}main{margin:0;padding:24px 18px}h1{font-size:25px}.skip:focus{left:10px}}
+@media print{aside,.skip,.meta{display:none}main{margin:0;padding:0}table{display:table}pre{white-space:pre-wrap}}</style></head>
+<body><a class="skip" href="#content">К содержимому</a><aside><a class="brand" href="index.html">Security Lab · Wiki</a>
+<p class="caption">Многоуровневая защита агента<br>Документация ≠ доказательство испытания</p><nav aria-label="Разделы Wiki"><details open><summary>Обзор</summary><a href="index.html">Вики проекта</a><a href="p060.html">Карта методов защиты</a><a href="p064.html">Реализованные политики: код, проверки и ограничения</a><a href="p004.html">Карта реализации многоуровневой защиты</a></details><details open><summary>L1 &#183; Вход и результаты</summary><a href="p051.html">L1: проверка входа</a><a href="p052.html">L1: происхождение данных</a><a href="p053.html">L1: повторная проверка результата инструмента</a></details><details open><summary>L3 &#183; Ограничения</summary><a href="p050.html">Оригинальный AGT: ограничение бюджета</a><a href="p054.html">L3: лимиты прототипа</a><a href="p055.html">L3: остановка сессии</a><a href="p056.html">L3: отказ при ошибке и запрет изменения политики</a><a href="p057.html">L3: подтверждение критического действия</a><a href="p058.html">L3: метки данных и сетевые адресаты</a><a href="p059.html">L3: инструменты и границы доступа</a></details><details open><summary>Источники</summary><a href="p063.html" aria-current="page">Полезные ссылки и ресурсы</a><a href="p049.html">Источники и честные статусы проверки</a><a href="p061.html">Неудавшиеся проверки и открытые вопросы</a><a href="p062.html">Поиск источников при отладке</a><a href="p026.html">A1.3 — индекс последовательного аудита 14 ZIP</a></details><details><summary>Аудит и покрытие L2</summary><a href="p027.html">Контрольная точка A1.3: 14 ZIP рассмотрены, A1 ещё не закрыт</a><a href="p028.html">Контрольная QA-сверка A1 после 14 отчётов</a><a href="p029.html">A1.4 — покрытие многоуровневой модели безопасности</a><a href="p030.html">Как пользователь будет проверять методы в VM</a><a href="p031.html">A1.2 — статическая сверка заявленных заимствований</a><a href="p032.html">Единый формат методички и отчёта</a><a href="p033.html">A1.3/1 — Agent Governance Toolkit в архиве ACS</a><a href="p034.html">M-AGT-APPROVAL — оригинальные правила согласования AGT</a><a href="p035.html">A1.3/11 — Dify: модерация, лимиты, sandbox и сетевой прокси</a><a href="p036.html">A1.3/5 — DeepSeek Harness: политика инструментов, настройки и изоляция</a><a href="p037.html">A1.3/13 — GenAI Data Security Initiative: статический сканер и проверка трасс</a><a href="p038.html">A1.3/12 — GenAI Red Team Lab: испытательный корпус, не защитный middleware</a><a href="p039.html">A1.3/9 — Goose: инспекторы инструментов, разрешения и граница shell</a><a href="p040.html">A1.3/8 — Hermes Agent: approval, защищённые файлы и терминальная среда</a><a href="p041.html">A1.3/4 — LangGraph: ToolNode, interrupt и состояние</a><a href="p042.html">A1.3/7 — Microsoft Agent Framework: метки, политика инструментов и контейнерный shell</a><a href="p043.html">A1.3/2 — NeMo Guardrails: что действительно защищает L1</a><a href="p044.html">A1.3/3 — OpenAI Agents SDK: guardrails, approvals и граница sandbox</a><a href="p045.html">A1.3/10 — OpenHands: Agent Canvas и граница внешнего agent-server</a><a href="p046.html">A1.3/14 — OWASP CheatSheetSeries: рекомендации и иллюстративные примеры</a><a href="p047.html">A1.3/6 — Pydantic AI: toolsets, approval и лимиты</a><a href="p048.html">Wiki оригинальных методов защиты</a></details><details><summary>Лабораторные</summary><a href="p016.html">A3 — подготовка ЛР №0: среда для пилота AGT budgets</a><a href="p017.html">labs/00-environment/Протокол_локальной_A3_20260929.md</a><a href="p018.html">A3 — фактический протокол Azure-стенда для ЛР №0</a><a href="p019.html">Лабораторная работа №1 — пороги AGT budgets без LLM</a><a href="p020.html">AGT budgets — отчёт пилотного сеанса 29.09.2026</a></details><details><summary>Проект и код</summary><a href="p001.html">Материалы проекта для проверки</a><a href="p002.html">Firecracker — заметка для этапа 5</a><a href="p003.html">Перенос политик безопасности между DeepSeek Harness и LangGraph</a><a href="p005.html">Контракт событий и политик L1/L3 — черновик 0.4</a><a href="p006.html">Матрица настроек L3 и границ автономности</a><a href="p007.html">Аудит оригинальных механизмов и ручная лаборатория</a><a href="p008.html">План работ по политикам безопасности агента</a><a href="p009.html">Программа проверки политик в Azure VM — A3–A4</a><a href="p010.html">Ревью этапов 1–3</a><a href="p011.html">Этап 1. Модель угроз и каталог политик многоуровневой защиты</a><a href="p012.html">Этап 2. Реализация L1 и передача меток в L3</a><a href="p013.html">Этап 3 — декларативные политики L3 и контрольная плоскость</a><a href="p014.html">Этап 4 — критерии интеграции L1/L3 с ядром</a><a href="p015.html">Этап 5.2 — подготовка изолированной среды</a><a href="p021.html">Этап 5.1: адаптер контракта DSH</a><a href="p022.html">Симулятор политик L1/L3</a><a href="p023.html">Agent Governance Toolkit policy notice</a><a href="p024.html">NeMo Guardrails code provenance</a><a href="p025.html">AI Agent Security Lab</a></details></nav></aside>
+<main id="content"><div class="meta">wiki/Полезные_ссылки_и_ресурсы.md · <a href="../../wiki/%D0%9F%D0%BE%D0%BB%D0%B5%D0%B7%D0%BD%D1%8B%D0%B5_%D1%81%D1%81%D1%8B%D0%BB%D0%BA%D0%B8_%D0%B8_%D1%80%D0%B5%D1%81%D1%83%D1%80%D1%81%D1%8B.md">Markdown-исходник</a></div>
+<span id="полезные-ссылки-и-ресурсы"></span><h1 id="section">Полезные ссылки и ресурсы</h1>
+<p>Дополнение по двум спискам из вложения: <a href="p049.html">источники со статусами</a>, <a href="p061.html">неудавшиеся проверки</a>, <a href="p062.html">поиск при отладке</a>. Тематический каталог и отчёт о проверке — разные документы: добавление ссылки не означает её чтение.</p>
+<p>Это тематический указатель из пользовательского <code>links.md</code>. Он не является
+списком обязательных зависимостей и не разрешает автоматически скачивать,
+устанавливать или запускать код по этим ссылкам. Упомянутый ранее полный исходный
+список <code>references/raw/links.md</code> отсутствует в проверенных копиях проекта на C: и D:.</p>
+<p>Дополнено 01.10.2026 ссылками из сообщения пользователя. Повторы объединены,
+пустой якорь и рекламные UTM-параметры убраны. Новые ссылки зарегистрированы
+как материалы для изучения: доступность и содержание страниц в этом обновлении
+не проверялись. Их добавление не меняет согласованный план или статус испытаний.
+Официальные документы, репозитории, авторские обзоры и коммерческие страницы
+ниже разделены по назначению; ссылка на проект не подтверждает его аудит.</p>
+<p>Указатель остаётся простым тематическим списком: связи «статья → все ссылки
+внутри статьи» не ведём. Для вывода или заимствованного метода, реально
+использованного в проекте, указываем конкретный первоисточник в соответствующей
+карточке метода или отчёте. Новая подборка от 01.10.2026 добавлена по тому же
+принципу; страницы и их содержание отдельно не проверялись.</p>
+<span id="1-модель-угроз-и-prompt-injection"></span><h2 id="prompt-injection">1. Модель угроз и prompt injection</h2>
+<ul>
+<li><a href="https://genai.owasp.org/" rel="noreferrer">OWASP GenAI Security Project</a> — главная страница инициативы; пользователь упомянул также Top 10 for LLM Applications. Конкретную редакцию Top 10 нужно указывать отдельно при использовании в анализе.</li>
+<li><a href="https://atlas.mitre.org/" rel="noreferrer">MITRE ATLAS</a> — ресурс для изучения тактик и техник атак на ИИ-системы; применимость к нашим сценариям пока не разбиралась.</li>
+<li><a href="https://genai.owasp.org/resource/agentic-ai-threats-and-mitigations/" rel="noreferrer">OWASP: Agentic AI — Threats and Mitigations</a> — угрозы и меры защиты агентных систем; источник для сопоставления с нашей картой L1/L2/L3.</li>
+<li><a href="https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html" rel="noreferrer">OWASP: LLM Prompt Injection Prevention Cheat Sheet</a></li>
+<li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html" rel="noreferrer">OWASP: Input Validation Cheat Sheet</a></li>
+<li><a href="https://csrc.nist.gov/glossary/term/prompt_injection" rel="noreferrer">NIST: Prompt Injection glossary</a></li>
+<li><a href="https://learn.microsoft.com/en-us/security/zero-trust/catalog-ai-attack-techniques/prompt-injection" rel="noreferrer">Microsoft: Prompt Injection techniques</a></li>
+<li><a href="https://docs.nvidia.com/nemo/guardrails/about-nemo-guardrails-library/rail-types" rel="noreferrer">NVIDIA NeMo Guardrails: rail types</a></li>
+<li><a href="https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-86M" rel="noreferrer">Meta Llama Prompt Guard 2</a></li>
+<li><a href="https://www.microsoft.com/en-us/research/publication/defending-against-indirect-prompt-injection-attacks-with-spotlighting/" rel="noreferrer">Microsoft Research: Spotlighting</a></li>
+<li><a href="https://aws.amazon.com/blogs/security/designing-for-the-inevitable-system-prompt-leakage-and-mitigations-in-generative-ai-applications/" rel="noreferrer">AWS: sandwich defense pattern</a></li>
+</ul>
+<span id="2-политики-разрешения-и-governance"></span><h2 id="governance">2. Политики, разрешения и governance</h2>
+<ul>
+<li><a href="https://cursor.com/ru/docs/agent/security" rel="noreferrer">Cursor: безопасность агента</a> — документация продукта для сравнительного изучения границ исполнения.</li>
+<li><a href="https://cursor.com/ru/docs/agent/security/run-modes" rel="noreferrer">Cursor: режимы запуска</a> — документация режимов работы; не готовая политика нашего стенда.</li>
+<li><a href="https://github.com/alukatsk/STF17/tree/main/security_policy" rel="noreferrer">STF17: security_policy</a> — предоставленный пользователем каталог; реализация, лицензия и применимость требуют отдельного чтения.</li>
+<li><a href="https://github.com/alukatsk/STF17/tree/main/communication" rel="noreferrer">STF17: communication</a>.</li>
+<li><a href="https://github.com/alukatsk/STF17/tree/main/communication_v20_customgpt" rel="noreferrer">STF17: communication_v20_customgpt</a>.</li>
+<li><a href="https://github.com/alukatsk/STF17/tree/main" rel="noreferrer">STF17: ветка main</a>.</li>
+<li><a href="https://github.com/alukatsk/STF17/tree/main/compliance_gpt" rel="noreferrer">STF17: compliance_gpt</a>.</li>
+<li><a href="https://github.com/alukatsk/STF17/tree/main/password_checker" rel="noreferrer">STF17: password_checker</a>.</li>
+<li><a href="https://knowledge.catonetworks.com/docs/ru/what-is-local-ai-agents-security" rel="noreferrer">Cato Networks: Local AI Agents Security</a> — документация поставщика.</li>
+<li><a href="https://knowledge.catonetworks.com/docs/ru/getting-started-with-ai-security" rel="noreferrer">Cato Networks: Getting Started with AI Security</a> — документация поставщика.</li>
+<li><a href="https://www.openpolicyagent.org/docs" rel="noreferrer">Open Policy Agent</a></li>
+<li><a href="https://github.com/cedar-policy/cedar" rel="noreferrer">Cedar Policy</a></li>
+<li><a href="https://github.com/microsoft/agent-governance-toolkit" rel="noreferrer">Microsoft Agent Governance Toolkit</a></li>
+<li><a href="https://microsoft.github.io/agent-governance-toolkit/" rel="noreferrer">Microsoft AGT documentation</a></li>
+<li><a href="https://github.com/genai-security-project/agent-control-standard" rel="noreferrer">Agent Control Standard</a></li>
+<li><a href="https://genai.owasp.org/llmrisk/llm062025-excessive-agency/" rel="noreferrer">OWASP: excessive agency</a></li>
+<li><a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices" rel="noreferrer">MCP security best practices</a></li>
+</ul>
+<span id="3-фреймворки-и-готовые-механизмы"></span><h2 id="section-1">3. Фреймворки и готовые механизмы</h2>
+<ul>
+<li><a href="https://github.com/NVIDIA/NeMo-Guardrails" rel="noreferrer">NVIDIA NeMo Guardrails: ссылка из подборки пользователя</a> — адрес сохранён как предоставлен; доступность и возможное перенаправление не проверены. Не заменяет ZIP Guardrails-develop, исследованный в A1.</li>
+<li><a href="https://github.com/guidance-ai/guidance" rel="noreferrer">Guidance</a> — найденный официальный репозиторий. По README, поддерживает ограничения генерации регулярными выражениями и грамматиками. Это контроль формата/структуры вывода; его нельзя засчитывать как доказательство запрета произвольного исполнения кода. Адрес и назначение сверены 01.10.2026; исходники и интеграция в наш стенд не проверялись.</li>
+<li><a href="https://github.com/crewaiinc/crewai" rel="noreferrer">CrewAI</a>.</li>
+<li><a href="https://github.com/microsoft/agent-framework" rel="noreferrer">Microsoft Agent Framework</a>.</li>
+<li><a href="https://github.com/langgenius/dify" rel="noreferrer">Dify</a>.</li>
+<li><a href="https://github.com/FlowiseAI/Flowise" rel="noreferrer">Flowise</a>.</li>
+<li><a href="https://github.com/langflow-ai/langflow/tree/main/docs" rel="noreferrer">Langflow: документация в репозитории</a>.</li>
+<li><a href="https://anythingllm.com/download" rel="noreferrer">AnythingLLM: страница загрузки</a> — справочная ссылка, установка не выполнялась.</li>
+<li><a href="https://simpleone.ru/genai-platform" rel="noreferrer">SimpleOne: GenAI Platform</a> — страница продукта.</li>
+<li><a href="https://docs.ainergy.ru/" rel="noreferrer">Ainergy: документация</a>.</li>
+<li><a href="https://ainergy.ru/use-cases/scied" rel="noreferrer">Ainergy: сценарий SciEd</a>.</li>
+</ul>
+<p>Ссылки на текущие репозитории Microsoft Agent Framework и Dify не заменяют
+исследованные ZIP-снимки: происхождение и версии см. в <a href="p026.html">индексе A1.3</a>.</p>
+<ul>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/overview" rel="noreferrer">LangGraph overview</a></li>
+<li><a href="https://github.com/deepseek-ai/deepseek-harness" rel="noreferrer">DeepSeek Harness</a></li>
+<li><a href="https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/interaction/permission-presets/README.md" rel="noreferrer">DSH: permission presets</a></li>
+<li><a href="https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/interaction/user-approval/README.md" rel="noreferrer">DSH: user approval</a></li>
+<li><a href="https://openai.github.io/openai-agents-python/guardrails/" rel="noreferrer">OpenAI Agents: guardrails</a></li>
+<li><a href="https://openai.github.io/openai-agents-python/ref/tool/" rel="noreferrer">OpenAI Agents: tool API</a></li>
+<li><a href="https://openai.github.io/openai-agents-python/human_in_the_loop/" rel="noreferrer">OpenAI Agents: HITL</a></li>
+<li><a href="https://github.com/pydantic/pydantic-ai/blob/main/pydantic_ai_slim/pydantic_ai/toolsets/approval_required.py" rel="noreferrer">Pydantic AI approval_required</a></li>
+<li><a href="https://github.com/aaif-goose/goose/blob/main/crates/goose/src/permission/permission_inspector.rs" rel="noreferrer">Goose permission inspector</a></li>
+<li><a href="https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/security.md" rel="noreferrer">Hermes Agent security guide</a></li>
+</ul>
+<span id="4-изоляция-ос-процессы-и-контейнеры"></span><h2 id="section-2">4. Изоляция ОС, процессы и контейнеры</h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/secauthz/access-control-lists" rel="noreferrer">Microsoft: Access Control Lists</a> — документация ACL Windows.</li>
+<li><a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/" rel="noreferrer">Microsoft: Windows Sandbox</a> — отдельный кандидат для изучения изоляции.</li>
+<li><a href="https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity" rel="noreferrer">Microsoft: VBS / memory integrity</a> — документация защиты целостности кода на основе виртуализации.</li>
+<li><a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/applocker/working-with-applocker-rules" rel="noreferrer">Windows AppLocker rules</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/secauthz/appcontainer-isolation" rel="noreferrer">Windows AppContainer isolation</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects" rel="noreferrer">Windows Job Objects</a></li>
+<li><a href="https://documentation.ubuntu.com/security/security-features/privilege-restriction/apparmor/" rel="noreferrer">Ubuntu AppArmor</a></li>
+<li><a href="https://docs.kernel.org/userspace-api/landlock.html" rel="noreferrer">Linux Landlock</a></li>
+<li><a href="https://docs.docker.com/engine/security/" rel="noreferrer">Docker security</a></li>
+<li><a href="https://docs.podman.io/" rel="noreferrer">Podman documentation</a></li>
+<li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd.resource-control.html" rel="noreferrer">systemd resource control</a></li>
+<li><a href="p002.html">Firecracker note for this project</a></li>
+</ul>
+<span id="5-тестирование-red-teaming-и-benchmarks"></span><h2 id="red-teaming-benchmarks">5. Тестирование, red teaming и benchmarks</h2>
+<ul>
+<li><a href="https://www.promptfoo.dev/docs/intro/" rel="noreferrer">promptfoo: введение</a> — документация для изучения организации проверок.</li>
+<li><a href="https://github.com/confident-ai/deepeval" rel="noreferrer">DeepEval</a> — репозиторий инструмента оценки; пока не выбран и не запускался в проекте.</li>
+<li><a href="https://github.com/microsoft/skillopt" rel="noreferrer">Microsoft: skillopt</a> — кандидат для отдельного изучения; назначение и применимость ещё не сверены по исходникам.</li>
+<li><a href="https://github.com/ethz-spylab/agentdojo" rel="noreferrer">AgentDojo</a></li>
+<li><a href="https://github.com/agiresearch/ASB" rel="noreferrer">AI Agent Security Benchmark</a></li>
+<li><a href="https://github.com/microsoft/PyRIT" rel="noreferrer">Microsoft PyRIT</a></li>
+<li><a href="https://github.com/NVIDIA/garak" rel="noreferrer">NVIDIA garak</a></li>
+<li><a href="https://github.com/promptfoo/promptfoo" rel="noreferrer">promptfoo</a></li>
+<li><a href="https://github.com/GenAI-Security-Project/GenAI-Agent-Security-Initiative" rel="noreferrer">GenAI Agent Security Initiative</a></li>
+</ul>
+<span id="6-стандарты-происхождение-и-лицензии"></span><h2 id="section-3">6. Стандарты, происхождение и лицензии</h2>
+<ul>
+<li><a href="https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final" rel="noreferrer">NIST SP 800-53 Rev. 5</a> — источник для сопоставления требований и мер контроля.</li>
+<li><a href="https://csrc.nist.gov/pubs/sp/800/125/final" rel="noreferrer">NIST SP 800-125</a> — источник по безопасности виртуализации.</li>
+<li><a href="https://fstec.ru/dokumenty/vse-dokumenty/spetsialnye-normativnye-dokumenty/trebovaniya-utverzhdeny-prikazom-fstek-rossii-ot-11-aprelya-2025-g-n-117" rel="noreferrer">ФСТЭК России: требования, утверждённые приказом от 11.04.2025 №117</a> — официальный документ для отдельного разбора области применения; добавление ссылки не означает, что требования применимы к нашему стенду или выполнены.</li>
+<li><a href="https://www.nist.gov/itl/ai-risk-management-framework" rel="noreferrer">NIST AI Risk Management Framework</a></li>
+<li><a href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf" rel="noreferrer">NIST AI 600-1</a></li>
+<li><a href="https://slsa.dev/spec/v1.2/provenance" rel="noreferrer">SLSA provenance</a></li>
+<li><a href="https://reuse.software/spec-3.3/" rel="noreferrer">REUSE specification</a></li>
+<li><a href="https://spdx.dev/learn/handling-license-info/" rel="noreferrer">SPDX license information</a></li>
+</ul>
+<span id="7-архитектура-агентов-инструменты-и-контекст"></span><h2 id="section-4">7. Архитектура агентов, инструменты и контекст</h2>
+<ul>
+<li><a href="https://www.anthropic.com/research/building-effective-agents" rel="noreferrer">Anthropic: Building effective agents</a>.</li>
+<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" rel="noreferrer">Anthropic: Effective context engineering for AI agents</a>.</li>
+<li><a href="https://www.anthropic.com/engineering/writing-tools-for-agents" rel="noreferrer">Anthropic: Writing tools for agents</a>.</li>
+<li><a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents" rel="noreferrer">Anthropic: Effective harnesses for long-running agents</a>.</li>
+<li><a href="https://cursor.com/ru/learn" rel="noreferrer">Cursor: учебные материалы</a>.</li>
+<li><a href="https://47billion.com/blog/ai-agents-in-production-frameworks-protocols-and-what-actually-works-in-2026/" rel="noreferrer">47Billion: AI Agents in Production — Frameworks, Protocols, and What Actually Works in 2026</a> — сторонний обзор, отдельно от документации авторов фреймворков.</li>
+</ul>
+<span id="8-модели-и-подбор-ресурсов"></span><h2 id="section-5">8. Модели и подбор ресурсов</h2>
+<ul>
+<li><a href="https://huggingface.co/meta-llama" rel="noreferrer">Meta Llama на Hugging Face</a> — страница организации из сообщения пользователя о Llama Guard; это не карточка конкретной модели Guard. Версию и точный артефакт для опыта нужно выбирать отдельно.</li>
+<li><a href="https://github.com/AlexsJones/llmfit" rel="noreferrer">llmfit</a> — репозиторий для изучения подбора модели под оборудование.</li>
+<li><a href="https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v1.0" rel="noreferrer">TinyLlama-1.1B-Chat-v1.0</a> — карточка модели.</li>
+<li><a href="https://ollama.com/library/qwen3:4b" rel="noreferrer">Ollama: qwen3:4b</a> — карточка варианта модели.</li>
+<li><a href="https://huggingface.co/ornith-ai/Ornith-1.5-9B-GGUF" rel="noreferrer">Ornith-1.5-9B-GGUF</a> — карточка модели.</li>
+</ul>
+<p>Это список кандидатов для A4.3. Модель не выбрана; лицензии, объём памяти,
+runtime и пригодность для конкретных опытов пока не проверены.</p>
+<span id="9-статьи-и-материалы-для-чтения"></span><h2 id="section-6">9. Статьи и материалы для чтения</h2>
+<p>Для страниц Habr сохранены идентификаторы: заголовки и содержание не проверялись,
+поэтому выводы этим публикациям пока не приписываются.</p>
+<ul>
+<li><a href="https://habr.com/ru/articles/1007922/" rel="noreferrer">Habr: статья 1007922</a>.</li>
+<li><a href="https://habr.com/ru/companies/simpleone/articles/1085188/" rel="noreferrer">Habr / SimpleOne: статья 1085188</a>.</li>
+<li><a href="https://habr.com/ru/companies/simpleone/articles/1054790/" rel="noreferrer">Habr / SimpleOne: статья 1054790</a>.</li>
+<li><a href="https://habr.com/ru/companies/simpleone/articles/1047562/" rel="noreferrer">Habr / SimpleOne: статья 1047562</a>.</li>
+<li><a href="https://habr.com/ru/companies/simpleone/articles/1064440/" rel="noreferrer">Habr / SimpleOne: статья 1064440</a>.</li>
+<li><a href="https://habr.com/ru/companies/pt/articles/1076702/" rel="noreferrer">Habr / Positive Technologies: статья 1076702</a>.</li>
+<li><a href="https://simpleone.ru/materials" rel="noreferrer">SimpleOne: материалы</a>.</li>
+<li><a href="https://bi.zone/expertise/blog/zapretit-nelzya-razreshit-gde-ciso-postavit-zapyatuyu-v-epokhu-ii-agentov/" rel="noreferrer">BI.ZONE: «Запретить нельзя разрешить»: где CISO поставит запятую в эпоху ИИ-агентов</a>.</li>
+<li><a href="https://habr.com/ru/companies/lanit/articles/1082982/" rel="noreferrer">Habr / ЛАНИТ: статья 1082982</a>.</li>
+<li><a href="https://habr.com/ru/companies/ru_mts/articles/1063200/" rel="noreferrer">Habr / МТС: статья 1063200</a>.</li>
+<li><a href="https://www.kalviumlabs.ai/blog/guardrails-for-llm-applications/" rel="noreferrer">Kalvium Labs: Guardrails for LLM Applications</a>.</li>
+<li><a href="https://www.kalviumlabs.ai/blog/ai-chatbot-development-beyond-chatgpt/" rel="noreferrer">Kalvium Labs: AI Chatbot Development Beyond ChatGPT</a>.</li>
+<li><a href="https://habr.com/ru/companies/doubletapp/articles/1034976/" rel="noreferrer">Habr / Doubletapp: статья 1034976</a>.</li>
+<li><a href="https://www.ultralytics.com/ru/glossary/shadow-ai" rel="noreferrer">Ultralytics: Shadow AI</a> — словарь.</li>
+<li><a href="https://secpost.ru/dictionary/fenomen-shadow-ai" rel="noreferrer">SecPost: феномен Shadow AI</a> — словарь.</li>
+<li><a href="https://habr.com/ru/companies/infera_security/articles/1072622/" rel="noreferrer">Habr / Infera Security: статья 1072622</a>.</li>
+<li><a href="https://habr.com/ru/companies/cloud_ru/articles/1081198/" rel="noreferrer">Habr / Cloud.ru: статья 1081198</a>.</li>
+<li><a href="https://universus.pro/blog/tenevoj-ii-chto-eto/" rel="noreferrer">Universus: теневой ИИ</a>.</li>
+<li><a href="https://yandex.cloud/ru/blog/ai-agents-security" rel="noreferrer">Yandex Cloud: безопасность ИИ-агентов</a>.</li>
+<li><a href="https://ru.linkedin.com/pulse/securing-ai-agents-where-act-from-static-credentials-kzyhc?tl=ru" rel="noreferrer">LinkedIn: Securing AI Agents Where They Act</a> — ссылка из подборки; авторство и содержание не проверены.</li>
+<li><a href="https://www.anti-malware.ru/analytics/Technology_Analysis/AI-agents-under-control" rel="noreferrer">Anti-Malware: AI agents under control</a>.</li>
+<li><a href="https://texterra.ru/blog/bezopasnost-ai-agentov.html" rel="noreferrer">TexTerra: безопасность AI-агентов</a>.</li>
+<li><a href="https://cloud.ru/blog/bezopasnost-ii" rel="noreferrer">Cloud.ru: безопасность ИИ</a>.</li>
+<li><a href="https://habr.com/ru/companies/sberbank/articles/932570/" rel="noreferrer">Habr / Сбер: статья 932570</a>.</li>
+</ul>
+<span id="10-agentic-sdlc-и-исследования-ии"></span><h2 id="agentic-sdlc">10. Agentic SDLC и исследования ИИ</h2>
+<ul>
+<li><a href="https://hai.stanford.edu/ai-index/2026-ai-index-report/economy" rel="noreferrer">Stanford HAI: AI Index 2026 — Economy</a> — контекстная ссылка из подборки пользователя; содержание раздела не проверено.</li>
+<li><a href="https://www.alphaxiv.org/ru/abs/2602.10465" rel="noreferrer">alphaXiv: публикация 2602.10465</a> — название, авторство и содержание ещё не сверены.</li>
+<li><a href="https://www.forrester.com/blogs/agentic-software-development-takes-the-lead-from-code-assistants-to-orchestrated-sdlc-agents/" rel="noreferrer">Forrester: Agentic Software Development Takes the Lead — From Code Assistants to Orchestrated SDLC Agents</a> — аналитическая публикация.</li>
+<li><a href="https://cloud.google.com/resources/content/2025-dora-ai-assisted-software-development-report" rel="noreferrer">Google Cloud: 2025 DORA AI-assisted software development report</a> — страница отчёта.</li>
+<li><a href="https://www.faros.ai/blog/key-takeaways-from-the-dora-report-2025" rel="noreferrer">Faros AI: Key takeaways from the DORA Report 2025</a> — сторонний разбор отчёта; учитывать отдельно от первоисточника.</li>
+</ul>
+<span id="11-книга-видео-и-сообщество"></span><h2 id="section-7">11. Книга, видео и сообщество</h2>
+<ul>
+<li><a href="https://www.amazon.com/Building-Agents-LLMs-Knowledge-Graphs/dp/183508706X" rel="noreferrer">Building AI Agents with LLMs and Knowledge Graphs — страница книги на Amazon</a>. Упоминание возможного перевода сохранено как заметка пользователя; перевод не найден и его существование не подтверждено.</li>
+<li><a href="https://www.youtube.com/watch?v=hrCkDaWG54Q" rel="noreferrer">YouTube: видео hrCkDaWG54Q</a> — заголовок и содержание не проверялись.</li>
+<li><a href="https://github.com/alukatsk" rel="noreferrer">GitHub: профиль alukatsk</a> — профиль автора предоставленных ссылок STF17.</li>
+</ul>
+<span id="12-заметки-пользователя-о-проверке-системы"></span><h2 id="section-8">12. Заметки пользователя о проверке системы</h2>
+<p>Сохранены как предложения для будущего разбора, а не утверждённые метрики:</p>
+<ul>
+<li>Трассировать решения модели и сопоставлять их с решением политики и реальным эффектом инструмента.</li>
+<li>Измерять число итераций на задачу и количество созданных субагентов; заранее определить, что считается лишним вызовом и успешной задачей.</li>
+<li>Выбирать критерии из требований и подходящих воспроизводимых сравнений; изучить подходы promptfoo и DeepEval из раздела 5.</li>
+<li>Упомянутые в сообщении значения «ReAct 3–5 итераций» и «15+ — проблема» не проверены и не принимаются как универсальные пороги.</li>
+<li>Пожелание о вычитке и Mermaid-схемах учесть при подготовке наглядных Wiki-примеров после испытаний; замечания к чужой статье не являются результатами проверки нашего проекта.</li>
+</ul>
+<span id="как-пользоваться-указателем"></span><h2 id="section-9">Как пользоваться указателем</h2>
+<ol>
+<li>Сначала сверить, нужен ли ресурс для L1, L2, L3, ОС-изоляции или тестирования.</li>
+<li>Затем проверить лицензию, commit/версию, зависимости и сетевые эффекты.</li>
+<li>Только после этого фиксировать решение в <a href="../../%D0%A0%D0%B5%D0%B5%D1%81%D1%82%D1%80_%D0%B8%D1%81%D1%82%D0%BE%D1%87%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2.yaml" title="Исходный файл; переход к строке зависит от просмотрщика"><code>Реестре источников</code></a>.</li>
+<li>Не копировать целые сторонние репозитории в рабочий код без необходимости.</li>
+</ol>
+<p>Адреса с тестовыми доменами, подозрительными URL или неустановленным происхождением
+из исходного списка не перенесены в этот указатель как рекомендуемые ресурсы.</p>
+
+<footer>Локальная HTML-сборка из Markdown. Правки вносить в исходные .md, затем повторить сборку. Без сервера и внешних зависимостей.</footer></main></body></html>
